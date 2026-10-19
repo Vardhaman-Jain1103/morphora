@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Morphora Spaces — Offices Delivered in 60 Days</title>
+<meta name="description" content="Commercial office interiors — designed, built and handed over in 60 days.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --plum:#8422A2; --plum-d:#1A0420; --plum-m:#3B0D4A; --lilac:#F4E8F8; --sand:#F6F1EA; --ink:#141118; --muted:#6B6472; --line:#E7E1EA; --bg:#FCFBF9;
+  --head:"Bricolage Grotesque",system-ui,sans-serif; --body:"Inter",system-ui,sans-serif; --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input,select{font:inherit}
+.wrap{width:min(1280px,100% - 48px);margin-inline:auto}
+h1,h2,h3{font-family:var(--head);font-weight:600;letter-spacing:-.03em;line-height:1}
+section{padding:120px 0}
+.tag{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--plum);background:var(--lilac);padding:7px 14px;border-radius:99px}
+.h2{font-size:clamp(38px,5vw,68px);margin-top:18px}
+.h2 span{color:var(--plum)}
+.head-row{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:56px;flex-wrap:wrap}
+.head-row p{max-width:340px;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:10px;height:54px;padding:0 26px;border-radius:14px;font-weight:600;font-size:15px;border:0;cursor:pointer;transition:.3s var(--ease);white-space:nowrap}
+.btn i{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.18);font-style:normal;transition:transform .3s var(--ease)}
+.btn:hover i{transform:translateX(3px) rotate(-45deg)}
+.btn-p{background:var(--plum);color:#fff}
+.btn-p:hover{background:var(--plum-d)}
+.btn-o{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.btn-o:hover{border-color:var(--ink)}
+.btn-o i{background:var(--lilac)}
+
+/* header */
+header{position:fixed;top:14px;left:0;right:0;z-index:50}
+.bar{display:flex;align-items:center;justify-content:space-between;height:68px;padding:0 10px 0 22px;border-radius:18px;background:rgba(255,255,255,.82);backdrop-filter:blur(16px);border:1px solid rgba(231,225,234,.8);transition:.4s var(--ease)}
+header.hide .bar{transform:translateY(-120%)}
+.bar img{height:38px}
+.bar nav{display:flex;gap:4px}
+.bar nav a{padding:9px 14px;border-radius:10px;font-size:14.5px;font-weight:500;color:#3a3540;transition:.25s}
+.bar nav a:hover{background:var(--lilac);color:var(--plum)}
+.bar .btn{height:48px}
+.menu-btn{display:none}
+
+/* hero */
+.hero{padding:150px 0 40px}
+.hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:50px;align-items:center}
+.hero h1{font-size:clamp(54px,7.4vw,112px)}
+.hero h1 .w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .04em .14em 0;margin-bottom:-.14em}
+.hero h1 .w b{display:inline-block;font-weight:inherit;transform:translateY(105%);animation:up 1s var(--ease) forwards}
+.hero h1 .accent{color:var(--plum);font-style:italic;font-weight:500}
+@keyframes up{to{transform:none}}
+.hero .sub{font-size:19px;color:var(--muted);margin:26px 0 36px;max-width:440px}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+.hero-vis{position:relative;height:620px}
+.hv{position:absolute;border-radius:24px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(26,4,32,.35)}
+.hv img{width:100%;height:100%;object-fit:cover}
+.hv1{inset:0 18% 22% 0;animation:float 9s ease-in-out infinite}
+.hv2{width:46%;height:44%;right:0;bottom:0;animation:float 9s -4s ease-in-out infinite;border:6px solid var(--bg)}
+@keyframes float{50%{transform:translateY(-12px)}}
+.live{position:absolute;left:-30px;bottom:40px;background:#fff;border-radius:18px;padding:18px 20px;width:260px;box-shadow:0 20px 50px -20px rgba(26,4,32,.35);z-index:2}
+.live small{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.live small::before{content:"";width:8px;height:8px;border-radius:50%;background:#22C55E;box-shadow:0 0 0 4px rgba(34,197,94,.2);animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.4}}
+.live strong{display:block;font-family:var(--head);font-size:30px;margin:6px 0 10px;letter-spacing:-.02em}
+.live .track{height:8px;border-radius:9px;background:var(--lilac);overflow:hidden}
+.live .track i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--plum),#C46BE0);border-radius:9px;transition:width 2s var(--ease)}
+.live .ph{font-size:13px;margin-top:10px;font-weight:500}
+.chip60{position:absolute;right:6%;top:-24px;width:118px;height:118px;border-radius:50%;background:var(--plum-d);color:#fff;display:grid;place-items:center;text-align:center;z-index:2}
+.chip60 b{font-family:var(--head);font-size:40px;line-height:1;font-weight:600}
+.chip60 span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+
+/* stats bar */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:70px}
+.st{background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px 28px}
+.st b{font-family:var(--head);font-size:48px;font-weight:600;letter-spacing:-.03em;line-height:1}
+.st b em{font-style:normal;color:var(--plum)}
+.st>span{display:block;color:var(--muted);font-size:14px;margin-top:8px}
+
+/* client marquee */
+.clients{padding:50px 0;border-block:1px solid var(--line);overflow:hidden}
+.clients .lbl{text-align:center;font-size:13px;color:var(--muted);margin-bottom:22px}
+.cm{display:flex;gap:80px;width:max-content;animation:mq 30s linear infinite}
+.cm span{font-family:var(--head);font-size:34px;font-weight:600;color:#C9BFCD;white-space:nowrap;letter-spacing:-.02em;transition:.3s}
+.cm span:hover{color:var(--plum)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* services */
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.svc{position:relative;border-radius:24px;overflow:hidden;height:500px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:30px;isolation:isolate}
+.svc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform 1.2s var(--ease)}
+.svc::before{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(26,4,32,.92) 10%,rgba(26,4,32,.1) 60%);z-index:-1;transition:.5s}
+.svc:hover img{transform:scale(1.08)}
+.svc:hover::before{background:linear-gradient(to top,rgba(132,34,162,.94) 10%,rgba(26,4,32,.2) 70%)}
+.svc .num{position:absolute;top:26px;left:30px;font-size:13px;opacity:.7}
+.svc .arr{position:absolute;top:22px;right:22px;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.15);backdrop-filter:blur(6px);display:grid;place-items:center;transition:.4s var(--ease)}
+.svc:hover .arr{background:#fff;color:var(--plum);transform:rotate(-45deg)}
+.svc h3{font-size:34px}
+.svc ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;max-height:0;opacity:0;overflow:hidden;transition:.5s var(--ease)}
+.svc:hover ul,.svc:focus-within ul{max-height:120px;opacity:1}
+.svc li{font-size:12.5px;padding:6px 11px;border-radius:99px;background:rgba(255,255,255,.16)}
+
+/* timeline */
+.tl{background:var(--plum-d);color:#fff;border-radius:40px;margin:0 16px;position:relative;overflow:hidden}
+.tl .tag{background:rgba(255,255,255,.1);color:#E2B6F1}
+.tl .h2 span{color:#D597EA}
+.tl .head-row p{color:rgba(255,255,255,.6)}
+.tl-body{display:grid;grid-template-columns:1fr 1.1fr;gap:50px;align-items:center}
+.tl-day{font-family:var(--head);font-size:clamp(110px,15vw,220px);font-weight:600;line-height:.85;letter-spacing:-.05em}
+.tl-day small{font-size:.22em;letter-spacing:0;font-weight:500;color:#D597EA;margin-left:6px}
+.tl-phase{font-family:var(--head);font-size:34px;margin:22px 0 10px}
+.tl-desc{color:rgba(255,255,255,.65);max-width:420px;min-height:52px}
+.tl-img{border-radius:24px;overflow:hidden;aspect-ratio:4/3;position:relative}
+.tl-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.06);transition:opacity .8s,transform 1.4s var(--ease)}
+.tl-img img.on{opacity:1;transform:none}
+.scrub{margin-top:60px;position:relative}
+.scrub input{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:9px;background:linear-gradient(90deg,#C46BE0 var(--p,0%),rgba(255,255,255,.15) var(--p,0%));outline:none;cursor:pointer}
+.scrub input::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#fff;border:7px solid var(--plum);box-shadow:0 0 0 8px rgba(196,107,224,.25)}
+.scrub input::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:7px solid var(--plum)}
+.marks{display:grid;grid-template-columns:repeat(5,1fr);margin-top:20px;font-size:13px}
+.marks button{background:none;border:0;color:rgba(255,255,255,.5);text-align:left;cursor:pointer;padding:0;transition:.3s}
+.marks button b{display:block;color:#fff;font-family:var(--head);font-size:18px;font-weight:500;opacity:.5;transition:.3s}
+.marks button.on,.marks button.on b{color:#fff;opacity:1}
+.marks button:last-child{text-align:right}
+
+/* spaces */
+.sp-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:50px;align-items:center}
+.sp-list{list-style:none;border-top:1px solid var(--line)}
+.sp-list li{border-bottom:1px solid var(--line)}
+.sp-list button{width:100%;display:flex;align-items:center;justify-content:space-between;background:none;border:0;padding:22px 4px;font-family:var(--head);font-size:30px;font-weight:500;color:#B5ABB9;cursor:pointer;letter-spacing:-.02em;transition:.35s var(--ease)}
+.sp-list button span{font:500 13px var(--body);color:var(--muted);opacity:0;transform:translateX(-10px);transition:.35s var(--ease)}
+.sp-list button.on,.sp-list button:hover{color:var(--ink);padding-left:14px}
+.sp-list button.on span{opacity:1;transform:none}
+.sp-view{position:relative;aspect-ratio:5/4;border-radius:28px;overflow:hidden}
+.sp-view img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;clip-path:inset(0 0 0 100%);transition:clip-path 1s var(--ease)}
+.sp-view img.on{clip-path:inset(0 0 0 0);z-index:1}
+.sp-view img.out{clip-path:inset(0 0 0 0);z-index:0}
+
+/* sectors */
+.sectors{background:var(--sand)}
+.sec-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.sec{background:#fff;border-radius:20px;padding:26px 20px;text-align:left;border:1px solid transparent;transition:.4s var(--ease);cursor:default}
+.sec:hover{border-color:var(--plum);transform:translateY(-6px)}
+.sec svg{width:34px;height:34px;color:var(--plum);margin-bottom:40px;transition:.4s var(--ease)}
+.sec:hover svg{transform:scale(1.15)}
+.sec b{font-family:var(--head);font-size:20px;font-weight:600;letter-spacing:-.02em;display:block}
+.sec span{font-size:13px;color:var(--muted)}
+
+/* projects */
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filters button{padding:10px 18px;border-radius:99px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:14px;font-weight:500;transition:.25s}
+.filters button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pj{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:4/5;transition:opacity .5s,transform .5s var(--ease)}
+.pj.big{grid-column:span 2;grid-row:span 2;aspect-ratio:auto}
+.pj img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+.pj:hover img{transform:scale(1.06)}
+.pj .info{position:absolute;left:14px;right:14px;bottom:14px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-radius:16px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;transform:translateY(10px);transition:.5s var(--ease)}
+.pj:hover .info{transform:none}
+.pj .info b{font-family:var(--head);font-size:20px;font-weight:600;letter-spacing:-.02em;display:block}
+.pj .info span{font-size:13px;color:var(--muted)}
+.pj .info em{font-style:normal;font-size:13px;font-weight:600;color:var(--plum);background:var(--lilac);padding:6px 10px;border-radius:8px;white-space:nowrap}
+.pj.hide{display:none}
+
+/* estimator */
+.est{display:grid;grid-template-columns:1.1fr .9fr;border-radius:32px;overflow:hidden;border:1px solid var(--line);background:#fff}
+.est-in{padding:56px}
+.est-in label{display:block;font-weight:600;font-size:14px;margin:34px 0 14px}
+.est-in label:first-of-type{margin-top:30px}
+.area-row{display:flex;align-items:baseline;justify-content:space-between}
+.area-row output{font-family:var(--head);font-size:40px;font-weight:600;letter-spacing:-.03em}
+.area-row output small{font-size:16px;color:var(--muted);font-weight:500}
+.est input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:9px;background:linear-gradient(90deg,var(--plum) var(--p,20%),var(--line) var(--p,20%));cursor:pointer}
+.est input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:#fff;border:6px solid var(--plum)}
+.est input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:6px solid var(--plum)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.seg button{border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:16px;text-align:left;cursor:pointer;transition:.25s}
+.seg button b{display:block;font-family:var(--head);font-size:18px;font-weight:600}
+.seg button span{font-size:12.5px;color:var(--muted)}
+.seg button.on{border-color:var(--plum);background:var(--lilac)}
+.est-out{background:var(--plum-d);color:#fff;padding:56px;display:flex;flex-direction:column;justify-content:space-between;background-image:radial-gradient(circle at 100% 0,rgba(132,34,162,.7),transparent 60%)}
+.est-out small{font-size:13px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.12em}
+.est-out .range{font-family:var(--head);font-size:clamp(40px,4.4vw,58px);font-weight:600;letter-spacing:-.03em;margin:10px 0 30px;line-height:1.05}
+.est-out dl{display:grid;grid-template-columns:1fr 1fr;gap:20px;border-top:1px solid rgba(255,255,255,.15);padding-top:24px}
+.est-out dt{font-size:13px;color:rgba(255,255,255,.6)}
+.est-out dd{font-family:var(--head);font-size:24px;font-weight:600}
+.est-out .note{font-size:12.5px;color:rgba(255,255,255,.5);margin:26px 0 20px}
+.est-out .btn{background:#fff;color:var(--plum-d);justify-content:center}
+
+/* why */
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line)}
+.why{padding:36px 28px 10px 0;border-right:1px solid var(--line);margin-right:28px}
+.why:last-child{border-right:0;margin-right:0}
+.why b{font-family:var(--head);font-size:56px;color:var(--plum);font-weight:600;letter-spacing:-.04em;line-height:1}
+.why h3{font-size:22px;margin:20px 0 8px;letter-spacing:-.02em}
+.why p{color:var(--muted);font-size:14.5px}
+
+/* testimonial + partners */
+.tp{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.quote{background:var(--lilac);border-radius:28px;padding:50px;display:flex;flex-direction:column;justify-content:space-between;min-height:420px}
+.quote p{font-family:var(--head);font-size:clamp(24px,2.4vw,34px);font-weight:500;letter-spacing:-.02em;line-height:1.2}
+.quote .who{display:flex;justify-content:space-between;align-items:flex-end;margin-top:30px}
+.quote .who b{display:block}
+.quote .who span{font-size:13px;color:var(--muted)}
+.quote .sample{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#A693AE}
+.logos{border:1px solid var(--line);border-radius:28px;display:grid;grid-template-columns:repeat(4,1fr);overflow:hidden;background:#fff}
+.logos div{display:grid;place-items:center;padding:18px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);aspect-ratio:3/2}
+.logos div:nth-child(4n){border-right:0}
+.logos img{max-height:44px;max-width:100%;object-fit:contain;filter:grayscale(1);opacity:.65;transition:.35s;mix-blend-mode:multiply}
+.logos div:hover img{filter:none;opacity:1;transform:scale(1.08)}
+
+/* faq */
+.faq-grid{display:grid;grid-template-columns:.7fr 1.3fr;gap:60px}
+.qa{border-bottom:1px solid var(--line)}
+.qa summary{list-style:none;cursor:pointer;padding:24px 0;font-family:var(--head);font-size:22px;font-weight:500;letter-spacing:-.02em;display:flex;justify-content:space-between;gap:20px}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary i{flex:none;width:32px;height:32px;border-radius:50%;background:var(--lilac);display:grid;place-items:center;font-style:normal;color:var(--plum);transition:transform .35s var(--ease)}
+.qa[open] summary i{transform:rotate(45deg);background:var(--plum);color:#fff}
+.qa p{color:var(--muted);padding:0 50px 24px 0}
+
+/* contact */
+.contact{padding:0 0 30px}
+.cbox{background:var(--plum-d);color:#fff;border-radius:40px;padding:80px;display:grid;grid-template-columns:1fr 1fr;gap:60px;position:relative;overflow:hidden}
+.cbox::before{content:"";position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(132,34,162,.6),transparent 65%);left:-200px;bottom:-300px}
+.cbox>*{position:relative}
+.cbox h2{font-size:clamp(44px,5.6vw,80px)}
+.cbox h2 span{color:#D597EA}
+.cbox .direct{margin-top:40px;display:grid;gap:12px}
+.cbox .direct a{display:flex;align-items:center;gap:14px;font-size:18px}
+.cbox .direct a i{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.1);display:grid;place-items:center;font-style:normal}
+form{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start}
+form .full{grid-column:1/-1}
+form input,form select{width:100%;height:58px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#fff;padding:0 18px;outline:none;transition:.25s}
+form select option{color:#000}
+form input::placeholder{color:rgba(255,255,255,.5)}
+form input:focus,form select:focus{border-color:#D597EA;background:rgba(255,255,255,.1)}
+form .btn{background:#fff;color:var(--plum-d);justify-content:center;height:60px}
+.ok{display:none;grid-column:1/-1;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.4);border-radius:14px;padding:16px 18px;font-size:14px}
+
+footer{padding:60px 0 40px;font-size:14px;color:var(--muted)}
+.ft{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:center}
+.ft img{height:40px}
+.ft nav{display:flex;gap:22px;flex-wrap:wrap}
+.ft nav a:hover{color:var(--plum)}
+.big-word{font-family:var(--head);font-weight:700;font-size:clamp(60px,15vw,230px);letter-spacing:-.06em;line-height:.8;color:var(--lilac);text-align:center;margin:50px 0 30px;user-select:none}
+
+/* reveal */
+.r{opacity:0;transform:translateY(36px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.r.in{opacity:1;transform:none}
+
+@media (max-width:1100px){
+  .bar nav{display:none}
+  .bar nav.open{display:flex;flex-direction:column;position:absolute;top:78px;left:0;right:0;background:#fff;border-radius:18px;padding:12px;border:1px solid var(--line);box-shadow:0 20px 50px -20px rgba(0,0,0,.25)}
+  .menu-btn{display:grid;place-items:center;width:48px;height:48px;border-radius:12px;border:1px solid var(--line);background:#fff;cursor:pointer;margin-left:8px}
+  .hero-grid,.tl-body,.sp-grid,.est,.tp,.faq-grid,.cbox{grid-template-columns:1fr}
+  .hero-vis{height:520px}
+  .live{left:10px}
+  .sec-grid{grid-template-columns:repeat(3,1fr)}
+  .svc-grid{grid-template-columns:1fr}
+  .svc{height:380px}
+  .svc ul{max-height:120px;opacity:1}
+  .why-grid{grid-template-columns:1fr 1fr}
+  .why:nth-child(2){border-right:0}
+}
+@media (max-width:680px){
+  .wrap{width:calc(100% - 32px)}
+  section{padding:84px 0}
+  .bar .cta-top{display:none}
+  .hero{padding-top:120px}
+  .hero-vis{height:440px}
+  .hv1{inset:0 0 26% 0}
+  .chip60{width:96px;height:96px;right:10px}
+  .chip60 b{font-size:32px}
+  .stats{grid-template-columns:1fr 1fr}
+  .st b{font-size:36px}
+  .tl{margin:0;border-radius:28px}
+  .marks{font-size:11px}
+  .marks button b{font-size:14px}
+  .sec-grid{grid-template-columns:1fr 1fr}
+  .pj-grid{grid-template-columns:1fr}
+  .pj.big{grid-column:auto;grid-row:auto;aspect-ratio:4/5}
+  .est-in,.est-out{padding:30px 24px}
+  .seg{grid-template-columns:1fr}
+  .why-grid{grid-template-columns:1fr}
+  .why{border-right:0;margin-right:0;border-bottom:1px solid var(--line);padding-bottom:28px}
+  .quote{padding:30px}
+  .logos{grid-template-columns:repeat(3,1fr)}
+  .logos div:nth-child(4n){border-right:1px solid var(--line)}
+  .logos div:nth-child(3n){border-right:0}
+  .cbox{padding:44px 24px;border-radius:28px}
+  form{grid-template-columns:1fr}
+  .sp-list button{font-size:24px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.r{opacity:1;transform:none}.hero h1 .w b{transform:none}}
+</style>
+</head>
+<body>
+
+<header id="hdr">
+  <div class="wrap bar">
+    <a href="../../index.html"><img src="../../wp-content/uploads/2025/06/Morphora-Logo-1-e1758320614708.png" alt="Morphora Spaces"></a>
+    <nav id="nav">
+      <a href="#services">Services</a><a href="#timeline">60-Day Plan</a><a href="#projects">Projects</a><a href="#estimate">Estimate</a><a href="../../about/index.html">About</a><a href="../../resources/index.html">Insights</a>
+    </nav>
+    <div style="display:flex;align-items:center">
+      <a class="btn btn-p cta-top" href="#contact">Get a quote <i>→</i></a>
+      <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="tag r">Commercial Office Interiors · Design &amp; Build</span>
+        <h1 style="margin-top:24px"><span class="w"><b>Your office.</b></span><br><span class="w"><b style="animation-delay:.1s">Ready in</b></span> <span class="w"><b class="accent" style="animation-delay:.2s">60 days.</b></span></h1>
+        <p class="sub r">Design, build and handover — one team, one timeline, zero surprises.</p>
+        <div class="ctas r">
+          <a class="btn btn-p" href="#estimate">Estimate my office <i>→</i></a>
+          <a class="btn btn-o" href="#projects">See projects <i>→</i></a>
+        </div>
+      </div>
+      <div class="hero-vis r">
+        <div class="hv hv1"><img src="../../wp-content/uploads/2025/10/ADI8321-scaled.jpg" alt="Office meeting zone by Morphora"></div>
+        <div class="hv hv2"><img src="../../wp-content/uploads/2025/10/Lounge-Area-1024x731.jpg" alt="Codal lounge"></div>
+        <div class="chip60"><div><b>60</b><span>Days</span></div></div>
+        <div class="live"><small>Live project · Mumbai</small><strong id="liveDay">Day 0 / 60</strong><div class="track"><i id="liveBar"></i></div><div class="ph" id="livePh">Site visit</div></div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="st r"><b><span data-c="2">0</span><em>M+</em></b><span>sq. ft. designed</span></div>
+      <div class="st r"><b><span data-c="150">0</span><em>+</em></b><span>offices delivered</span></div>
+      <div class="st r"><b><span data-c="10">0</span><em>+</em></b><span>cities served</span></div>
+      <div class="st r"><b><span data-c="100">0</span><em>%</em></b><span>repeat-client retention</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="clients">
+  <p class="lbl">Workplaces delivered for</p>
+  <div class="cm" id="cm"></div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="wrap">
+    <div class="head-row"><div><span class="tag r">What we do</span><h2 class="h2 r">One partner. <span>Start to finish.</span></h2></div><p class="r">From finding the floor to handing over the keys.</p></div>
+    <div class="svc-grid">
+      <a class="svc r" href="../../index.html"><img src="../../wp-content/uploads/2025/10/ADI8397-scaled.jpg" alt=""><span class="num">01</span><span class="arr">→</span><h3>Design &amp; Build</h3><ul><li>Space planning</li><li>3D renders</li><li>Civil &amp; MEP</li><li>Furniture</li><li>Handover</li></ul></a>
+      <a class="svc r" style="transition-delay:.1s" href="../../real-estate/index.html"><img src="../../wp-content/uploads/2025/10/photo-1582407947304-fd86f028f716-1-scaled.jpg" alt=""><span class="num">02</span><span class="arr">→</span><h3>Real Estate Advisory</h3><ul><li>Site search</li><li>Fit-out feasibility</li><li>Lease support</li></ul></a>
+      <a class="svc r" style="transition-delay:.2s" href="../../pmc/index.html"><img src="../../wp-content/uploads/2025/10/IMG_20200919_173257-scaled.jpg" alt=""><span class="num">03</span><span class="arr">→</span><h3>Project Management (PMC)</h3><ul><li>Vendor control</li><li>Cost tracking</li><li>Quality audits</li><li>Timelines</li></ul></a>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="tl" id="timeline">
+  <div class="wrap">
+    <div class="head-row"><div><span class="tag">The 60-day plan</span><h2 class="h2">Drag through <span>your project.</span></h2></div><p>Every phase has a date. Every date is kept.</p></div>
+    <div class="tl-body">
+      <div>
+        <div class="tl-day"><span id="tDay">1</span><small>/ 60 days</small></div>
+        <div class="tl-phase" id="tPhase">Site visit &amp; brief</div>
+        <p class="tl-desc" id="tDesc">We walk the floor, measure, and capture how your teams work.</p>
+      </div>
+      <div class="tl-img" id="tImgs">
+        <img class="on" src="../../wp-content/uploads/2025/10/IMG_20200919_174259-scaled.jpg" alt="">
+        <img src="../../wp-content/uploads/2025/10/pooja-singh-L4Cev9HX9aU-unsplash-scaled.jpg" alt="">
+        <img src="../../wp-content/uploads/2025/10/ADI8363-scaled.jpg" alt="">
+        <img src="../../wp-content/uploads/2025/10/IMG_20200919_173755-scaled.jpg" alt="">
+        <img src="../../wp-content/uploads/2025/10/ADI8325-scaled.jpg" alt="">
+      </div>
+    </div>
+    <div class="scrub">
+      <input type="range" id="scrub" min="1" max="60" value="1" aria-label="Project day">
+      <div class="marks" id="marks"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SPACES -->
+<section>
+  <div class="wrap sp-grid">
+    <div>
+      <span class="tag r">Spaces we build</span>
+      <h2 class="h2 r" style="margin-bottom:40px">Every zone, <span>considered.</span></h2>
+      <ul class="sp-list" id="spList"></ul>
+    </div>
+    <div class="sp-view r" id="spView"></div>
+  </div>
+</section>
+
+<!-- SECTORS -->
+<section class="sectors">
+  <div class="wrap">
+    <div class="head-row"><div><span class="tag r">Who we build for</span><h2 class="h2 r">Built for <span>how you work.</span></h2></div><p class="r">Layouts and specs shaped by your industry.</p></div>
+    <div class="sec-grid">
+      <div class="sec r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg><b>IT &amp; Tech</b><span>Collab-first floors</span></div>
+      <div class="sec r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 10l9-6 9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 21h18"/></svg><b>BFSI</b><span>Secure, compliant</span></div>
+      <div class="sec r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3c3 2 5 5.5 5 9l-2 4H9l-2-4c0-3.5 2-7 5-9zM9 16l-2 5M15 16l2 5"/><circle cx="12" cy="10" r="1.6"/></svg><b>Startups</b><span>Scale-ready</span></div>
+      <div class="sec r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg><b>Consulting</b><span>Client-facing</span></div>
+      <div class="sec r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="8" r="2.5"/><circle cx="17" cy="8" r="2.5"/><path d="M2 19c0-3 2.2-5 5-5s5 2 5 5M12 19c0-3 2.2-5 5-5s5 2 5 5"/></svg><b>Co-working</b><span>High-turnover ready</span></div>
+      <div class="sec r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21V9l6 4V9l6 4V5h6v16z"/></svg><b>Corporate HQ</b><span>Brand-led</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="wrap">
+    <div class="head-row"><div><span class="tag r">Selected work</span><h2 class="h2 r">Projects that <span>speak.</span></h2></div>
+      <div class="filters r" id="filters"><button class="on" data-f="all">All</button><button data-f="Mumbai">Mumbai</button><button data-f="Ahmedabad">Ahmedabad</button><button data-f="Thane">Thane</button></div></div>
+    <div class="pj-grid" id="pjGrid">
+      <a class="pj big r" data-city="Mumbai" href="../../portfolio/lafarge-holcim/index.html"><img src="../../wp-content/uploads/2025/10/IMG_20200919_173919-scaled.jpg" alt=""><div class="info"><div><b>Lafarge Holcim</b><span>Mumbai · with TOA</span></div><em>18,000 sq ft</em></div></a>
+      <a class="pj r" data-city="Ahmedabad" href="../../portfolio/codal-ahmedabad/index.html"><img src="../../wp-content/uploads/2025/10/Lounge-Area-1024x731.jpg" alt=""><div class="info"><div><b>Codal</b><span>Ahmedabad · with Phi Designs</span></div><em>12,000 sq ft</em></div></a>
+      <a class="pj r" data-city="Mumbai" href="../../portfolio/festival-mumbai/index.html"><img src="../../wp-content/uploads/2025/10/ADI8276-scaled.jpg" alt=""><div class="info"><div><b>Festival</b><span>Mumbai · with ANS Designs</span></div><em>3,000 sq ft</em></div></a>
+      <a class="pj r" data-city="Ahmedabad" href="../../portfolio/ishan-tech-ahmedabad/index.html"><img src="../../wp-content/uploads/2025/10/MicrosoftTeams-image-48-1024x731.jpg" alt=""><div class="info"><div><b>Ishan Tech</b><span>Ahmedabad · with Phi Designs</span></div><em>5,000 sq ft</em></div></a>
+      <a class="pj r" data-city="Mumbai" href="../../portfolio/gro-value-mumbai/index.html"><img src="../../wp-content/uploads/2025/10/office-interior-design-santacruz-mumbai-grovalue09-3-1024x683.jpg" alt=""><div class="info"><div><b>Gro Value</b><span>Mumbai · by Morphora</span></div><em>2,500 sq ft</em></div></a>
+      <a class="pj r" data-city="Thane" href="../../portfolio/i-i-fidelis-thane/index.html"><img src="../../wp-content/uploads/2025/10/20-I-I-MD-CABIN-1-1024x684.jpg" alt=""><div class="info"><div><b>I &amp; I Fidelis</b><span>Thane · with ANS Designs</span></div><em>2,000 sq ft</em></div></a>
+    </div>
+  </div>
+</section>
+
+<!-- ESTIMATOR -->
+<section id="estimate" style="padding-top:0">
+  <div class="wrap">
+    <div class="est r">
+      <div class="est-in">
+        <span class="tag">Fit-out estimator</span>
+        <h2 class="h2" style="font-size:clamp(34px,3.6vw,50px)">What will your <span>office cost?</span></h2>
+        <label for="area">Carpet area</label>
+        <div class="area-row"><output id="areaOut">5,000 <small>sq ft</small></output></div>
+        <input type="range" id="area" min="1000" max="25000" step="500" value="5000">
+        <label>Finish level</label>
+        <div class="seg" id="tier">
+          <button data-t="0"><b>Essential</b><span>Smart, functional</span></button>
+          <button data-t="1" class="on"><b>Premium</b><span>Brand-led finishes</span></button>
+          <button data-t="2"><b>Signature</b><span>Statement spaces</span></button>
+        </div>
+        <label>Seats (approx.)</label>
+        <div class="area-row"><output id="seatOut" style="font-size:28px">55 <small>workstations</small></output></div>
+      </div>
+      <div class="est-out">
+        <div><small>Indicative budget</small><div class="range" id="range">₹1.2 – 1.6 Cr</div>
+        <dl><div><dt>Timeline</dt><dd id="time">60 days</dd></div><div><dt>Per sq ft</dt><dd id="psf">₹2,400 – 3,200</dd></div></dl></div>
+        <div><p class="note">Indicative only. Your exact quote follows a free site visit.</p><a class="btn" href="#contact" id="estCta">Get exact quote <i style="background:var(--lilac)">→</i></a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="head-row"><div><span class="tag r">Why Morphora</span><h2 class="h2 r">Less waiting. <span>More working.</span></h2></div></div>
+    <div class="why-grid">
+      <div class="why r"><b>01</b><h3>Fixed 60-day timeline</h3><p>A dated plan, signed before we start.</p></div>
+      <div class="why r"><b>02</b><h3>Live dashboards</h3><p>Track progress and spend in real time.</p></div>
+      <div class="why r"><b>03</b><h3>Single point of contact</h3><p>Design, build and PMC under one roof.</p></div>
+      <div class="why r"><b>04</b><h3>Handover kit</h3><p>SOPs, maintenance and space guides.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL + PARTNERS -->
+<section style="padding-top:0">
+  <div class="wrap tp">
+    <div class="quote r"><p>“Bare shell to a fully working office — without a single missed milestone. Our team walked in and simply started working.”</p><div class="who"><div><b>Client Name</b><span>Founder · Technology company</span></div><span class="sample">Sample quote</span></div></div>
+    <div class="logos r" id="logos"></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="padding-top:0">
+  <div class="wrap faq-grid">
+    <div><span class="tag r">FAQ</span><h2 class="h2 r">Quick <span>answers.</span></h2></div>
+    <div>
+      <details class="qa r" open><summary>Can you really deliver in 60 days?<i>+</i></summary><p>Yes — design, procurement and construction run on one dated plan, so there’s minimal downtime.</p></details>
+      <details class="qa r"><summary>What does Design &amp; Build include?<i>+</i></summary><p>Concept, 3D renders, layout, civil and electrical works, furniture procurement and final execution.</p></details>
+      <details class="qa r"><summary>Do you work outside Mumbai?<i>+</i></summary><p>Yes — across Mumbai, Thane, Navi Mumbai and major cities in India, on-site or remotely managed.</p></details>
+      <details class="qa r"><summary>Can you help find the office space first?<i>+</i></summary><p>Yes. Our Real Estate Advisory team shortlists and evaluates spaces before design begins.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="cbox r">
+      <div>
+        <h2>Let’s build your <span>next office.</span></h2>
+        <div class="direct">
+          <a href="tel:+917719155155"><i>☎</i>+91 77191 55155</a>
+          <a href="https://wa.me/917719155155"><i>✆</i>Chat on WhatsApp</a>
+        </div>
+      </div>
+      <form id="form">
+        <input required placeholder="Your name" aria-label="Your name">
+        <input required type="tel" placeholder="Phone" aria-label="Phone">
+        <input class="full" placeholder="Company" aria-label="Company">
+        <input placeholder="City" aria-label="City">
+        <select aria-label="Office size"><option>Office size</option><option>Under 2,000 sq ft</option><option>2,000 – 5,000 sq ft</option><option>5,000 – 15,000 sq ft</option><option>15,000+ sq ft</option></select>
+        <button class="btn full" type="submit">Get a callback <i style="background:var(--lilac)">→</i></button>
+        <div class="ok" id="ok">Thanks! Our team will call you within one working day.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="big-word">morphora</div>
+    <div class="ft">
+      <img src="../../wp-content/uploads/2025/06/Morphora-Logo-1-e1758320614708.png" alt="Morphora Spaces">
+      <nav><a href="../../about/index.html">About</a><a href="../../portfolio/index.html">Portfolio</a><a href="../../careers/index.html">Careers</a><a href="../../resources/index.html">Blog</a><a href="../../contact/index.html">Contact</a><a href="../../privacy-policy/index.html">Privacy</a></nav>
+      <span>© 2025 Morphora Spaces</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const U='../../wp-content/uploads/';
+// header hide on scroll down
+let ly=0;addEventListener('scroll',()=>{$('#hdr').classList.toggle('hide',scrollY>ly&&scrollY>300);ly=scrollY},{passive:true});
+$('#menuBtn').onclick=()=>$('#nav').classList.toggle('open');
+$$('#nav a').forEach(a=>a.onclick=()=>$('#nav').classList.remove('open'));
+// reveal
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+$$('.r').forEach(el=>io.observe(el));
+// counters
+const co=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,n=+el.dataset.c,t0=performance.now();(function f(t){const p=Math.max(0,Math.min((t-t0)/1600,1));el.textContent=Math.round(n*(1-Math.pow(1-p,3)));p<1&&requestAnimationFrame(f)})(t0);co.unobserve(el)}),{threshold:.5});
+$$('[data-c]').forEach(el=>co.observe(el));
+// live card animation
+const phases=[[1,'Site visit & brief','We walk the floor, measure, and capture how your teams work.'],[8,'Design & 3D','Layouts, moodboards and photoreal 3D views for sign-off.'],[18,'Quote & approvals','A line-item quote and a dated execution plan.'],[22,'Build on site','Civil, MEP, joinery and furniture — tracked daily.'],[56,'Handover','Snag-free walkthrough, SOPs and your keys.']];
+const phaseAt=d=>{let i=0;phases.forEach((p,k)=>{if(d>=p[0])i=k});return i};
+let ld=0;(function live(){ld=ld>=60?0:ld+1;$('#liveDay').textContent=`Day ${ld} / 60`;$('#liveBar').style.width=ld/60*100+'%';$('#livePh').textContent=phases[phaseAt(Math.max(ld,1))][1];setTimeout(live,ld===60?2500:140)})();
+// clients marquee
+const clients=['Lafarge Holcim','Codal','Ishan Tech','Festival','Gro Value','I & I Fidelis'];
+$('#cm').innerHTML=[...clients,...clients,...clients,...clients].map(c=>`<span>${c}</span>`).join('');
+// timeline scrubber
+const sc=$('#scrub'),imgs=$$('#tImgs img'),marks=$('#marks');
+marks.innerHTML=phases.map((p,i)=>`<button data-d="${p[0]}"><b>Day ${p[0]}</b>${p[1].split(' ')[0]}</button>`).join('');
+function setDay(d){sc.value=d;sc.style.setProperty('--p',(d-1)/59*100+'%');$('#tDay').textContent=d;const i=phaseAt(d);$('#tPhase').textContent=phases[i][1];$('#tDesc').textContent=phases[i][2];imgs.forEach((im,k)=>im.classList.toggle('on',k===i));[...marks.children].forEach((b,k)=>b.classList.toggle('on',k===i))}
+sc.oninput=()=>setDay(+sc.value);$$('#marks button').forEach(b=>b.onclick=()=>animTo(+b.dataset.d));
+function animTo(t){const s=+sc.value,t0=performance.now();(function f(n){const p=Math.min((n-t0)/700,1),e=1-Math.pow(1-p,3);setDay(Math.round(s+(t-s)*e));p<1&&requestAnimationFrame(f)})(t0)}
+setDay(1);
+let autoPlayed=false;new IntersectionObserver(es=>{if(es[0].isIntersecting&&!autoPlayed){autoPlayed=true;const s=performance.now();(function f(n){const p=Math.min((n-s)/3200,1);setDay(Math.max(1,Math.round(60*p)));p<1&&requestAnimationFrame(f)})(s)}},{threshold:.5}).observe(sc);
+// spaces
+const spaces=[['Reception','First impressions','2025/10/IMG_20200919_174146-scaled.jpg'],['Workstations','Focus at scale','2025/10/IMG_20200919_173813-scaled.jpg'],['Cabins','Private, quiet','2025/10/ADI8340-scaled.jpg'],['Conference','Present with confidence','2025/10/PAB_1864-scaled.jpg'],['Breakout','Recharge & connect','2025/10/IMG_1650-scaled.jpg'],['Cafeteria','Where culture happens','2025/10/IMG_1645-scaled.jpg']];
+$('#spList').innerHTML=spaces.map((s,i)=>`<li><button data-i="${i}">${s[0]}<span>${s[1]}</span></button></li>`).join('');
+$('#spView').innerHTML=spaces.map(s=>`<img src="${U+s[2]}" alt="${s[0]}" loading="lazy">`).join('');
+const spB=$$('#spList button'),spI=$$('#spView img');let cur=-1,spT;
+function sp(i){if(i===cur)return;spI.forEach(im=>im.classList.remove('out'));if(cur>=0){spI[cur].classList.remove('on');spI[cur].classList.add('out')}cur=i;spI[i].classList.add('on');spB.forEach((b,k)=>b.classList.toggle('on',k===i))}
+spB.forEach(b=>{b.onmouseenter=b.onclick=()=>{sp(+b.dataset.i);clearInterval(spT)}});sp(0);spT=setInterval(()=>sp((cur+1)%spaces.length),3500);
+// project filters
+$$('#filters button').forEach(b=>b.onclick=()=>{$$('#filters button').forEach(x=>x.classList.remove('on'));b.classList.add('on');const f=b.dataset.f;
+  $$('.pj').forEach(p=>{const show=f==='all'||p.dataset.city===f;p.classList.toggle('hide',!show);p.classList.toggle('big',show&&f==='all'&&p===$('.pj'))})});
+// estimator (rates per sq ft — indicative, to be confirmed by Morphora)
+const RATES=[[1800,2300],[2400,3200],[3300,4500]];let tier=1;
+const inr=v=>v>=1e7?(v/1e7).toFixed(2).replace(/\.?0+$/,'')+' Cr':(v/1e5).toFixed(0)+' L';
+function est(){const a=+$('#area').value;$('#area').style.setProperty('--p',(a-1000)/24000*100+'%');$('#areaOut').innerHTML=a.toLocaleString('en-IN')+' <small>sq ft</small>';
+  const [lo,hi]=RATES[tier];$('#range').textContent=`₹${inr(a*lo)} – ${inr(a*hi)}`;$('#psf').textContent=`₹${lo.toLocaleString('en-IN')} – ${hi.toLocaleString('en-IN')}`;
+  $('#time').textContent=a<=15000?'60 days':a<=20000?'75 days':'90 days';$('#seatOut').innerHTML=Math.round(a/90)+' <small>workstations</small>'}
+$('#area').oninput=est;$$('#tier button').forEach(b=>b.onclick=()=>{$$('#tier button').forEach(x=>x.classList.remove('on'));b.classList.add('on');tier=+b.dataset.t;est()});est();
+// partners grid
+const logos=['Saint-Gobain_logo.png','Honeywell.png','Legrand_.png','Polycab.png','Armstrong-Logo.png','DAIKIN-logo.png','Philips-logo-scaled.jpg','Asian-Paints.png','Greenlam-Logo.png','gyproc-logo.png','Hikvision-logo-scaled.png','Feather-Lite-Logo.jpg'];
+$('#logos').innerHTML=logos.map(l=>`<div><img src="${U}2025/07/${l}" alt="${l.split(/[-_.]/)[0]}" loading="lazy"></div>`).join('');
+// form (demo — connect to WPForms / CRM endpoint)
+$('#form').onsubmit=e=>{e.preventDefault();$('#ok').style.display='block';e.target.querySelector('button').disabled=true};
+</script>
+</body>
+</html>

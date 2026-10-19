@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Morphora Spaces — Workplaces That Work</title>
+<meta name="description" content="Morphora Spaces — commercial office interiors designed and built in 60 days.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --stone:#ECE7DF; --stone-2:#E2DBD0; --paper:#F5F2EC; --char:#151215; --char-2:#221C23; --plum:#8422A2; --plum-l:#C784DE; --brass:#B08D57; --mut:#6F6870; --line:rgba(21,18,21,.14);
+  --disp:"Fraunces",Georgia,serif; --sans:"Inter Tight",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace; --ease:cubic-bezier(.7,0,.2,1); --out:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--stone);color:var(--char);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.5}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.wrap{width:min(1360px,100% - 64px);margin-inline:auto}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.disp{font-family:var(--disp);font-weight:300;letter-spacing:-.035em;line-height:.95;font-variation-settings:"opsz" 144}
+.disp em{font-style:italic;color:var(--plum)}
+/* cursor */
+.cur{position:fixed;top:0;left:0;z-index:150;pointer-events:none;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--plum);transition:width .4s var(--out),height .4s var(--out),margin .4s var(--out),background .3s;display:grid;place-items:center;mix-blend-mode:normal}
+.cur span{font:500 11px var(--mono);letter-spacing:.08em;color:#fff;opacity:0;transition:opacity .3s}
+.cur.big{width:96px;height:96px;margin:-48px 0 0 -48px}
+.cur.big span{opacity:1}
+@media (hover:none){.cur{display:none}}
+
+/* header */
+header{position:relative;z-index:60;mix-blend-mode:difference;color:#fff}
+header .wrap{display:flex;justify-content:space-between;align-items:center;height:92px}
+header .logo img{height:42px;filter:brightness(0) invert(1)}
+header .right{display:flex;gap:34px;align-items:center}
+.menu-t{display:flex;align-items:center;gap:12px}
+.menu-t b{display:grid;gap:5px;width:26px}
+.menu-t b i{height:1.5px;background:currentColor;transition:.4s var(--out)}
+.menu-t b i:last-child{width:60%;justify-self:end}
+.menu-t:hover b i:last-child{width:100%}
+.overlay{position:fixed;inset:0;z-index:55;background:var(--char);color:var(--stone);clip-path:circle(0 at calc(100% - 60px) 46px);transition:clip-path 1s var(--ease);display:grid;grid-template-columns:1.3fr 1fr;padding:140px 64px 50px;gap:40px}
+.overlay.open{clip-path:circle(150% at calc(100% - 60px) 46px)}
+.overlay nav a{display:block;font-family:var(--disp);font-weight:300;font-size:clamp(44px,6.4vw,96px);line-height:1.05;letter-spacing:-.03em;transition:color .3s,padding .5s var(--out)}
+.overlay nav a:hover{color:var(--plum-l);padding-left:24px;font-style:italic}
+.overlay nav a sup{font:12px var(--mono);vertical-align:top;margin-right:14px;color:var(--brass)}
+.overlay aside{align-self:end;display:grid;gap:28px;color:rgba(236,231,223,.7)}
+.overlay aside a{color:var(--stone);font-size:22px}
+
+/* hero */
+.hero{position:relative;z-index:1;padding:78px 0 60px}
+.hero h1{font-size:clamp(64px,11.6vw,196px)}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.08em}
+.hero h1 .ln>span{display:inline-flex;align-items:center;gap:.18em}
+.pill-img{display:inline-block;width:1.9em;height:.78em;border-radius:999px;overflow:hidden;vertical-align:middle;position:relative;top:-.02em}
+.pill-img img{width:100%;height:100%;object-fit:cover}
+.hero-meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;margin-top:60px;align-items:end}
+.hero-meta p{max-width:340px;font-size:17px;color:var(--mut)}
+.hero-meta .mono{color:var(--mut)}
+.circle-btn{justify-self:end;width:150px;height:150px;border-radius:50%;background:var(--char);color:var(--stone);display:grid;place-items:center;text-align:center;font-size:14px;transition:background .4s,transform .3s var(--out);position:relative}
+.circle-btn:hover{background:var(--plum)}
+.circle-btn svg{position:absolute;inset:8px;animation:rot 20s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+/* expanding image */
+.expand{position:relative;z-index:1;height:180vh}
+.expand .stick{position:sticky;top:0;height:100vh;display:grid;place-items:center;overflow:hidden}
+.expand .frame{width:100%;height:100%;overflow:hidden;clip-path:inset(18% 26% 18% 26% round 300px);will-change:clip-path}
+.expand img{width:100%;height:100%;object-fit:cover;transform:scale(1.25);will-change:transform}
+.expand .cap{position:absolute;bottom:40px;left:0;right:0;display:flex;justify-content:space-between;color:#fff;mix-blend-mode:difference}
+
+/* manifesto */
+.manifesto{position:relative;z-index:1;padding:160px 0}
+.manifesto .mono{color:var(--plum);margin-bottom:40px;display:block}
+.manifesto p{font-family:var(--disp);font-weight:300;font-size:clamp(32px,4.4vw,68px);line-height:1.12;letter-spacing:-.025em;max-width:1200px}
+.manifesto p span{opacity:.14;transition:opacity .3s}
+.manifesto p span.on{opacity:1}
+.manifesto p em{font-style:italic;color:var(--plum)}
+
+/* floor plan */
+.plan{position:relative;z-index:1;background:var(--char);color:var(--stone);padding:140px 0}
+.plan-head{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:60px;flex-wrap:wrap}
+.plan-head h2{font-size:clamp(46px,6vw,100px)}
+.plan-head h2 em{color:var(--plum-l)}
+.plan-head p{max-width:340px;color:rgba(236,231,223,.6)}
+.plan-body{display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:stretch}
+.plan svg{width:100%;height:auto;display:block}
+.plan .zone{cursor:pointer}
+.plan .zone rect.z{fill:rgba(236,231,223,.02);stroke:rgba(236,231,223,.35);stroke-width:1.2;transition:fill .4s}
+.plan .zone:hover rect.z,.plan .zone.on rect.z{fill:rgba(132,34,162,.38)}
+.plan .zone text{font-family:var(--mono);font-size:12px;fill:rgba(236,231,223,.75);letter-spacing:.06em;pointer-events:none}
+.plan .zone.on text{fill:#fff}
+.plan .furn{fill:none;stroke:rgba(236,231,223,.22);stroke-width:1;pointer-events:none}
+.plan .dims{font-family:var(--mono);font-size:10px;fill:rgba(236,231,223,.4)}
+.plan .walls{fill:none;stroke:var(--stone);stroke-width:3}
+.zcard{border:1px solid rgba(236,231,223,.15);border-radius:6px;display:flex;flex-direction:column;overflow:hidden}
+.zcard .ph{aspect-ratio:4/3;overflow:hidden;position:relative}
+.zcard .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .7s,transform 1.2s var(--out);transform:scale(1.08)}
+.zcard .ph img.on{opacity:1;transform:none}
+.zcard .bd{padding:28px;flex:1;display:flex;flex-direction:column}
+.zcard .mono{color:var(--brass)}
+.zcard h3{font-family:var(--disp);font-weight:300;font-size:42px;letter-spacing:-.02em;margin:10px 0 12px}
+.zcard p{color:rgba(236,231,223,.65);font-size:15.5px}
+.zcard ul{list-style:none;margin-top:auto;padding-top:22px;display:flex;flex-wrap:wrap;gap:8px}
+.zcard li{font:11px var(--mono);letter-spacing:.05em;text-transform:uppercase;border:1px solid rgba(236,231,223,.2);padding:6px 10px;border-radius:99px}
+.plan-hint{margin-top:20px;color:rgba(236,231,223,.45)}
+
+/* horizontal projects */
+.hz{position:relative;z-index:1}
+.hz .stick{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding-top:60px}
+.hz-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:4vh}
+.hz-head h2{font-size:clamp(46px,6vw,100px)}
+.hz-head .mono{color:var(--mut)}
+.hz-track{display:flex;gap:28px;padding-left:max(32px,calc((100vw - 1360px)/2));will-change:transform}
+.hz-card{flex:0 0 auto;width:clamp(280px,30vw,460px)}
+.hz-card:nth-child(even){margin-top:6vh}
+.hz-card .ph{height:min(54vh,560px);overflow:hidden;border-radius:4px;position:relative}
+.hz-card .ph img{width:100%;height:100%;object-fit:cover;transform:scale(1.15);transition:transform 1.4s var(--out)}
+.hz-card:hover .ph img{transform:scale(1.02)}
+.hz-card .meta{display:flex;justify-content:space-between;align-items:baseline;margin-top:18px;gap:20px}
+.hz-card h3{font-family:var(--disp);font-weight:300;font-size:34px;letter-spacing:-.02em}
+.hz-card .mono{color:var(--mut);text-align:right}
+.hz-end{flex:0 0 auto;width:min(420px,80vw);display:flex;flex-direction:column;justify-content:center;padding-right:60px}
+.hz-end a{font-family:var(--disp);font-weight:300;font-size:56px;line-height:1;letter-spacing:-.03em}
+.hz-end a em{color:var(--plum)}
+.hz-prog{height:1px;background:var(--line);margin-top:50px;position:relative}
+.hz-prog i{position:absolute;inset:0 auto 0 0;background:var(--char);width:0}
+
+/* numbers */
+.nums{position:relative;z-index:1;padding:140px 0;border-top:1px solid var(--line)}
+.nums-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.n{padding-right:30px}
+.n b{display:block;font-family:var(--disp);font-weight:300;font-size:clamp(70px,8vw,140px);letter-spacing:-.05em;line-height:.9}
+.n b sup{font-size:.36em;color:var(--plum);font-style:italic;vertical-align:top;position:relative;top:.3em}
+.n .mono{display:block;color:var(--mut);margin-top:16px;max-width:200px;line-height:1.6}
+
+/* process stacking */
+.proc{position:relative;z-index:1;padding:40px 0 140px}
+.proc-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:60px;gap:30px;flex-wrap:wrap}
+.proc-head h2{font-size:clamp(46px,6vw,100px)}
+.pcard{position:sticky;top:110px;background:var(--paper);border:1px solid var(--line);border-radius:6px;display:grid;grid-template-columns:120px 1fr 1.1fr;gap:40px;padding:40px;min-height:440px;margin-bottom:30px;transform-origin:center top;box-shadow:0 -20px 60px -40px rgba(0,0,0,.3)}
+.pcard:nth-child(2){top:130px}.pcard:nth-child(3){top:150px}.pcard:nth-child(4){top:170px}
+.pcard .k{font-family:var(--disp);font-size:80px;font-weight:300;font-style:italic;color:var(--plum);line-height:.8}
+.pcard h3{font-family:var(--disp);font-weight:300;font-size:clamp(34px,3.4vw,54px);letter-spacing:-.025em;line-height:1}
+.pcard p{color:var(--mut);margin-top:20px;max-width:380px;font-size:16.5px}
+.pcard .mono{color:var(--brass);display:block;margin-top:30px}
+.pcard .ph{border-radius:4px;overflow:hidden}
+.pcard .ph img{width:100%;height:100%;object-fit:cover}
+
+/* services hover list */
+.svc{position:relative;z-index:1;padding:140px 0;background:var(--paper)}
+.svc .mono.lbl{color:var(--plum);display:block;margin-bottom:30px}
+.svc-row{display:grid;grid-template-columns:80px 1fr auto;align-items:center;gap:30px;padding:36px 0;border-top:1px solid var(--line);position:relative;transition:padding .6s var(--out)}
+.svc-row:last-child{border-bottom:1px solid var(--line)}
+.svc-row h3{font-family:var(--disp);font-weight:300;font-size:clamp(40px,5.6vw,92px);letter-spacing:-.035em;line-height:1;transition:font-style .3s,color .3s}
+.svc-row:hover{padding-left:30px}
+.svc-row:hover h3{font-style:italic;color:var(--plum)}
+.svc-row .mono{color:var(--mut)}
+.svc-row .tags{text-align:right;color:var(--mut);max-width:260px}
+.float-img{position:fixed;top:0;left:0;width:340px;height:240px;border-radius:4px;overflow:hidden;pointer-events:none;z-index:20;opacity:0;transform:translate(-50%,-50%) scale(.6) rotate(-6deg);transition:opacity .4s,transform .6s var(--out)}
+.float-img.on{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}
+.float-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s}
+.float-img img.on{opacity:1}
+
+/* quote */
+.quote{position:relative;z-index:1;padding:160px 0;text-align:center}
+.quote blockquote{font-family:var(--disp);font-weight:300;font-size:clamp(30px,3.8vw,58px);line-height:1.15;letter-spacing:-.025em;max-width:1100px;margin:0 auto}
+.quote blockquote em{color:var(--plum)}
+.quote cite{display:block;margin-top:40px;font-style:normal}
+.quote .s{display:block;margin-top:10px;color:#A39AA3;font-size:10.5px}
+
+/* partners text marquee */
+.mq{position:relative;z-index:1;border-block:1px solid var(--line);padding:30px 0;overflow:hidden;white-space:nowrap}
+.mq div{display:inline-flex;gap:60px;animation:mq 50s linear infinite;font-family:var(--disp);font-weight:300;font-size:46px;letter-spacing:-.02em}
+.mq div span:nth-child(odd){font-style:italic;color:var(--plum)}
+.mq div i{font-style:normal;color:var(--brass)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* cta / footer */
+.cta{position:relative;z-index:1;background:var(--char);color:var(--stone);padding:160px 0 40px;overflow:hidden}
+.cta .mono{color:var(--brass)}
+.cta h2{font-size:clamp(70px,13vw,230px);margin:20px 0 60px}
+.cta h2 em{color:var(--plum-l)}
+.cta-row{display:grid;grid-template-columns:1fr 1fr auto;gap:40px;align-items:end;padding-bottom:100px;border-bottom:1px solid rgba(236,231,223,.15)}
+.cta-row a.big{font-family:var(--disp);font-size:clamp(26px,2.6vw,40px);font-weight:300;letter-spacing:-.02em;border-bottom:1px solid rgba(236,231,223,.3);padding-bottom:6px;transition:color .3s,border-color .3s}
+.cta-row a.big:hover{color:var(--plum-l);border-color:var(--plum-l)}
+.mag{width:190px;height:190px;border-radius:50%;background:var(--plum);color:#fff;display:grid;place-items:center;font-size:16px;font-weight:500;transition:transform .4s var(--out),background .3s}
+.mag:hover{background:var(--stone);color:var(--char)}
+.ft{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;padding:60px 0 40px;font-size:15px;color:rgba(236,231,223,.6)}
+.ft .mono{display:block;margin-bottom:18px}
+.ft a{display:block;margin-bottom:8px;transition:color .3s}
+.ft a:hover{color:var(--stone)}
+.wordmark{font-family:var(--disp);font-weight:300;font-size:clamp(70px,17.6vw,300px);letter-spacing:-.06em;line-height:.8;text-align:center;color:transparent;-webkit-text-stroke:1px rgba(236,231,223,.25);margin-top:20px;user-select:none}
+.legal{display:flex;justify-content:space-between;margin-top:30px;color:rgba(236,231,223,.4)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(50px);transition:opacity 1.2s var(--out),transform 1.2s var(--out)}
+.rv.in{opacity:1;transform:none}
+
+@media (max-width:1000px){
+  .wrap{width:calc(100% - 40px)}
+  .hero-meta{grid-template-columns:1fr}
+  .circle-btn{justify-self:start}
+  .plan-body{grid-template-columns:1fr}
+  .nums-grid{grid-template-columns:1fr 1fr;row-gap:60px}
+  .pcard{grid-template-columns:1fr;gap:20px;padding:28px;min-height:auto}
+  .pcard .ph{aspect-ratio:16/9}
+  .pcard .k{font-size:56px}
+  .svc-row{grid-template-columns:50px 1fr}
+  .svc-row .tags{display:none}
+  .cta-row{grid-template-columns:1fr}
+  .ft{grid-template-columns:1fr 1fr}
+  .overlay{grid-template-columns:1fr;padding:120px 24px 40px}
+  .hz .stick{position:static;height:auto;padding:100px 0}
+  .hz{height:auto!important}
+  .hz-track{transform:none!important;overflow-x:auto;scroll-snap-type:x mandatory;padding-right:20px;scrollbar-width:none}
+  .hz-card{scroll-snap-align:start;width:78vw}
+  .hz-card .ph{height:auto;aspect-ratio:4/5}
+  .hz-card:nth-child(even){margin-top:0}
+  .hz-prog{display:none}
+  .float-img{display:none}
+}
+@media (max-width:640px){
+  .hero{padding-top:38px}
+  .hero-meta{margin-top:40px;gap:24px}
+  .expand{height:130vh}
+  .manifesto,.plan,.nums,.svc,.quote{padding:100px 0}
+  .hz-head{flex-direction:column;align-items:flex-start;gap:12px}
+  .nums-grid{grid-template-columns:1fr 1fr}
+  .n b{font-size:64px}
+  .zcard h3{font-size:34px}
+  .mq div{font-size:30px}
+  .cta{padding-top:110px}
+  .legal{flex-direction:column;gap:6px}
+  .mag{width:150px;height:150px}
+  header .right .mono.ph{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="cur" id="cur"><span>VIEW</span></div>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="../../index.html"><img src="../../wp-content/uploads/2025/06/Morphora-Logo-1-e1758320614708.png" alt="Morphora Spaces"></a>
+    <div class="right">
+      <a class="mono ph" href="tel:+917719155155">+91 77191 55155</a>
+      <button class="menu-t mono" id="menuT" aria-label="Open menu"><span id="menuL">Menu</span><b><i></i><i></i></b></button>
+    </div>
+  </div>
+</header>
+<div class="overlay" id="overlay">
+  <nav>
+    <a href="#plan"><sup>01</sup>Design &amp; Build</a>
+    <a href="../../real-estate/index.html"><sup>02</sup>Real Estate</a>
+    <a href="../../pmc/index.html"><sup>03</sup>PMC</a>
+    <a href="#work"><sup>04</sup>Work</a>
+    <a href="../../about/index.html"><sup>05</sup>Studio</a>
+    <a href="#contact"><sup>06</sup>Contact</a>
+  </nav>
+  <aside>
+    <div><span class="mono">Call</span><br><a href="tel:+917719155155">+91 77191 55155</a></div>
+    <div><span class="mono">Write</span><br><a href="../../contact/index.html">Start a project →</a></div>
+    <div class="mono">Mumbai · Thane · Pune · Ahmedabad · Bengaluru · Delhi +</div>
+  </aside>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <h1 class="disp">
+      <span class="ln"><span>Workplaces</span></span>
+      <span class="ln"><span>that <span class="pill-img"><img src="../../wp-content/uploads/2025/10/petr-magera-P5TDvxkHWss-unsplash-scaled.jpg" alt=""></span> <em>work.</em></span></span>
+    </h1>
+    <div class="hero-meta">
+      <span class="mono">( Commercial interiors — est. Mumbai )</span>
+      <p>We design and build offices that make teams sharper and brands unmistakable — delivered, start to finish, in sixty days.</p>
+      <a class="circle-btn" href="#contact" data-cur="TALK">
+        <svg viewBox="0 0 134 134"><defs><path id="cp" d="M67,67 m-56,0 a56,56 0 1,1 112,0 a56,56 0 1,1 -112,0"/></defs><text fill="currentColor" font-size="10" letter-spacing="3.4" font-family="JetBrains Mono"><textPath href="#cp">START A PROJECT · 60 DAYS · START A PROJECT · </textPath></text></svg>
+        <span>Let’s talk ↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- EXPANDING IMAGE -->
+<section class="expand" id="expand">
+  <div class="stick">
+    <div class="frame" id="xFrame"><img id="xImg" src="../../wp-content/uploads/2025/10/ADI8415-scaled.jpg" alt="Festival office, Mumbai"></div>
+    <div class="cap wrap mono"><span>Festival — Mumbai</span><span>3,000 sq ft · 60 days</span></div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section class="manifesto">
+  <div class="wrap">
+    <span class="mono">( 01 — Approach )</span>
+    <p id="mf">An office is not a backdrop. It is a <em>business tool</em> — it recruits, it retains, it closes deals. So we plan every square foot around how your people think, meet and move, then build it with one team, one budget and one fixed date.</p>
+  </div>
+</section>
+
+<!-- FLOOR PLAN -->
+<section class="plan" id="plan">
+  <div class="wrap">
+    <div class="plan-head">
+      <div><span class="mono" style="color:var(--brass)">( 02 — Anatomy of an office )</span><h2 class="disp" style="margin-top:20px">Every zone, <em>by design.</em></h2></div>
+      <p>Explore a typical Morphora floor. Select a zone to see how we approach it.</p>
+    </div>
+    <div class="plan-body">
+      <div>
+        <svg viewBox="0 0 1000 620" id="planSvg" role="img" aria-label="Interactive office floor plan">
+          <g class="dims"><text x="0" y="14">A — 100'</text><text x="940" y="14">N ↑</text></g>
+          <!-- zones -->
+          <g class="zone" data-z="0"><rect class="z" x="20" y="400" width="240" height="200"/><text x="36" y="426">RECEPTION</text>
+            <path class="furn" d="M60 520h140v30H60zM90 470a20 20 0 1 0 0.1 0M180 470a20 20 0 1 0 0.1 0"/></g>
+          <g class="zone" data-z="1"><rect class="z" x="260" y="30" width="440" height="330"/><text x="276" y="56">OPEN WORKSTATIONS</text>
+            <path class="furn" d="M300 90h160v40H300zM300 160h160v40H300zM300 230h160v40H300zM300 300h160v40H300zM500 90h160v40H500zM500 160h160v40H500zM500 230h160v40H500zM500 300h160v40H500zM380 90v40M380 160v40M380 230v40M380 300v40M580 90v40M580 160v40M580 230v40M580 300v40"/></g>
+          <g class="zone" data-z="2"><rect class="z" x="700" y="30" width="280" height="190"/><text x="716" y="56">CABINS</text>
+            <path class="furn" d="M793 30v190M886 30v190M720 120h50v30h-50zM813 120h50v30h-50zM906 120h50v30h-50z"/></g>
+          <g class="zone" data-z="3"><rect class="z" x="700" y="220" width="280" height="200"/><text x="716" y="246">BOARDROOM</text>
+            <path class="furn" d="M760 290h160v60H760zM770 280h10M800 280h10M830 280h10M860 280h10M890 280h10M770 360h10M800 360h10M830 360h10M860 360h10M890 360h10"/></g>
+          <g class="zone" data-z="4"><rect class="z" x="260" y="360" width="260" height="240"/><text x="276" y="386">BREAKOUT</text>
+            <path class="furn" d="M300 430h90v40h-90zM300 470h40v60h-40zM450 470a30 30 0 1 0 0.1 0M330 560h150"/></g>
+          <g class="zone" data-z="5"><rect class="z" x="520" y="360" width="180" height="240"/><text x="536" y="386">CAFÉ</text>
+            <path class="furn" d="M540 410h140v26H540zM580 490a18 18 0 1 0 0.1 0M650 490a18 18 0 1 0 0.1 0M580 560a18 18 0 1 0 0.1 0M650 560a18 18 0 1 0 0.1 0"/></g>
+          <g class="zone" data-z="6"><rect class="z" x="20" y="30" width="240" height="370"/><text x="36" y="56">FOCUS &amp; PODS</text>
+            <path class="furn" d="M50 90h80v80H50zM150 90h80v80h-80zM50 200h80v80H50zM150 200h80v80h-80zM50 310h180v60H50z"/></g>
+          <g class="zone" data-z="3"><rect class="z" x="700" y="420" width="280" height="180"/><text x="716" y="446">MEETING ROOMS</text>
+            <path class="furn" d="M840 420v180M730 490h80v40h-80zM870 490h80v40h-80z"/></g>
+          <rect class="walls" x="20" y="30" width="960" height="570"/>
+          <path d="M20 470v60" stroke="var(--char)" stroke-width="6"/>
+        </svg>
+        <p class="plan-hint mono">↳ Hover or tap a zone</p>
+      </div>
+      <div class="zcard">
+        <div class="ph" id="zPh"></div>
+        <div class="bd"><span class="mono" id="zK">Zone 01 · ~8% of floor</span><h3 id="zT">Reception</h3><p id="zD"></p><ul id="zL"></ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HORIZONTAL WORK -->
+<section class="hz" id="work">
+  <div class="stick">
+    <div class="wrap hz-head"><h2 class="disp">Selected <em>work</em></h2><span class="mono">( 03 — 150+ offices delivered )</span></div>
+    <div class="hz-track" id="hzTrack">
+      <a class="hz-card" href="../../portfolio/lafarge-holcim/index.html" data-cur="VIEW"><div class="ph"><img src="../../wp-content/uploads/2025/10/IMG_20200919_174008-scaled.jpg" alt=""></div><div class="meta"><h3>Lafarge Holcim</h3><span class="mono">Mumbai<br>18,000 sq ft</span></div></a>
+      <a class="hz-card" href="../../portfolio/codal-ahmedabad/index.html" data-cur="VIEW"><div class="ph"><img src="../../wp-content/uploads/2025/10/Lounge-Area-1024x731.jpg" alt=""></div><div class="meta"><h3>Codal</h3><span class="mono">Ahmedabad<br>12,000 sq ft</span></div></a>
+      <a class="hz-card" href="../../portfolio/festival-mumbai/index.html" data-cur="VIEW"><div class="ph"><img src="../../wp-content/uploads/2025/10/ADI8358-scaled.jpg" alt=""></div><div class="meta"><h3>Festival</h3><span class="mono">Mumbai<br>3,000 sq ft</span></div></a>
+      <a class="hz-card" href="../../portfolio/ishan-tech-ahmedabad/index.html" data-cur="VIEW"><div class="ph"><img src="../../wp-content/uploads/2025/10/MicrosoftTeams-image-51-1024x731.jpg" alt=""></div><div class="meta"><h3>Ishan Tech</h3><span class="mono">Ahmedabad<br>5,000 sq ft</span></div></a>
+      <a class="hz-card" href="../../portfolio/gro-value-mumbai/index.html" data-cur="VIEW"><div class="ph"><img src="../../wp-content/uploads/2025/10/office-interior-design-santacruz-mumbai-grovalue09-3-1024x683.jpg" alt=""></div><div class="meta"><h3>Gro Value</h3><span class="mono">Mumbai<br>2,500 sq ft</span></div></a>
+      <a class="hz-card" href="../../portfolio/i-i-fidelis-thane/index.html" data-cur="VIEW"><div class="ph"><img src="../../wp-content/uploads/2025/10/20-I-I-MD-CABIN-1-1024x684.jpg" alt=""></div><div class="meta"><h3>I &amp; I Fidelis</h3><span class="mono">Thane<br>2,000 sq ft</span></div></a>
+      <div class="hz-end"><span class="mono" style="color:var(--mut);margin-bottom:20px">( Full portfolio )</span><a href="../../portfolio/index.html">See all <em>projects</em> ↗</a></div>
+    </div>
+    <div class="wrap"><div class="hz-prog"><i id="hzProg"></i></div></div>
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<section class="nums">
+  <div class="wrap nums-grid">
+    <div class="n rv"><b><span data-c="60">0</span><sup>d</sup></b><span class="mono">Concept to handover, fixed</span></div>
+    <div class="n rv"><b><span data-c="2">0</span><sup>M+</sup></b><span class="mono">Sq. ft. of workplace designed</span></div>
+    <div class="n rv"><b><span data-c="150">0</span><sup>+</sup></b><span class="mono">Offices designed &amp; built</span></div>
+    <div class="n rv"><b><span data-c="100">0</span><sup>%</sup></b><span class="mono">Clients who return for their next office</span></div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="proc">
+  <div class="wrap">
+    <div class="proc-head"><h2 class="disp">Sixty days, <em>four moves.</em></h2><span class="mono" style="color:var(--mut)">( 04 — Process )</span></div>
+    <div>
+      <article class="pcard"><span class="k">01</span><div><h3>Survey &amp; brief</h3><p>We walk your floor, measure every wall and sit with your teams to understand how work really happens.</p><span class="mono">Days 01 — 07</span></div><div class="ph"><img src="../../wp-content/uploads/2025/10/IMG_20200919_173518-scaled.jpg" alt=""></div></article>
+      <article class="pcard"><span class="k">02</span><div><h3>Design &amp; plan</h3><p>Layouts, material palettes and photoreal 3D — refined with you until every zone earns its square footage.</p><span class="mono">Days 08 — 17</span></div><div class="ph"><img src="../../wp-content/uploads/2025/10/pooja-singh-CJVG-BAz4-k-unsplash-scaled.jpg" alt=""></div></article>
+      <article class="pcard"><span class="k">03</span><div><h3>Quote &amp; commit</h3><p>A transparent, line-item quote built around your budget — and a dated plan we sign our name to.</p><span class="mono">Days 18 — 21</span></div><div class="ph"><img src="../../wp-content/uploads/2025/10/ADI8376-scaled.jpg" alt=""></div></article>
+      <article class="pcard"><span class="k">04</span><div><h3>Build &amp; hand over</h3><p>Civil, MEP, joinery and furniture run in parallel under one PMC. You get the keys, SOPs and a maintenance kit.</p><span class="mono">Days 22 — 60</span></div><div class="ph"><img src="../../wp-content/uploads/2025/10/IMG_1675-scaled.jpg" alt=""></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="svc" id="svc">
+  <div class="wrap">
+    <span class="mono lbl">( 05 — Services )</span>
+    <a class="svc-row" href="../../index.html" data-i="0"><span class="mono">01</span><h3>Design &amp; Build</h3><span class="mono tags">Planning · 3D · Civil · MEP · Furniture</span></a>
+    <a class="svc-row" href="../../real-estate/index.html" data-i="1"><span class="mono">02</span><h3>Real Estate Advisory</h3><span class="mono tags">Site search · Feasibility · Leasing</span></a>
+    <a class="svc-row" href="../../pmc/index.html" data-i="2"><span class="mono">03</span><h3>Project Management</h3><span class="mono tags">Vendors · Cost · Quality · Time</span></a>
+    <a class="svc-row" href="../../contact/index.html" data-i="3"><span class="mono">04</span><h3>Handover &amp; Care</h3><span class="mono tags">SOPs · Maintenance · Optimisation</span></a>
+  </div>
+  <div class="float-img" id="flt">
+    <img src="../../wp-content/uploads/2025/10/ADI8427-scaled.jpg" alt="">
+    <img src="../../wp-content/uploads/2025/10/photo-1582407947304-fd86f028f716-1-scaled.jpg" alt="">
+    <img src="../../wp-content/uploads/2025/10/IMG_20200919_173443-scaled.jpg" alt="">
+    <img src="../../wp-content/uploads/2025/10/openart-image_jk5Yu86G_1759864469491_raw-scaled.jpg" alt="">
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section class="quote">
+  <div class="wrap rv">
+    <span class="mono" style="color:var(--plum)">( 06 — In their words )</span>
+    <blockquote style="margin-top:40px">“They treated our office like a <em>business decision,</em> not a decoration project — and handed it over on the day they promised.”</blockquote>
+    <cite class="mono">Client Name — Director, Consulting firm</cite>
+    <span class="s mono">Sample quote — replace with client testimonial</span>
+  </div>
+</section>
+
+<div class="mq" aria-label="Material partners"><div id="mq"></div></div>
+
+<!-- CTA + FOOTER -->
+<section class="cta" id="contact">
+  <div class="wrap">
+    <span class="mono">( 07 — Next )</span>
+    <h2 class="disp">Let’s build <em>yours.</em></h2>
+    <div class="cta-row">
+      <div><span class="mono" style="color:rgba(236,231,223,.5)">Call us</span><br><br><a class="big" href="tel:+917719155155">+91 77191 55155</a></div>
+      <div><span class="mono" style="color:rgba(236,231,223,.5)">Or message</span><br><br><a class="big" href="https://wa.me/917719155155">WhatsApp ↗</a></div>
+      <a class="mag" href="../../contact/index.html" id="mag" data-cur="GO">Start a project</a>
+    </div>
+    <div class="ft">
+      <div><span class="mono">Studio</span><a href="../../about/index.html">About</a><a href="../../careers/index.html">Careers</a><a href="../../resources/index.html">Journal</a></div>
+      <div><span class="mono">Services</span><a href="../../index.html">Design &amp; Build</a><a href="../../real-estate/index.html">Real Estate</a><a href="../../pmc/index.html">PMC</a></div>
+      <div><span class="mono">Cities</span><a href="../../office-interior-designer-in-mumbai/index.html">Mumbai</a><a href="../../office-interior-designer-in-pune/index.html">Pune</a><a href="../../office-interior-designer-in-bengaluru/index.html">Bengaluru</a></div>
+      <div><span class="mono">&nbsp;</span><a href="../../office-interior-designer-in-ahmedabad/index.html">Ahmedabad</a><a href="../../office-interior-designer-in-delhi/index.html">Delhi</a><a href="../../office-interior-designer-in-hyderabad/index.html">Hyderabad</a></div>
+    </div>
+    <div class="wordmark">Morphora</div>
+    <div class="legal mono"><span>© 2025 Morphora Spaces</span><span><a href="../../privacy-policy/index.html">Privacy</a> · <a href="../../terms-and-conditions/index.html">Terms</a></span></div>
+  </div>
+</section>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const U='../../wp-content/uploads/2025/10/';
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+// menu
+$('#menuT').onclick=()=>{const o=$('#overlay').classList.toggle('open');$('#menuL').textContent=o?'Close':'Menu'};
+$$('#overlay a').forEach(a=>a.onclick=()=>{$('#overlay').classList.remove('open');$('#menuL').textContent='Menu'});
+
+// cursor
+const cur=$('#cur');let mx=innerWidth/2,my=innerHeight/2,cx=mx,cy=my;
+addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){cx+=(mx-cx)*.2;cy+=(my-cy)*.2;cur.style.transform=`translate(${cx}px,${cy}px)`;requestAnimationFrame(loop)})();
+$$('[data-cur]').forEach(el=>{el.onmouseenter=()=>{cur.querySelector('span').textContent=el.dataset.cur;cur.classList.add('big')};el.onmouseleave=()=>cur.classList.remove('big')});
+
+// reveal + counters
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});$$('.rv').forEach(el=>io.observe(el));
+const co=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,n=+el.dataset.c,t0=performance.now();(function f(t){const p=clamp((t-t0)/2000);el.textContent=Math.round(n*(1-Math.pow(1-p,4)));p<1&&requestAnimationFrame(f)})(t0);co.unobserve(el)}),{threshold:.5});$$('[data-c]').forEach(el=>co.observe(el));
+
+// manifesto words
+const mf=$('#mf');mf.innerHTML=mf.innerHTML.replace(/(<em>.*?<\/em>)|([^\s<]+)/g,(m)=>`<span>${m}</span>`);const words=$$('#mf>span');
+
+// floor plan zones
+const Z=[
+ ['Reception','~8%','The handshake of your brand. We design arrival sequences that tell visitors who you are in five seconds.',['Brand wall','Waiting lounge','Access control'],'IMG_20200919_174146-scaled.jpg'],
+ ['Open workstations','~38%','Rows that breathe: acoustic control, daylight-first planning and cable management that disappears.',['Benching','Storage','Task lighting','Acoustics'],'IMG_20200919_173813-scaled.jpg'],
+ ['Cabins','~10%','Private offices that stay connected to the floor through glass, sight lines and shared light.',['Glazed partitions','Joinery','Privacy film'],'ADI8340-scaled.jpg'],
+ ['Boardroom & meeting','~14%','Rooms built for decisions — sized right, wired for hybrid, and comfortable for a two-hour review.',['AV & VC','Acoustic panels','Booking'],'room-used-official-event-1-scaled.jpg'],
+ ['Breakout','~12%','Where ideas get loud. Informal seating and colour that give the team a reason to come in.',['Soft seating','Games','Biophilia'],'IMG_1650-scaled.jpg'],
+ ['Café','~8%','A pantry upgraded into the social heart of the office — the place culture actually happens.',['Pantry','Counter dining','MEP'],'IMG_1645-scaled.jpg'],
+ ['Focus & pods','~10%','Quiet rooms, phone booths and pods for deep work and private calls.',['Phone booths','Focus rooms','Sound masking'],'IMG_1675-scaled.jpg']];
+$('#zPh').innerHTML=Z.map(z=>`<img src="${U+z[4]}" alt="${z[0]}" loading="lazy">`).join('');
+const zImgs=$$('#zPh img'),zones=$$('.zone');
+function zone(i){zones.forEach(g=>g.classList.toggle('on',+g.dataset.z===i));zImgs.forEach((im,k)=>im.classList.toggle('on',k===i));const z=Z[i];
+  $('#zK').textContent=`Zone ${String(i+1).padStart(2,'0')} · ${z[1]} of floor`;$('#zT').textContent=z[0];$('#zD').textContent=z[2];$('#zL').innerHTML=z[3].map(x=>`<li>${x}</li>`).join('')}
+zones.forEach(g=>{g.onmouseenter=g.onclick=()=>zone(+g.dataset.z)});zone(0);
+
+// services floating image
+const flt=$('#flt'),fImgs=$$('#flt img');let fx=0,fy=0,tx=0,ty=0;
+$$('.svc-row').forEach(r=>{r.onmouseenter=()=>{flt.classList.add('on');fImgs.forEach((im,k)=>im.classList.toggle('on',k===+r.dataset.i))};r.onmouseleave=()=>flt.classList.remove('on')});
+addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY});
+(function fl(){fx+=(tx-fx)*.12;fy+=(ty-fy)*.12;flt.style.left=fx+'px';flt.style.top=fy+'px';requestAnimationFrame(fl)})();
+
+// magnetic button
+const mag=$('#mag');mag.onmousemove=e=>{const r=mag.getBoundingClientRect();mag.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.3}px,${(e.clientY-r.top-r.height/2)*.3}px)`};mag.onmouseleave=()=>mag.style.transform='';
+
+// partners marquee
+const P=['Saint-Gobain','Armstrong','Honeywell','Legrand','Polycab','Daikin','Philips','Gyproc','Asian Paints','Greenlam','Merino','Featherlite','Hikvision','Wipro','Welspun','CommScope'];
+$('#mq').innerHTML=[...P,...P].map(p=>`<span>${p}</span><i>✦</i>`).join('');
+
+// scroll-driven: expand image, manifesto, horizontal
+const ex=$('#expand'),xf=$('#xFrame'),xi=$('#xImg'),hz=$('#work'),track=$('#hzTrack'),hp=$('#hzProg');
+function sizeHz(){if(innerWidth>1000){hz.style.height=(track.scrollWidth-innerWidth+innerHeight+100)+'px'}else hz.style.height=''}
+function onScroll(){
+  const r=ex.getBoundingClientRect(),p=clamp(-r.top/(r.height-innerHeight));
+  const ins=(1-p)*18,side=(1-p)*26,rad=(1-p)*300;xf.style.clipPath=`inset(${ins}% ${side}% ${ins}% ${side}% round ${rad}px)`;xi.style.transform=`scale(${1.25-p*.25})`;
+  const mr=mf.getBoundingClientRect(),mp=clamp((innerHeight*.85-mr.top)/(mr.height+innerHeight*.3));const lit=Math.round(mp*words.length);words.forEach((w,i)=>w.classList.toggle('on',i<lit));
+  if(innerWidth>1000){const hr=hz.getBoundingClientRect(),hpv=clamp(-hr.top/(hr.height-innerHeight));track.style.transform=`translateX(${-hpv*(track.scrollWidth-innerWidth+80)}px)`;hp.style.width=hpv*100+'%'}
+}
+addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',()=>{sizeHz();onScroll()});addEventListener('load',()=>{sizeHz();onScroll()});sizeHz();onScroll();
+</script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Morphora Design Directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3EFE9;--ink:#151215;--mut:#6F6870;--plum:#8422A2;--line:rgba(21,18,21,.12)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Inter Tight",system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(1280px,100% - 32px);margin:auto;padding:56px 0 80px}
+header{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+header img{height:42px}
+header span{font-size:13px;color:var(--mut);letter-spacing:.06em;text-transform:uppercase}
+h1{font-family:"Fraunces",serif;font-weight:300;font-size:clamp(44px,7vw,96px);letter-spacing:-.035em;line-height:1;margin:70px 0 18px}
+h1 em{color:var(--plum)}
+.lead{color:var(--mut);max-width:620px;font-size:18px;line-height:1.55}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:60px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .5s cubic-bezier(.16,1,.3,1),box-shadow .5s}
+.card:hover{transform:translateY(-8px);box-shadow:0 30px 60px -30px rgba(21,18,21,.35)}
+.shot{aspect-ratio:16/10;overflow:hidden;border-bottom:1px solid var(--line)}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform 1.2s cubic-bezier(.16,1,.3,1)}
+.card:hover .shot img{transform:scale(1.04)}
+.body{padding:26px 26px 28px;display:flex;flex-direction:column;flex:1}
+.num{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--plum)}
+.card h2{font-family:"Fraunces",serif;font-weight:300;font-size:34px;letter-spacing:-.02em;margin:8px 0 10px}
+.card p{color:var(--mut);font-size:15px;line-height:1.55}
+.card ul{list-style:none;margin:18px 0 24px;display:grid;gap:8px;font-size:14px}
+.card li::before{content:"—";color:var(--plum);margin-right:10px}
+.meta{margin-top:auto;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:18px;font-size:13px;color:var(--mut)}
+.meta b{color:var(--ink);font-weight:600}
+.open{font-weight:600;color:var(--plum)}
+footer{margin-top:60px;color:var(--mut);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media (max-width:1000px){.grid{grid-template-columns:1fr}.wrap{padding-top:32px}h1{margin-top:44px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><img src="../wp-content/uploads/2025/06/Morphora-Logo-1-e1758320614708.png" alt="Morphora Spaces"><span>Homepage redesign · 3 directions</span></header>
+  <h1>Three directions for a <em>new look.</em></h1>
+  <p class="lead">Each concept is a working, responsive homepage built with Morphora’s own project photography. Open each one and scroll through. Most of the motion only shows on scroll.</p>
+  <div class="grid">
+    <a class="card" href="design-1-refined/index.html">
+      <div class="shot"><img src="previews/design-1-refined.jpg" alt="Design 1 preview"></div>
+      <div class="body">
+        <span class="num">Direction 01</span><h2>Refined</h2>
+        <p>The current website, elevated. Same structure and content, with new type, a cleaner palette and motion throughout.</p>
+        <ul><li>DM Serif Display + Outfit typography</li><li>Hero slideshow with animated text and a rotating 60-day badge</li><li>Scroll reveals, counters, parallax and a process line that fills as you scroll</li><li>Draggable portfolio carousel and a partner logo marquee</li></ul>
+        <div class="meta"><span>Change level: <b>Low</b></span><span class="open">Open →</span></div>
+      </div>
+    </a>
+    <a class="card" href="design-2-reimagined/index.html">
+      <div class="shot"><img src="previews/design-2-reimagined.jpg" alt="Design 2 preview"></div>
+      <div class="body">
+        <span class="num">Direction 02</span><h2>Reimagined</h2>
+        <p>Far less text and far more value. Built around what a business owner wants to know: how long it takes, what it costs, and what you have built before.</p>
+        <ul><li>Interactive 60-day timeline you can drag</li><li>Fit-out cost estimator (area × finish level)</li><li>Office zones, sectors served and city-filtered projects</li><li>Callback form, services cards and a short FAQ</li></ul>
+        <div class="meta"><span>Change level: <b>Medium</b></span><span class="open">Open →</span></div>
+      </div>
+    </a>
+    <a class="card" href="design-3-signature/index.html">
+      <div class="shot"><img src="previews/design-3-signature.jpg" alt="Design 3 preview"></div>
+      <div class="body">
+        <span class="num">Direction 03</span><h2>Signature</h2>
+        <p>An editorial, architecture-studio feel that positions Morphora as a premium workplace brand rather than a vendor.</p>
+        <ul><li>60-day preloader, custom cursor, blueprint grid</li><li>Interactive office floor plan, zone by zone</li><li>Scroll-expanding hero image and a horizontal project gallery</li><li>Stacked process cards and a hover-reveal services list</li></ul>
+        <div class="meta"><span>Change level: <b>High</b></span><span class="open">Open →</span></div>
+      </div>
+    </a>
+  </div>
+  <footer><span>Concepts for review. Testimonial text is placeholder copy.</span><span><a href="../index.html">Current website →</a></span></footer>
+</div>
+</body>
+</html>
