@@ -7,11 +7,11 @@
 <meta name="description" content="Morphora Spaces — commercial office interiors designed and built in 60 days.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --stone:#ECE7DF; --stone-2:#E2DBD0; --paper:#F5F2EC; --char:#151215; --char-2:#221C23; --plum:#8422A2; --plum-l:#C784DE; --brass:#B08D57; --mut:#6F6870; --line:rgba(21,18,21,.14);
-  --disp:"DM Serif Display",Georgia,serif; --sans:"DM Sans",system-ui,sans-serif; --mono:"DM Sans",system-ui,sans-serif; --ease:cubic-bezier(.7,0,.2,1); --out:cubic-bezier(.16,1,.3,1);
+  --disp:"Manrope",system-ui,sans-serif; --sans:"Manrope",system-ui,sans-serif; --mono:"Manrope",system-ui,sans-serif; --ease:cubic-bezier(.7,0,.2,1); --out:cubic-bezier(.16,1,.3,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--sans);background:var(--stone);color:var(--char);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.5}
@@ -20,8 +20,8 @@ a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .wrap{width:min(1360px,100% - 64px);margin-inline:auto}
 .mono{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase}
-.disp{font-family:var(--disp);font-weight:400;letter-spacing:-.015em;line-height:1}
-.disp em{font-style:italic;color:var(--plum)}
+.disp{font-family:var(--disp);font-weight:500;letter-spacing:-.035em;line-height:1}
+.disp em{font-style:normal;color:var(--plum)}
 /* cursor */
 .cur{position:fixed;top:0;left:0;z-index:150;pointer-events:none;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--plum);transition:width .4s var(--out),height .4s var(--out),margin .4s var(--out),background .3s;display:grid;place-items:center;mix-blend-mode:normal}
 .cur span{font:500 11px var(--mono);letter-spacing:.08em;color:#fff;opacity:0;transition:opacity .3s}
@@ -41,8 +41,8 @@ header .right{display:flex;gap:34px;align-items:center}
 .menu-t:hover b i:last-child{width:100%}
 .overlay{position:fixed;inset:0;z-index:55;background:var(--char);color:var(--stone);clip-path:circle(0 at calc(100% - 60px) 46px);transition:clip-path 1s var(--ease);display:grid;grid-template-columns:1.3fr 1fr;padding:140px 64px 50px;gap:40px}
 .overlay.open{clip-path:circle(150% at calc(100% - 60px) 46px)}
-.overlay nav a{display:block;font-family:var(--disp);font-weight:400;font-size:clamp(44px,6.4vw,96px);line-height:1.05;letter-spacing:-.01em;transition:color .3s,padding .5s var(--out)}
-.overlay nav a:hover{color:var(--plum-l);padding-left:24px;font-style:italic}
+.overlay nav a{display:block;font-family:var(--disp);font-weight:500;font-size:clamp(44px,6.4vw,96px);line-height:1.05;letter-spacing:-.03em;transition:color .3s,padding .5s var(--out)}
+.overlay nav a:hover{color:var(--plum-l);padding-left:24px;font-style:normal}
 .overlay nav a sup{font:12px var(--mono);vertical-align:top;margin-right:14px;color:var(--brass)}
 .overlay aside{align-self:end;display:grid;gap:28px;color:rgba(236,231,223,.7)}
 .overlay aside a{color:var(--stone);font-size:22px}
@@ -72,10 +72,10 @@ header .right{display:flex;gap:34px;align-items:center}
 /* manifesto */
 .manifesto{position:relative;z-index:1;padding:160px 0}
 .manifesto .mono{color:var(--plum);margin-bottom:40px;display:block}
-.manifesto p{font-family:var(--disp);font-weight:400;font-size:clamp(32px,4.4vw,68px);line-height:1.12;letter-spacing:-.01em;max-width:1200px}
+.manifesto p{font-family:var(--disp);font-weight:400;font-size:clamp(32px,4.4vw,68px);line-height:1.12;letter-spacing:-.03em;max-width:1200px}
 .manifesto p span{opacity:.14;transition:opacity .3s}
 .manifesto p span.on{opacity:1}
-.manifesto p em{font-style:italic;color:var(--plum)}
+.manifesto p em{font-style:normal;color:var(--plum)}
 
 /* floor plan */
 .plan{position:relative;z-index:1;background:var(--char);color:var(--stone);padding:140px 0}
@@ -99,7 +99,7 @@ header .right{display:flex;gap:34px;align-items:center}
 .zcard .ph img.on{opacity:1;transform:none}
 .zcard .bd{padding:28px;flex:1;display:flex;flex-direction:column}
 .zcard .mono{color:var(--brass)}
-.zcard h3{font-family:var(--disp);font-weight:400;font-size:42px;letter-spacing:-.01em;margin:10px 0 12px}
+.zcard h3{font-family:var(--disp);font-weight:500;font-size:42px;letter-spacing:-.03em;margin:10px 0 12px}
 .zcard p{color:rgba(236,231,223,.65);font-size:15.5px}
 .zcard ul{list-style:none;margin-top:auto;padding-top:22px;display:flex;flex-wrap:wrap;gap:8px}
 .zcard li{font:11px var(--mono);letter-spacing:.05em;text-transform:uppercase;border:1px solid rgba(236,231,223,.2);padding:6px 10px;border-radius:99px}
@@ -118,10 +118,10 @@ header .right{display:flex;gap:34px;align-items:center}
 .hz-card .ph img{width:100%;height:100%;object-fit:cover;transform:scale(1.15);transition:transform 1.4s var(--out)}
 .hz-card:hover .ph img{transform:scale(1.02)}
 .hz-card .meta{display:flex;justify-content:space-between;align-items:baseline;margin-top:18px;gap:20px}
-.hz-card h3{font-family:var(--disp);font-weight:400;font-size:34px;letter-spacing:-.01em}
+.hz-card h3{font-family:var(--disp);font-weight:500;font-size:34px;letter-spacing:-.03em}
 .hz-card .mono{color:var(--mut);text-align:right}
 .hz-end{flex:0 0 auto;width:min(420px,80vw);display:flex;flex-direction:column;justify-content:center;padding-right:60px}
-.hz-end a{font-family:var(--disp);font-weight:400;font-size:56px;line-height:1;letter-spacing:-.01em}
+.hz-end a{font-family:var(--disp);font-weight:500;font-size:56px;line-height:1;letter-spacing:-.03em}
 .hz-end a em{color:var(--plum)}
 .hz-prog{height:1px;background:var(--line);margin-top:50px;position:relative}
 .hz-prog i{position:absolute;inset:0 auto 0 0;background:var(--char);width:0}
@@ -130,8 +130,8 @@ header .right{display:flex;gap:34px;align-items:center}
 .nums{position:relative;z-index:1;padding:140px 0;border-top:1px solid var(--line)}
 .nums-grid{display:grid;grid-template-columns:repeat(4,1fr)}
 .n{padding-right:30px}
-.n b{display:block;font-family:var(--disp);font-weight:400;font-size:clamp(70px,8vw,140px);letter-spacing:-.01em;line-height:.9}
-.n b sup{font-size:.36em;color:var(--plum);font-style:italic;vertical-align:top;position:relative;top:.3em}
+.n b{display:block;font-family:var(--disp);font-weight:500;font-size:clamp(70px,8vw,140px);letter-spacing:-.03em;line-height:.9}
+.n b sup{font-size:.36em;color:var(--plum);font-style:normal;vertical-align:top;position:relative;top:.3em}
 .n .mono{display:block;color:var(--mut);margin-top:16px;max-width:200px;line-height:1.6}
 
 /* process stacking */
@@ -140,8 +140,8 @@ header .right{display:flex;gap:34px;align-items:center}
 .proc-head h2{font-size:clamp(46px,6vw,100px)}
 .pcard{position:sticky;top:110px;background:var(--paper);border:1px solid var(--line);border-radius:6px;display:grid;grid-template-columns:120px 1fr 1.1fr;gap:40px;padding:40px;min-height:440px;margin-bottom:30px;transform-origin:center top;box-shadow:0 -20px 60px -40px rgba(0,0,0,.3)}
 .pcard:nth-child(2){top:130px}.pcard:nth-child(3){top:150px}.pcard:nth-child(4){top:170px}
-.pcard .k{font-family:var(--disp);font-size:80px;font-weight:400;font-style:italic;color:var(--plum);line-height:.8}
-.pcard h3{font-family:var(--disp);font-weight:400;font-size:clamp(34px,3.4vw,54px);letter-spacing:-.01em;line-height:1}
+.pcard .k{font-family:var(--disp);font-size:80px;font-weight:500;font-style:normal;color:var(--plum);line-height:.8}
+.pcard h3{font-family:var(--disp);font-weight:500;font-size:clamp(34px,3.4vw,54px);letter-spacing:-.03em;line-height:1}
 .pcard p{color:var(--mut);margin-top:20px;max-width:380px;font-size:16.5px}
 .pcard .mono{color:var(--brass);display:block;margin-top:30px}
 .pcard .ph{border-radius:4px;overflow:hidden}
@@ -152,9 +152,9 @@ header .right{display:flex;gap:34px;align-items:center}
 .svc .mono.lbl{color:var(--plum);display:block;margin-bottom:30px}
 .svc-row{display:grid;grid-template-columns:80px 1fr auto;align-items:center;gap:30px;padding:36px 0;border-top:1px solid var(--line);position:relative;transition:padding .6s var(--out)}
 .svc-row:last-child{border-bottom:1px solid var(--line)}
-.svc-row h3{font-family:var(--disp);font-weight:400;font-size:clamp(34px,5vw,80px);letter-spacing:-.015em;line-height:1;transition:font-style .3s,color .3s}
+.svc-row h3{font-family:var(--disp);font-weight:500;font-size:clamp(34px,5vw,80px);letter-spacing:-.03em;line-height:1;transition:font-style .3s,color .3s}
 .svc-row:hover{padding-left:30px}
-.svc-row:hover h3{font-style:italic;color:var(--plum)}
+.svc-row:hover h3{font-style:normal;color:var(--plum)}
 .svc-row .mono{color:var(--mut)}
 .svc-row .tags{text-align:right;color:var(--mut);max-width:260px}
 .float-img{position:fixed;top:0;left:0;width:340px;height:240px;border-radius:4px;overflow:hidden;pointer-events:none;z-index:20;opacity:0;transform:translate(-50%,-50%) scale(.6) rotate(-6deg);transition:opacity .4s,transform .6s var(--out)}
@@ -164,15 +164,15 @@ header .right{display:flex;gap:34px;align-items:center}
 
 /* quote */
 .quote{position:relative;z-index:1;padding:160px 0;text-align:center}
-.quote blockquote{font-family:var(--disp);font-weight:400;font-size:clamp(30px,3.8vw,58px);line-height:1.15;letter-spacing:-.01em;max-width:1100px;margin:0 auto}
+.quote blockquote{font-family:var(--disp);font-weight:400;font-size:clamp(30px,3.8vw,58px);line-height:1.15;letter-spacing:-.03em;max-width:1100px;margin:0 auto}
 .quote blockquote em{color:var(--plum)}
 .quote cite{display:block;margin-top:40px;font-style:normal}
 .quote .s{display:block;margin-top:10px;color:#A39AA3;font-size:10.5px}
 
 /* partners text marquee */
 .mq{position:relative;z-index:1;border-block:1px solid var(--line);padding:30px 0;overflow:hidden;white-space:nowrap}
-.mq div{display:inline-flex;gap:60px;animation:mq 50s linear infinite;font-family:var(--disp);font-weight:400;font-size:46px;letter-spacing:-.01em}
-.mq div span:nth-child(odd){font-style:italic;color:var(--plum)}
+.mq div{display:inline-flex;gap:60px;animation:mq 50s linear infinite;font-family:var(--disp);font-weight:500;font-size:46px;letter-spacing:-.03em}
+.mq div span:nth-child(odd){font-style:normal;color:var(--plum)}
 .mq div i{font-style:normal;color:var(--brass)}
 @keyframes mq{to{transform:translateX(-50%)}}
 
@@ -191,7 +191,7 @@ header .right{display:flex;gap:34px;align-items:center}
 .cinfo .map{display:inline-block;margin-top:10px;color:var(--plum-l);font-size:14px}
 .cinfo .cities{color:rgba(236,231,223,.6);font-size:15px}
 .cform{background:var(--char-2);border:1px solid rgba(236,231,223,.12);border-radius:8px;padding:40px;display:grid;grid-template-columns:1fr 1fr;gap:22px 24px}
-.cform h3{grid-column:1/-1;font-family:var(--disp);font-weight:400;font-size:32px;line-height:1.1}
+.cform h3{grid-column:1/-1;font-family:var(--disp);font-weight:500;font-size:32px;line-height:1.1}
 .cform label{display:grid;gap:8px;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(236,231,223,.55)}
 .cform label.full{grid-column:1/-1}
 .cform input,.cform select,.cform textarea{font:400 16px var(--sans);color:var(--stone);background:transparent;border:0;border-bottom:1px solid rgba(236,231,223,.25);padding:10px 0;border-radius:0;outline:none;transition:border-color .3s;letter-spacing:0;text-transform:none;width:100%}
@@ -295,7 +295,7 @@ header .right{display:flex;gap:34px;align-items:center}
       <span class="mono">( Office interiors · Mumbai )</span>
       <p>We design and build offices for growing companies — from the first layout to the final handover, in just 60 days.</p>
       <a class="circle-btn" href="#contact" data-cur="TALK">
-        <svg viewBox="0 0 134 134"><defs><path id="cp" d="M67,67 m-56,0 a56,56 0 1,1 112,0 a56,56 0 1,1 -112,0"/></defs><text fill="currentColor" font-size="10" font-weight="500" letter-spacing="3.6" font-family="DM Sans"><textPath href="#cp">START A PROJECT · 60 DAYS · START A PROJECT · </textPath></text></svg>
+        <svg viewBox="0 0 134 134"><defs><path id="cp" d="M67,67 m-56,0 a56,56 0 1,1 112,0 a56,56 0 1,1 -112,0"/></defs><text fill="currentColor" font-size="10" font-weight="500" letter-spacing="3.6" font-family="Manrope"><textPath href="#cp">START A PROJECT · 60 DAYS · START A PROJECT · </textPath></text></svg>
         <span>Talk to us ↗</span>
       </a>
     </div>
