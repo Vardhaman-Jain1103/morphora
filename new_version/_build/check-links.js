@@ -10,7 +10,7 @@ const path = require('path');
 
 const REPO = path.resolve(__dirname, '../..');
 const SIG = path.join(REPO, 'new_version/design-3-signature');
-const UPLOADS = path.join(REPO, 'wp-content');
+
 
 const files = [];
 (function walk(d) { for (const f of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, f.name); if (f.isDirectory()) walk(p); else if (f.name.endsWith('.html')) files.push(p); } })(SIG);
@@ -31,8 +31,9 @@ for (const file of files) {
     let target = path.resolve(path.dirname(file), decodeURI(raw.split(/[?#]/)[0]));
     if (raw.endsWith('/')) target = path.join(target, 'index.html');
     if (!fs.existsSync(target)) { broken.push(`${rel(file)} -> ${raw}`); continue; }
-    const inSig = target.startsWith(SIG + path.sep), inUploads = target.startsWith(UPLOADS + path.sep);
-    if (!inSig && !inUploads) escapes.push(`${rel(file)} -> ${raw}`);
+    // Vercel serves only new_version/, so everything must live inside design-3-signature/
+    const inSig = target.startsWith(SIG + path.sep);
+    if (!inSig) escapes.push(`${rel(file)} -> ${raw}`);
     if (kind === 'href' && inSig && target.endsWith('.html') && target !== file) inbound.set(target, (inbound.get(target) || 0) + 1);
   }
 }
@@ -44,7 +45,7 @@ const orphans = [...inbound].filter(([f, n]) => n === 0 && f !== home).map(([f])
 console.log(`Pages: ${files.length} · local links/images checked: ${checked}`);
 const report = (label, list) => { console.log(`${label}: ${list.length}`); list.slice(0, 25).forEach(x => console.log('   ' + x)); };
 report('Broken links/images', broken);
-report('Links to old live-site pages (outside Signature)', escapes);
+report('Links/images outside design-3-signature (not deployed)', escapes);
 report('Absolute links to morphoraspaces.com', liveLinks);
 report('Pages not linked from anywhere', orphans);
 process.exit(broken.length || escapes.length || liveLinks.length || orphans.length ? 1 : 0);

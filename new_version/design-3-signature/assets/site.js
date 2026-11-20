@@ -2,9 +2,9 @@
 (function () {
   const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-  // Site root (…/design-3-signature/) and repo-level uploads, resolved from this script's own URL
+  // Site root (…/design-3-signature/) and its local copy of the live-site uploads, resolved from this script's own URL
   const ROOT = new URL('../', document.currentScript.src);
-  const UPLOADS = new URL('../../wp-content/uploads/', ROOT);
+  const UPLOADS = new URL('media/', ROOT);
 
   // ---- mobile menu ----
   const hdr = $('header'), mnav = $('#mnav'), mt = $('#menuT');
@@ -40,9 +40,41 @@
     $$('[data-cur]').forEach(el => { el.addEventListener('mouseenter', () => { cur.querySelector('span').textContent = el.dataset.cur; cur.classList.add('big'); }); el.addEventListener('mouseleave', () => cur.classList.remove('big')); });
   }
 
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canHover = matchMedia('(hover: hover)').matches;
+
+  // ---- hero headings: split into words that rise in one after another ----
+  function splitWords(el) {
+    let i = 0;
+    (function walk(n) {
+      [...n.childNodes].forEach(c => {
+        if (c.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          c.textContent.split(/(\s+)/).forEach(p => {
+            if (!p) return;
+            if (/^\s+$/.test(p)) { frag.append(p); return; }
+            const o = document.createElement('span'), s = document.createElement('span');
+            o.className = 'sw'; s.textContent = p; s.style.setProperty('--i', i++); o.append(s); frag.append(o);
+          });
+          c.replaceWith(frag);
+        } else if (c.nodeType === 1) walk(c);
+      });
+    })(el);
+  }
+  if (!reduce) $$('.phero h1, .art-head h1').forEach(splitWords);
+
+  // ---- inner-page blocks fade up in sequence; photos wipe in ----
+  $$('.sec-head,.split>*,.steps>div,.tick li,.facts>div,.loc-top a,.ccards>*,.faq details,.prose>h2,.prose>h3,.prose>p,.prose>ul,.prose>ol,.prose>img,.note,.chips>*').forEach(el => el.classList.add('rv'));
+  $$('.rv').forEach(el => {
+    if (el.style.transitionDelay) return;
+    const sib = [...el.parentElement.children].filter(c => c.classList.contains('rv')), k = sib.indexOf(el);
+    if (k > 0) el.style.transitionDelay = (k % 6) * 90 + 'ms';
+  });
+  $$('.wcard .ph,.post .ph,.feat .ph,.gal a,.pcard .ph').forEach(el => el.classList.add('ir'));
+
   // ---- reveal + counters ----
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
-  $$('.rv').forEach(el => io.observe(el));
+  $$('.rv,.ir').forEach(el => io.observe(el));
   const co = new IntersectionObserver(es => es.forEach(e => {
     if (!e.isIntersecting) return;
     const el = e.target, n = +el.dataset.c, t0 = performance.now();
@@ -82,6 +114,52 @@
     lb.onclick = e => { if (e.target === lb || e.target.classList.contains('x')) closeLb(); };
     lb.querySelector('.p').onclick = () => showLb(lbi - 1); lb.querySelector('.n').onclick = () => showLb(lbi + 1);
     gal.forEach((a, i) => a.addEventListener('click', e => { e.preventDefault(); showLb(i); }));
+  }
+
+  // ---- scroll-driven effects: progress bar, hero parallax, word banners, process line ----
+  const prog = document.createElement('div'); prog.className = 'prog'; document.body.append(prog);
+  const par = $$('.pimg img,.art-img img'), banners = $$('.tmq>div'), lines = $$('.steps.line');
+  let drift = 0;
+  (function frame() {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    prog.style.transform = `scaleX(${max > 0 ? clamp(scrollY / max) : 0})`;
+    if (!reduce) {
+      par.forEach(im => {
+        const r = im.parentElement.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > innerHeight) return;
+        im.style.transform = `translateY(${((r.top + r.height / 2 - innerHeight / 2) / innerHeight) * -7}%) scale(1.12)`;
+      });
+      drift += .5;
+      banners.forEach((b, i) => {
+        const half = b.scrollWidth / 2 || 1, x = (drift + scrollY * .45) % half;
+        b.style.transform = `translateX(${i % 2 ? x - half : -x}px)`;
+      });
+    }
+    lines.forEach(l => { const r = l.getBoundingClientRect(); l.style.setProperty('--p', clamp((innerHeight * .8 - r.top) / (r.height + innerHeight * .25))); });
+    requestAnimationFrame(frame);
+  })();
+
+  // ---- 3D tilt on project / featured photos, magnetic buttons ----
+  if (canHover && !reduce) {
+    $$('[data-tilt]').forEach(el => {
+      el.addEventListener('mousemove', e => { const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; el.style.transform = `perspective(900px) rotateY(${x * 7}deg) rotateX(${-y * 7}deg)`; });
+      el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+    });
+    $$('.btn,.hbtn,.phero .circle-btn').forEach(b => {
+      b.addEventListener('mousemove', e => { const r = b.getBoundingClientRect(); b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .2}px,${(e.clientY - r.top - r.height / 2) * .3}px)`; });
+      b.addEventListener('mouseleave', () => { b.style.transform = ''; });
+    });
+  }
+
+  // ---- locations: live city search ----
+  const lq = $('#locq');
+  if (lq) {
+    const items = $$('.loc-grid a'), cnt = $('#locn'), empty = $('#loce');
+    lq.oninput = () => {
+      const q = lq.value.trim().toLowerCase(); let n = 0;
+      items.forEach(a => { const m = a.textContent.toLowerCase().includes(q); a.hidden = !m; n += m; });
+      cnt.textContent = n + (n === 1 ? ' city' : ' cities'); empty.hidden = n > 0;
+    };
   }
 
   // ---- blog category filter ----
