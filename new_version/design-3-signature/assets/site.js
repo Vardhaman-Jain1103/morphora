@@ -74,7 +74,17 @@
 
   // ---- reveal + counters ----
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
-  $$('.rv,.ir').forEach(el => io.observe(el));
+  $$('.rv').forEach(el => io.observe(el));
+  // .ir photos are hidden with clip-path, and Chromium's IntersectionObserver counts a fully
+  // clipped element as never visible — so check their position on scroll instead.
+  $$('.gal a.ir').forEach((el, k) => { el.style.transitionDelay = (k % 3) * 120 + 'ms'; });
+  let irs = $$('.ir');
+  const irCheck = () => {
+    if (!irs.length) return;
+    const h = innerHeight * .92;
+    irs = irs.filter(el => { if (el.getBoundingClientRect().top < h) { el.classList.add('in'); return false; } return true; });
+  };
+  addEventListener('scroll', irCheck, { passive: true }); addEventListener('resize', irCheck); irCheck();
   const co = new IntersectionObserver(es => es.forEach(e => {
     if (!e.isIntersecting) return;
     const el = e.target, n = +el.dataset.c, t0 = performance.now();
