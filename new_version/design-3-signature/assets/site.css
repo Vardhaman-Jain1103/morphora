@@ -217,11 +217,13 @@ header.open .menu-t b i:last-child{width:100%;transform:translateY(-3.25px) rota
 /* cta / footer */
 .cta{position:relative;z-index:1;background:var(--char);color:var(--stone);padding:140px 0 40px;overflow:hidden}
 .cta .mono{color:var(--brass)}
-.cta h2{font-size:clamp(38.4px,5.6vw,89.6px);margin:20px 0 20px}
+.cta h2{font-size:clamp(36px,4.6vw,76px);margin:18px 0 18px}
 .cta h2 em{color:var(--plum-l)}
-.cta-lead{max-width:520px;color:rgba(236,231,223,.65);font-size:15.6px}
-.cta-grid{display:grid;grid-template-columns:1fr 1.25fr;gap:64px;margin-top:64px;padding-bottom:90px;border-bottom:1px solid rgba(236,231,223,.15);align-items:start}
-.cinfo{display:grid;gap:30px}
+.cta-lead{max-width:460px;color:rgba(236,231,223,.65);font-size:15.6px}
+/* left column (intro + contact details) stretches to the form's height so both columns start and end together */
+.cta-grid{display:grid;grid-template-columns:1fr 1.25fr;gap:64px;padding-bottom:90px;border-bottom:1px solid rgba(236,231,223,.15);align-items:stretch}
+.cta-side{display:flex;flex-direction:column;justify-content:space-between;gap:48px}
+.cinfo{display:grid;gap:26px}
 .cinfo .mono{display:block;color:rgba(236,231,223,.5);margin-bottom:8px}
 .cinfo a.big{font-family:var(--disp);font-size:clamp(19.2px,1.9vw,27.2px);line-height:1.2;border-bottom:1px solid rgba(236,231,223,.3);padding-bottom:4px;transition:color .3s,border-color .3s}
 .cinfo a.big:hover{color:var(--plum-l);border-color:var(--plum-l)}
