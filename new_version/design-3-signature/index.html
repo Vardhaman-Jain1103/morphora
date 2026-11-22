@@ -125,15 +125,22 @@
           <rect class="walls" x="20" y="30" width="960" height="570"/>
           <path d="M20 470v60" stroke="var(--char)" stroke-width="6"/>
         </svg>
-        <p class="plan-hint mono">↳ Hover or tap an area</p>
+        <p class="plan-hint mono">↳ Hover to preview · click an area to see its photos</p>
       </div>
       <div class="zcard">
         <div class="ph" id="zPh"></div>
-        <div class="bd"><span class="mono" id="zK">Area 01 · ~8% of floor space</span><h3 id="zT">Reception</h3><p id="zD"></p><ul id="zL"></ul></div>
+        <div class="bd"><span class="mono" id="zK">Area 01 · ~8% of floor space</span><h3 id="zT">Reception</h3><p id="zD"></p><ul id="zL"></ul><button type="button" class="zbtn mono" id="zBtn">View photos <span>↗</span></button></div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- ZONE GALLERY (opened by clicking an area) -->
+<div class="zg" id="zg" role="dialog" aria-modal="true" aria-labelledby="zgT" hidden>
+  <div class="zg-top"><div><span class="mono" id="zgK">Area 01</span><h3 class="disp" id="zgT">Reception</h3></div><span class="mono zg-count" id="zgCount">01 / 06</span><button type="button" class="zg-x" id="zgClose" aria-label="Close gallery">✕</button></div>
+  <div class="zg-stage"><button type="button" class="zg-nav prev" id="zgPrev" aria-label="Previous photo">←</button><img id="zgImg" alt=""><button type="button" class="zg-nav next" id="zgNext" aria-label="Next photo">→</button></div>
+  <div class="zg-thumbs" id="zgThumbs"></div>
+</div>
 
 <!-- HORIZONTAL WORK -->
 <section class="hz" id="work">
@@ -275,11 +282,27 @@ const Z=[
  ['Breakout','~12%','A relaxed space for informal chats and team time — a good reason for people to come to the office.',['Lounge seating','Games area','Indoor plants'],'IMG_1650-scaled.jpg'],
  ['Café','~8%','A pantry turned into a friendly space where the team eats, talks and connects.',['Pantry','Counter seating','Plumbing & electrical'],'IMG_1645-scaled.jpg'],
  ['Focus & pods','~10%','Quiet rooms, phone booths and pods for focused work and private calls.',['Phone booths','Quiet rooms','Soundproofing'],'IMG_1675-scaled.jpg']];
+// photos per zone (opened in the gallery on click)
+const ZG=[["01-ENTRANCE-FOYER.jpg","03-ENTRANCE-02.jpg","04-RECEPTION-WAITING-01.jpg","MicrosoftTeams-image-48-1024x731.jpg","office-interior-design-santacruz-mumbai-grovalue03-1.jpg","ADI8276-scaled.jpg"],["ADI8397-scaled.jpg","ADI8415-scaled.jpg","ADI8427-scaled.jpg","IMG_20200919_173257-scaled.jpg","IMG_20200919_173919-scaled.jpg","17-I-I-STAFF.jpg"],["11-MD-CABIN-FIDELIS.jpg","17-CABIN-I-I.jpg","ADI8340-scaled.jpg","ADI8325-scaled.jpg","09-FIDELIS-CABINS.jpg","office-interior-design-santacruz-mumbai-grovalue05-1.jpg"],["07-CONFERANCE.jpg","Conference_01.jpg","IMG_20200919_173345-scaled.jpg","ADI8358-scaled.jpg","PAB_1864-scaled.jpg","8-Pax-Meeting-Room_02.jpg"],["14-LOUNGE-2.jpg","Flexi-Area_01.jpg","IMG_1676-scaled.jpg","IMG_20200919_173443-scaled.jpg","IMG_20200919_174008-scaled.jpg","MicrosoftTeams-image-56.jpg"],["IMG_1645-scaled.jpg","IMG_20200919_173755-scaled.jpg","IMG_20200919_173813-scaled.jpg","IMG_1650-scaled.jpg","MicrosoftTeams-image-52.jpg","MicrosoftTeams-image-53.jpg"],["IMG_1675-scaled.jpg","2-Pax-Meeting-Room.jpg","MicrosoftTeams-image-57.jpg","office-interior-design-santacruz-mumbai-grovalue02-1.jpg","MicrosoftTeams-image-54.jpg","IMG_20200919_174259-scaled.jpg"]].map(a=>a.map(x=>'./media/2025/10/'+x));
 $('#zPh').innerHTML=Z.map(z=>`<img src="${U+z[4]}" alt="${z[0]}" loading="lazy">`).join('');
 const zImgs=$$('#zPh img'),zones=$$('.zone');
 function zone(i){zones.forEach(g=>g.classList.toggle('on',+g.dataset.z===i));zImgs.forEach((im,k)=>im.classList.toggle('on',k===i));const z=Z[i];
-  $('#zK').textContent=`Area ${String(i+1).padStart(2,'0')} · ${z[1]} of floor space`;$('#zT').textContent=z[0];$('#zD').textContent=z[2];$('#zL').innerHTML=z[3].map(x=>`<li>${x}</li>`).join('')}
-zones.forEach(g=>{g.onmouseenter=g.onclick=()=>zone(+g.dataset.z)});zone(0);
+  $('#zK').textContent=`Area ${String(i+1).padStart(2,'0')} · ${z[1]} of floor space`;$('#zT').textContent=z[0];$('#zD').textContent=z[2];$('#zL').innerHTML=z[3].map(x=>`<li>${x}</li>`).join('');$('#zBtn').firstChild.textContent=`View ${z[0].toLowerCase()} photos (${ZG[i].length}) `}
+let zCur=0;
+zones.forEach(g=>{g.onmouseenter=()=>{zCur=+g.dataset.z;zone(zCur)};g.onclick=()=>{zCur=+g.dataset.z;zone(zCur);zgOpen(zCur)}});zone(0);
+$('#zBtn').onclick=()=>zgOpen(zCur);$('#zPh').onclick=()=>zgOpen(zCur);
+// zone gallery
+const zg=$('#zg'),zgImg=$('#zgImg'),zgTh=$('#zgThumbs');let zgZ=0,zgI=0,zgLast=null;
+function zgShow(k){const a=ZG[zgZ];zgI=(k+a.length)%a.length;zgImg.classList.remove('on');const src=a[zgI];const im=new Image();im.onload=()=>{zgImg.src=src;zgImg.alt=Z[zgZ][0]+' — photo '+(zgI+1);zgImg.classList.add('on')};im.src=src;
+  $('#zgCount').textContent=String(zgI+1).padStart(2,'0')+' / '+String(a.length).padStart(2,'0');zgTh.querySelectorAll('button').forEach((b,j)=>b.classList.toggle('on',j===zgI))}
+function zgOpen(z){zgZ=z;zgLast=document.activeElement;$('#zgK').textContent='Area '+String(z+1).padStart(2,'0');$('#zgT').textContent=Z[z][0];
+  zgTh.innerHTML=ZG[z].map((src,j)=>`<button type="button" aria-label="Photo ${j+1}"><img src="${src}" alt="" loading="lazy"></button>`).join('');
+  zgTh.querySelectorAll('button').forEach((b,j)=>b.onclick=()=>zgShow(j));zgShow(0);zg.hidden=false;requestAnimationFrame(()=>zg.classList.add('open'));document.documentElement.style.overflow='hidden';$('#zgClose').focus()}
+function zgClose(){zg.classList.remove('open');document.documentElement.style.overflow='';setTimeout(()=>{zg.hidden=true},350);if(zgLast)zgLast.focus()}
+$('#zgClose').onclick=zgClose;$('#zgPrev').onclick=()=>zgShow(zgI-1);$('#zgNext').onclick=()=>zgShow(zgI+1);
+zg.addEventListener('click',e=>{if(e.target===zg)zgClose()});
+addEventListener('keydown',e=>{if(zg.hidden)return;if(e.key==='Escape')zgClose();else if(e.key==='ArrowRight')zgShow(zgI+1);else if(e.key==='ArrowLeft')zgShow(zgI-1)});
+let zgX=null;zgImg.parentNode.addEventListener('touchstart',e=>{zgX=e.touches[0].clientX},{passive:true});zgImg.parentNode.addEventListener('touchend',e=>{if(zgX===null)return;const dx=e.changedTouches[0].clientX-zgX;if(Math.abs(dx)>40)zgShow(zgI+(dx<0?1:-1));zgX=null});
 
 // scroll-driven: expand image, manifesto, horizontal
 const ex=$('#expand'),xf=$('#xFrame'),xi=$('#xImg'),hz=$('#work'),track=$('#hzTrack'),hp=$('#hzProg');

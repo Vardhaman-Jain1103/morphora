@@ -143,6 +143,34 @@ header.open .menu-t b i:last-child{width:100%;transform:translateY(-3.25px) rota
 .zcard ul{list-style:none;margin-top:auto;padding-top:22px;display:flex;flex-wrap:wrap;gap:8px}
 .zcard li{font:11px var(--mono);letter-spacing:.05em;text-transform:uppercase;border:1px solid rgba(236,231,223,.2);padding:6px 10px;border-radius:99px}
 .plan-hint{margin-top:20px;color:rgba(236,231,223,.45)}
+.zone{cursor:pointer}
+.zcard .ph{cursor:zoom-in}
+.zbtn{align-self:flex-start;margin-top:22px;display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 18px;border-radius:999px;border:1px solid rgba(236,231,223,.3);background:none;color:var(--stone);font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .3s,border-color .3s}
+.zbtn span{color:var(--plum-l);transition:transform .3s}
+.zbtn:hover{background:var(--plum);border-color:var(--plum)}
+.zbtn:hover span{color:var(--stone);transform:translate(2px,-2px)}
+/* zone gallery */
+.zg{position:fixed;inset:0;z-index:200;background:rgba(21,18,21,.94);backdrop-filter:blur(8px);color:var(--stone);display:grid;grid-template-rows:auto 1fr auto;gap:20px;padding:24px 32px;opacity:0;transition:opacity .35s}
+.zg.open{opacity:1}
+.zg[hidden]{display:none}
+.zg-top{display:flex;align-items:flex-end;gap:24px}
+.zg-top>div{flex:1}
+.zg-top .mono{color:var(--brass)}
+.zg-top h3{font-weight:300;font-size:clamp(26px,3vw,44px);letter-spacing:-.01em;margin-top:6px}
+.zg-count{color:rgba(236,231,223,.6)!important;padding-bottom:8px}
+.zg-x,.zg-nav{width:48px;height:48px;border-radius:50%;border:1px solid rgba(236,231,223,.3);background:none;color:var(--stone);font-size:18px;cursor:pointer;flex:none;transition:background .3s,border-color .3s}
+.zg-x:hover,.zg-nav:hover{background:var(--plum);border-color:var(--plum)}
+.zg-stage{position:relative;min-height:0;display:flex;align-items:center;justify-content:center}
+.zg-stage img{max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;opacity:0;transform:scale(.98);transition:opacity .4s,transform .6s var(--out)}
+.zg-stage img.on{opacity:1;transform:none}
+.zg-nav{position:absolute;top:50%;margin-top:-24px;background:rgba(21,18,21,.55)}
+.zg-nav.prev{left:0}.zg-nav.next{right:0}
+.zg-thumbs{display:flex;gap:10px;justify-content:center;overflow-x:auto;padding-bottom:4px}
+.zg-thumbs button{flex:none;width:96px;height:64px;padding:0;border:2px solid transparent;border-radius:4px;overflow:hidden;background:none;cursor:pointer;opacity:.45;transition:opacity .3s,border-color .3s}
+.zg-thumbs button.on,.zg-thumbs button:hover{opacity:1}
+.zg-thumbs button.on{border-color:var(--plum-l)}
+.zg-thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+@media (max-width:700px){.zg{padding:16px;gap:14px}.zg-nav{width:40px;height:40px;margin-top:-20px}.zg-thumbs{justify-content:flex-start}.zg-thumbs button{width:72px;height:48px}.zg-count{display:none}}
 
 /* horizontal projects */
 .hz{position:relative;z-index:1}
