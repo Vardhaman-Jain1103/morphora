@@ -66,6 +66,20 @@
     addEventListener('keydown', e => { if (e.key === 'Escape') openFsw(false); });
   }
 
+  // ---- pan-India map: draw routes when in view; list rows and pins highlight each other ----
+  const pan = $('#pan');
+  if (pan) {
+    const po = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { pan.classList.add('in'); po.disconnect(); } }), { threshold: .2 });
+    po.observe(pan);
+    const items = [...pan.querySelectorAll('[data-city]')];
+    const hl = c => items.forEach(el => el.classList.toggle('on', !!c && el.dataset.city.split(' ').includes(c)));
+    items.forEach(el => {
+      const c = el.dataset.city.split(' ')[0];
+      el.addEventListener('mouseenter', () => hl(c)); el.addEventListener('mouseleave', () => hl(null));
+      el.addEventListener('focus', () => hl(c)); el.addEventListener('blur', () => hl(null));
+    });
+  }
+
   // ---- footer year ----
   const yr = $('#yr'); if (yr) yr.textContent = new Date().getFullYear();
 

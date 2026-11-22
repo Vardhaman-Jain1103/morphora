@@ -559,3 +559,47 @@ header.open .menu-t b i:last-child{width:100%;transform:translateY(-3.25px) rota
 @media (max-width:1000px){.fsw-b span{display:none}.fsw-b{padding:9px 13px}header.open .fsw{display:none}}
 @media (max-width:640px){.fsw-p{position:fixed;top:70px;left:16px;right:16px;width:auto}}
 @media (max-width:1240px){.fsw-b span{display:none}.fsw-b{padding:9px 13px}}
+
+/* ---- pan-India map ---- */
+.pan{position:relative;z-index:1;background:var(--char);color:var(--stone);padding:130px 0;overflow:hidden}
+.pan-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:60px;align-items:center}
+.pan-txt>.mono{color:var(--plum-l)}
+.pan h2{font-size:clamp(42px,5vw,84px);margin:20px 0 24px}
+.pan h2 em{color:var(--plum-l)}
+.pan-txt>p{max-width:460px;color:rgba(236,231,223,.65);font-size:17px}
+.pan-list{list-style:none;margin-top:40px;border-top:1px solid rgba(236,231,223,.14);display:grid;grid-template-columns:1fr 1fr;column-gap:30px}
+.pan-list li{border-bottom:1px solid rgba(236,231,223,.14)}
+.pan-list a{display:grid;grid-template-columns:34px 1fr auto;align-items:baseline;gap:8px;padding:15px 0;font-size:19px;transition:color .3s,padding .4s var(--out)}
+.pan-list b{font-weight:400;font-size:12px;letter-spacing:.1em;color:var(--brass)}
+.pan-list small{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(236,231,223,.45);margin-left:6px}
+.pan-list i{font-style:normal;opacity:0;transform:translate(-6px,6px);transition:opacity .3s,transform .4s var(--out)}
+.pan-list a.on{color:var(--plum-l);padding-left:6px}
+.pan-list a.on i{opacity:1;transform:none}
+.pan-all{display:inline-block;margin-top:30px;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--plum-l);border-bottom:1px solid currentColor;padding-bottom:4px}
+.pan-map{position:relative;margin:0}
+.pan-map svg{display:block;width:100%;height:auto;max-height:78vh;overflow:visible}
+.pan-states path{fill:rgba(236,231,223,.07);stroke:rgba(236,231,223,.22);stroke-width:.6;stroke-linejoin:round;transition:fill .6s}
+.pan-map:hover .pan-states path{fill:rgba(236,231,223,.09)}
+.pan-arcs path{fill:none;stroke:var(--plum-l);stroke-width:1.3;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:.55;transition:stroke-dashoffset 1.6s var(--out) calc(.4s + var(--i)*.12s),opacity .3s,stroke-width .3s}
+.pan.in .pan-arcs path{stroke-dashoffset:0}
+.pan-arcs path.on{opacity:1;stroke-width:2.2}
+.pin{cursor:pointer}
+.pin>g>*{transform-box:fill-box;transform-origin:center}
+.pin .dot{fill:var(--plum-l);transform:scale(0);transition:transform .7s var(--out) calc(.3s + var(--i)*.12s)}
+.pin .ring{fill:none;stroke:var(--plum-l);stroke-width:1.2;opacity:0}
+.pin text{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;fill:var(--stone);opacity:0;transition:opacity .6s calc(.6s + var(--i)*.12s),fill .3s}
+.pin text.sub{font-size:10px;fill:rgba(236,231,223,.5)}
+.pin.hq .dot{fill:var(--brass)}
+.pin.hq .ring{stroke:var(--brass)}
+.pan.in .pin .dot{transform:none}
+.pan.in .pin text{opacity:1}
+.pan.in .pin .ring{animation:panPulse 2.6s var(--out) infinite;animation-delay:calc(1.2s + var(--i)*.2s)}
+.pin.on .dot,.pin:hover .dot{transform:scale(1.5)}
+.pin.on text,.pin:hover text{fill:var(--plum-l)}
+.pin.hq.on text:not(.sub),.pin.hq:hover text:not(.sub){fill:var(--brass)}
+@keyframes panPulse{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(2.6)}}
+.pan-map figcaption{position:absolute;right:0;bottom:0;font-size:11px;color:rgba(236,231,223,.35)}
+.pan-map figcaption a{text-decoration:underline}
+@media (max-width:1000px){.pan{padding:90px 0}.pan-grid{grid-template-columns:1fr;gap:40px}.pan-map{max-width:560px;width:100%;justify-self:center}.pan-map svg{max-height:none}}
+@media (max-width:640px){.pan-list{grid-template-columns:1fr}.pan-list a{font-size:17px;padding:13px 0}.pin text{font-size:16px}.pin text.sub{font-size:12px}.pan-map figcaption{position:static;margin-top:10px}}
+@media (prefers-reduced-motion:reduce){.pan-arcs path{stroke-dashoffset:0}.pin .dot{transform:none}.pin text{opacity:1}}

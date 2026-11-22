@@ -325,6 +325,61 @@ ${footer(P, o.footLabel, o.footH2)}
 `;
 }
 
+/* ------------------------------------------------------- pan-India map */
+// Outline: MapSVG "Map of India" (CC BY 4.0), slimmed into _build/india-map.json. Its projection is
+// Mercator with x = (lon − 68.18) × 20.94 and the top edge at 37.08°N, so cities are placed from lat/lon.
+const INDIA = JSON.parse(fs.readFileSync(path.join(__dirname, 'india-map.json'), 'utf8'));
+const MERC = p => Math.log(Math.tan(Math.PI / 4 + p * Math.PI / 360));
+const proj = (lat, lon) => [+((lon - 68.18) * 20.94).toFixed(1), +(20.94 * 180 / Math.PI * (MERC(37.08) - MERC(lat))).toFixed(1)];
+const HQ = { name: 'Mumbai · Thane', sub: 'Our studio', lat: 19.22, lon: 72.98, slug: 'thane' };
+// [display name, city page slug, lat, lon, label side]
+const METROS = [
+  ['Mumbai', 'mumbai', 19.03, 72.85, 'l'],
+  ['Delhi NCR', 'delhi', 28.61, 77.21, 'r'],
+  ['Bengaluru', 'bengaluru', 12.97, 77.59, 'l'],
+  ['Hyderabad', 'hyderabad', 17.39, 78.49, 'r'],
+  ['Chennai', 'chennai', 13.08, 80.27, 'r'],
+  ['Kolkata', 'kolkata', 22.57, 88.36, 'r'],
+  ['Pune', 'pune', 18.52, 73.86, 'r'],
+  ['Ahmedabad', 'ahmedabad', 23.02, 72.57, 'l'],
+];
+function panIndia(P, label = '( Pan-India )') {
+  const [hx, hy] = proj(HQ.lat, HQ.lon);
+  const href = s => P.L('office-interior-designer-in-' + s);
+  const arcs = METROS.filter(m => m[1] !== 'mumbai').map(([, s, lat, lon], i) => {
+    const [x, y] = proj(lat, lon), mx = (hx + x) / 2, my = (hy + y) / 2, dx = x - hx, dy = y - hy;
+    const cx = (mx - dy * .22).toFixed(1), cy = (my + dx * .22).toFixed(1);
+    return `<path data-city="${s}" d="M${hx} ${hy}Q${cx} ${cy} ${x} ${y}" pathLength="1" style="--i:${i}"/>`;
+  }).join('');
+  const pin = (name, s, lat, lon, side, i, hq) => {
+    const [x, y] = proj(lat, lon), tx = side === 'l' ? -12 : 12, anchor = side === 'l' ? 'end' : 'start';
+    const dy = s === 'pune' ? 10 : 4;
+    return `<a class="pin${hq ? ' hq' : ''}" href="${href(s)}" data-city="${hq ? 'thane mumbai' : s}" style="--i:${i}" aria-label="${name}"><g transform="translate(${x} ${y})"><circle class="ring" r="${hq ? 9 : 6}"/><circle class="dot" r="${hq ? 6 : 4}"/><text x="${tx}" y="${dy}" text-anchor="${anchor}">${name}</text>${hq ? `<text class="sub" x="${tx}" y="${dy + 15}" text-anchor="${anchor}">${HQ.sub}</text>` : ''}</g></a>`;
+  };
+  return `<section class="pan" id="pan">
+  <div class="wrap pan-grid">
+    <div class="pan-txt">
+      <span class="mono">${label}</span>
+      <h2 class="disp">One studio. <em>Offices across India.</em></h2>
+      <p>We design, build and manage offices for clients across India from our studio in Thane. Our team works on-site or remotely, depending on the location and size of your project.</p>
+      <ol class="pan-list">
+        <li><a href="${href(HQ.slug)}" data-city="${HQ.slug}"><b>HQ</b><span>Thane <small>Our studio</small></span><i>↗</i></a></li>
+${METROS.map(([n, s], i) => `        <li><a href="${href(s)}" data-city="${s}"><b>0${i + 1}</b><span>${n}</span><i>↗</i></a></li>`).join('\n')}
+      </ol>
+      <a class="pan-all" href="${P.L('locations')}">See all ${CITIES.length} cities we work in →</a>
+    </div>
+    <figure class="pan-map">
+      <svg viewBox="${INDIA.viewBox}" role="img" aria-label="Map of India showing the Morphora Spaces studio in Thane and the major metro cities we work in">
+        <g class="pan-states">${INDIA.states.map(s => `<path d="${s.d}"/>`).join('')}</g>
+        <g class="pan-arcs">${arcs}</g>
+        <g class="pan-pins">${METROS.filter(m => m[1] !== 'mumbai').map((m, i) => pin(...m, i + 1)).join('')}${pin(HQ.name, HQ.slug, HQ.lat, HQ.lon, 'l', 0, true)}</g>
+      </svg>
+      <figcaption>Map outline: <a href="https://mapsvg.com/maps/india" target="_blank" rel="noopener">MapSVG</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></figcaption>
+    </figure>
+  </div>
+</section>`;
+}
+
 /* ---------------------------------------------------------- section kits */
 const crumbs = (P, items) => `<nav class="crumb mono" aria-label="Breadcrumb"><a href="${P.L('')}">Home</a>${items.map(([t, p]) => ` <span>/</span> ${p !== undefined ? `<a href="${P.L(p)}">${t}</a>` : `<span aria-current="page">${t}</span>`}`).join('')}</nav>`;
 const badge = () => `<a class="circle-btn" href="#contact" data-cur="TALK"><svg viewBox="0 0 134 134" aria-hidden="true"><defs><path id="cpb" d="M67,67 m-56,0 a56,56 0 1,1 112,0 a56,56 0 1,1 -112,0"/></defs><text fill="currentColor" font-size="10" font-weight="500" letter-spacing="3.6" font-family="Jost"><textPath href="#cpb">START A PROJECT · 60 DAYS · START A PROJECT · </textPath></text></svg><span>Let’s talk ↗</span></a>`;
@@ -695,6 +750,7 @@ add('locations', P => ({
   title: 'Locations — Office Interior Designers Across India | Morphora Spaces', desc: `Morphora Spaces designs and builds offices across India, including Mumbai, Thane, Pune, Bengaluru, Ahmedabad and Hyderabad.`, active: '',
   body: [
     phero(P, { tmq: ['Mumbai', 'Thane', 'Pune', 'Bengaluru', 'Ahmedabad', 'Hyderabad', 'Delhi'], crumb: [['Locations']], h1: 'Office interiors <em>across India.</em>', lead: `We design, build and manage offices for clients across India. Our team works on-site or remotely, depending on the location and size of your project.` }),
+    panIndia(P, '( Where we work )'),
     `<section class="sec" style="padding-top:20px">
   <div class="wrap">
     <div class="loc-top">
@@ -755,7 +811,8 @@ for (const [p, fn] of pages) {
   const P = ctx(''), f = path.join(SIG, 'index.html');
   let s = fs.readFileSync(f, 'utf8');
   s = s.replace(/<!-- @header -->[\s\S]*?<!-- \/@header -->/, `<!-- @header -->\n${header(P, '')}\n<!-- /@header -->`);
-  s = s.replace(/<!-- @footer -->[\s\S]*?<!-- \/@footer -->/, `<!-- @footer -->\n${footer(P, '( 09 — Contact us )')}\n<!-- /@footer -->`);
+  s = s.replace(/<!-- @map -->[\s\S]*?<!-- \/@map -->/, `<!-- @map -->\n${panIndia(P, '( 04 — Pan-India )')}\n<!-- /@map -->`);
+  s = s.replace(/<!-- @footer -->[\s\S]*?<!-- \/@footer -->/, `<!-- @footer -->\n${footer(P, '( 10 — Contact us )')}\n<!-- /@footer -->`);
   s = s.replace(/href="(\.\.\/\.\.\/[^"]*)"/g, (m, h) => { const r = P.href(h); return r ? `href="${r.href}"` : m; });
   s = s.replace(/src="(?:\.\.\/\.\.\/|\.\/media\/)(?:wp-content\/uploads\/)?([^"]+)"/g, (m, r) => `src="${P.media('wp-content/uploads/' + r)}"`);
   s = s.replace('href="./index.html" data-i="0"', `href="${P.L('design-and-build')}" data-i="0"`);
