@@ -29,7 +29,7 @@
   if (hdr) { addEventListener('scroll', onHdr, { passive: true }); onHdr(); }
 
   // ---- font switcher (client showcase; delete this block + the matching CSS once a font is picked) ----
-  // Each option sets the display (headings) and body fonts. ?font=1..5 in the URL preselects one; 0 = original Jost.
+  // Each option sets the display (headings) and body fonts. ?font=1..6 in the URL preselects one; 0 = original Jost.
   const FONTS = [
     ['Original', 'Jost — current geometric', 'Jost', 'Jost'],
     ['Luxe Serif', 'Cormorant Garamond + Manrope', 'Cormorant Garamond', 'Manrope'],
@@ -37,24 +37,27 @@
     ['Studio', 'Syne + Inter', 'Syne', 'Inter'],
     ['Technical', 'Space Grotesk + IBM Plex Sans', 'Space Grotesk', 'IBM Plex Sans'],
     ['Clean Modern', 'Plus Jakarta Sans', 'Plus Jakarta Sans', 'Plus Jakarta Sans'],
+    // Megalito Slab is a commercial font: self-hosted from assets/fonts/ (see @font-face in site.css); Rokkitt stands in until the files are added
+    ['Slab Display', 'Megalito Slab + IBM Plex Sans', 'Megalito Slab, Rokkitt', 'IBM Plex Sans'],
   ];
+  const stack = (f, g) => f.split(',').map(n => `"${n.trim()}"`).join(',') + ',' + g;
   const right = $('header .right');
   if (right) {
     const fl = document.createElement('link'); fl.rel = 'stylesheet';
-    fl.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Manrope:wght@300;400;500&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=DM+Sans:wght@300;400;500&family=Syne:wght@400;500;600&family=Inter:wght@300;400;500&family=Space+Grotesk:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap';
+    fl.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Manrope:wght@300;400;500&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=DM+Sans:wght@300;400;500&family=Syne:wght@400;500;600&family=Inter:wght@300;400;500&family=Space+Grotesk:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&family=Plus+Jakarta+Sans:wght@300;400;500&family=Rokkitt:wght@300;400;500&display=swap';
     document.head.appendChild(fl);
     const store = { get() { try { return localStorage.getItem('msFont'); } catch (e) { return null; } }, set(v) { try { localStorage.setItem('msFont', v); } catch (e) {} } };
     const q = new URLSearchParams(location.search).get('font');
     const fsw = document.createElement('div'); fsw.className = 'fsw';
-    fsw.innerHTML = `<button class="fsw-b" type="button" aria-haspopup="true" aria-expanded="false"><i>Aa</i><span>Fonts</span></button><div class="fsw-p" role="radiogroup" aria-label="Choose a font">${FONTS.map((f, i) => `<button type="button" role="radio" data-f="${i}"><b>0${i}</b><strong style="font-family:'${f[2]}',serif">${f[0]}</strong><small style="font-family:'${f[3]}',sans-serif">${f[1]}</small></button>`).join('')}</div>`;
+    fsw.innerHTML = `<button class="fsw-b" type="button" aria-haspopup="true" aria-expanded="false"><i>Aa</i><span>Fonts</span></button><div class="fsw-p" role="radiogroup" aria-label="Choose a font">${FONTS.map((f, i) => `<button type="button" role="radio" data-f="${i}"><b>0${i}</b><strong style='font-family:${stack(f[2], 'serif')}'>${f[0]}</strong><small style='font-family:${stack(f[3], 'sans-serif')}'>${f[1]}</small></button>`).join('')}</div>`;
     right.insertBefore(fsw, right.firstChild);
     const btn = fsw.querySelector('.fsw-b');
     function applyFont(i) {
       i = FONTS[i] ? +i : 0;
       const f = FONTS[i], r = document.documentElement.style;
-      r.setProperty('--disp', `"${f[2]}",system-ui,sans-serif`);
-      r.setProperty('--sans', `"${f[3]}",system-ui,sans-serif`);
-      r.setProperty('--mono', `"${f[3]}",system-ui,sans-serif`);
+      r.setProperty('--disp', stack(f[2], 'system-ui,sans-serif'));
+      r.setProperty('--sans', stack(f[3], 'system-ui,sans-serif'));
+      r.setProperty('--mono', stack(f[3], 'system-ui,sans-serif'));
       fsw.querySelectorAll('[data-f]').forEach(b => b.setAttribute('aria-checked', b.dataset.f == i));
       store.set(i);
     }
@@ -157,13 +160,6 @@
     note.textContent = 'Thank you! Please press send in WhatsApp to share your details.'; note.style.color = ''; form.reset();
   };
 
-  // ---- vendor partner logos (same set as the live site) ----
-  const mq = $('#mq');
-  if (mq) {
-    const P = [['Saint-Gobain', 'Saint-Gobain_logo.png'], ['Armstrong', 'Armstrong-Logo.png'], ['Honeywell', 'Honeywell.png'], ['Legrand', 'Legrand_.png'], ['Polycab', 'Polycab.png'], ['Daikin', 'DAIKIN-logo.png'], ['Philips', 'Philips-logo-scaled.jpg'], ['Gyproc', 'gyproc-logo.png'], ['Asian Paints', 'Asian-Paints.png'], ['Greenlam', 'Greenlam-Logo.png'], ['Merino', 'merino-laminates-ltd-vector-logo.png'], ['Featherlite', 'Feather-Lite-Logo.jpg'], ['Hikvision', 'Hikvision-logo-scaled.png'], ['Wipro', 'wipro-logo.jpg'], ['Welspun', 'Welspun-logo.jpg'], ['CommScope', 'CommScope-logo-scaled.jpg'], ['Kubik', 'kubik-logo-1-scaled.png'], ['Windor', 'Windor-e1753389106844.png'], ['Amardeep Designs', 'Amardeep-Designs-scaled.png']];
-    mq.innerHTML = [...P, ...P].map((p, i) => `<img src="${new URL('2025/07/' + p[1], UPLOADS)}" alt="${i < P.length ? p[0] : ''}" loading="lazy">`).join('');
-  }
-
   // ---- gallery lightbox ----
   const gal = $$('.gal a');
   let lb, lbi = 0;
@@ -178,10 +174,9 @@
     gal.forEach((a, i) => a.addEventListener('click', e => { e.preventDefault(); showLb(i); }));
   }
 
-  // ---- scroll-driven effects: progress bar, hero parallax, word banners, process line ----
+  // ---- scroll-driven effects: progress bar, hero parallax, process line ----
   const prog = document.createElement('div'); prog.className = 'prog'; document.body.append(prog);
-  const par = $$('.pimg img,.art-img img'), banners = $$('.tmq>div'), lines = $$('.steps.line');
-  let drift = 0;
+  const par = $$('.pimg img,.art-img img'), lines = $$('.steps.line');
   (function frame() {
     const max = document.documentElement.scrollHeight - innerHeight;
     prog.style.transform = `scaleX(${max > 0 ? clamp(scrollY / max) : 0})`;
@@ -190,11 +185,6 @@
         const r = im.parentElement.getBoundingClientRect();
         if (r.bottom < 0 || r.top > innerHeight) return;
         im.style.transform = `translateY(${((r.top + r.height / 2 - innerHeight / 2) / innerHeight) * -7}%) scale(1.12)`;
-      });
-      drift += .5;
-      banners.forEach((b, i) => {
-        const half = b.scrollWidth / 2 || 1, x = (drift + scrollY * .45) % half;
-        b.style.transform = `translateX(${i % 2 ? x - half : -x}px)`;
       });
     }
     lines.forEach(l => { const r = l.getBoundingClientRect(); l.style.setProperty('--p', clamp((innerHeight * .8 - r.top) / (r.height + innerHeight * .25))); });

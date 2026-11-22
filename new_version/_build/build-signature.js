@@ -383,8 +383,6 @@ ${METROS.map(([n, s], i) => `        <li><a href="${href(s)}" data-city="${s}"><
 /* ---------------------------------------------------------- section kits */
 const crumbs = (P, items) => `<nav class="crumb mono" aria-label="Breadcrumb"><a href="${P.L('')}">Home</a>${items.map(([t, p]) => ` <span>/</span> ${p !== undefined ? `<a href="${P.L(p)}">${t}</a>` : `<span aria-current="page">${t}</span>`}`).join('')}</nav>`;
 const badge = () => `<a class="circle-btn" href="#contact" data-cur="TALK"><svg viewBox="0 0 134 134" aria-hidden="true"><defs><path id="cpb" d="M67,67 m-56,0 a56,56 0 1,1 112,0 a56,56 0 1,1 -112,0"/></defs><text fill="currentColor" font-size="10" font-weight="500" letter-spacing="3.6" font-family="Jost"><textPath href="#cpb">START A PROJECT · 60 DAYS · START A PROJECT · </textPath></text></svg><span>Let’s talk ↗</span></a>`;
-// big scroll-driven word banner (words differ per page)
-const tmq = (words, dark) => `<div class="tmq${dark ? ' dark' : ''}" aria-hidden="true"><div>${[...words, ...words].map(w => `<span>${w}</span><i>✦</i>`).join('')}</div></div>`;
 const phero = (P, o) => `<section class="phero">
   <div class="wrap">
     ${crumbs(P, o.crumb)}
@@ -392,7 +390,7 @@ const phero = (P, o) => `<section class="phero">
     <div class="phero-meta"><p>${o.lead}</p>${o.badge ? badge() : o.btns === false ? '' : `<div class="btns"><a class="btn" href="#contact">${o.cta || 'Get a free consultation'}</a>${o.btn2 ? `<a class="btn ghost" href="${o.btn2[1]}">${o.btn2[0]}</a>` : ''}</div>`}</div>
   </div>
 </section>${o.img ? `
-<section class="pimg"><div class="wrap"><div><img src="${o.img}" alt="${esc(o.imgAlt || '')}"></div></div></section>` : ''}${o.tmq ? '\n' + tmq(o.tmq, o.tmqDark) : ''}`;
+<section class="pimg"><div class="wrap"><div><img src="${o.img}" alt="${esc(o.imgAlt || '')}"></div></div></section>` : ''}`;
 
 const whyList = items => `<ol>
 ${items.map(([h, p], i) => `      <li class="rv"><span class="mono">${String(i + 1).padStart(2, '0')}</span><div><h3>${h}</h3><p>${p}</p></div></li>`).join('\n')}
@@ -454,7 +452,6 @@ const numsSec = () => `<section class="nums">
     <div class="n rv"><b><span data-c="100">0</span><sup>%</sup></b><span class="mono">Clients who come back for their next office</span></div>
   </div>
 </section>`;
-const mqSec = () => `<div class="mq" aria-label="Our vendor partners"><span class="mono">Our vendor partners</span><div class="mq-t" id="mq"></div></div>`;
 const procSec = (P, label) => `<section class="proc">
   <div class="wrap">
     <div class="proc-head"><h2 class="disp">Four steps, <em>60 days.</em></h2><span class="mono" style="color:var(--mut)">${label}</span></div>
@@ -493,7 +490,7 @@ const add = (p, o) => pages.push([p, o]);
 add('about', P => ({
   title: 'About Us — Morphora Spaces', desc: 'Morphora Spaces is an office interior company in Thane that designs and builds workplaces that look good, work well and are delivered on time.', active: 'about',
   body: [
-    phero(P, { tmq: ['We listen', 'We deliver', 'With purpose', 'Since day one'], crumb: [['About']], h1: 'We listen. We deliver. <em>With purpose.</em>', lead: 'Morphora Spaces is an office interior company based in Thane. We design and build workplaces that look good, work well and are delivered on time.', btn2: ['See our work', P.L('portfolio')], img: P.media('wp-content/uploads/2025/10/slidebean-TpGIpUF67po-unsplash-scaled.jpg') }),
+    phero(P, { crumb: [['About']], h1: 'We listen. We deliver. <em>With purpose.</em>', lead: 'Morphora Spaces is an office interior company based in Thane. We design and build workplaces that look good, work well and are delivered on time.', btn2: ['See our work', P.L('portfolio')], img: P.media('wp-content/uploads/2025/10/slidebean-TpGIpUF67po-unsplash-scaled.jpg') }),
     splitSec('( 01 — Who we are )', 'Design with <em>a clear purpose.</em>', `<p>We don’t just decorate offices — we plan them around how your business really works. By mixing creative design with clear planning, we create spaces that help teams do their best work.</p>
 <p>Every project is a practical answer to what our clients need today and where they want to grow. We see an office as a living system: it should adapt, inspire and lift the people who use it.</p>
 <p>Our team of designers, architects, engineers and project experts can handle projects of any size, with a strong focus on quality, practical design and a look that lasts.</p>`),
@@ -511,7 +508,6 @@ add('about', P => ({
       [`<a href="${P.L('pmc')}">Project Management ↗</a>`, 'Independent PMC that keeps your project on time, on budget and true to the design.'],
       [`<a href="${P.L('portfolio')}">Our work ↗</a>`, 'See offices we have delivered for companies like Lafarge Holcim, Codal and Ishan Tech.'],
     ]),
-    mqSec(),
   ].join('\n\n'),
 }));
 
@@ -519,7 +515,7 @@ add('about', P => ({
 add('design-and-build', P => ({
   title: 'Office Design & Build in 60 Days — Morphora Spaces', desc: 'Complete office interiors — planning, 3D design, civil and electrical work, furniture and handover — delivered by one team in 60 days.', active: 'design-and-build',
   body: [
-    phero(P, { tmq: ['Plan', 'Design', 'Build', 'Hand over', 'In 60 days'], tmqDark: true, crumb: [['Design &amp; Build']], h1: 'Office design &amp; build, <em>in 60 days.</em>', lead: 'From the first idea and detailed planning to smooth execution and a quality finish — one team handles your whole office project, within 60 days.', btn2: ['See our work', P.L('portfolio')], img: P.img('images/ADI8340-scaled.jpg') }),
+    phero(P, { crumb: [['Design &amp; Build']], h1: 'Office design &amp; build, <em>in 60 days.</em>', lead: 'From the first idea and detailed planning to smooth execution and a quality finish — one team handles your whole office project, within 60 days.', btn2: ['See our work', P.L('portfolio')], img: P.img('images/ADI8340-scaled.jpg') }),
     splitSec('( 01 — The service )', 'Everything, <em>under one roof.</em>', `<p>Our Design &amp; Build service takes your office from an empty floor to a finished workplace. You work with one team, one budget and one fixed timeline — so there is no chasing separate designers, contractors and vendors.</p>
 <p>We plan every area around how your team works, then build it with quality checks at every stage.</p>
 <ul class="tick"><li>Concept and space planning</li><li>Realistic 3D views</li><li>Layout and furniture planning</li><li>Civil and electrical work</li><li>Furniture and material buying</li><li>Final execution and handover</li></ul>`),
@@ -534,7 +530,7 @@ add('design-and-build', P => ({
 add('real-estate', P => ({
   title: 'Real Estate Advisory — Find Your Office Space | Morphora Spaces', desc: 'From finding the right location to closing the deal, Morphora’s Real Estate Advisory helps you secure an office that fits your business and growth plans.', active: '',
   body: [
-    phero(P, { tmq: ['Mumbai', 'Pune', 'Bengaluru', 'Hyderabad', 'Find your space'], crumb: [['Real Estate Advisory']], h1: 'Find your new <em>office space.</em>', lead: 'From finding the right location to closing the deal, our Real Estate Advisory team helps you secure an office that fits your business, your brand and your growth plans — clearly and quickly.', img: P.media('wp-content/uploads/2025/10/pooja-singh-L4Cev9HX9aU-unsplash-scaled.jpg') }),
+    phero(P, { crumb: [['Real Estate Advisory']], h1: 'Find your new <em>office space.</em>', lead: 'From finding the right location to closing the deal, our Real Estate Advisory team helps you secure an office that fits your business, your brand and your growth plans — clearly and quickly.', img: P.media('wp-content/uploads/2025/10/pooja-singh-L4Cev9HX9aU-unsplash-scaled.jpg') }),
     splitSec('( 01 — Corporate real estate )', 'The right space, <em>from day one.</em>', `<p>We help you shortlist and secure commercial properties that match how you work today and where you want to grow.</p>
 <p>We look at your space needs, team size, work style and expansion plans, then recommend the best locations — so you are set up for success from day one. When you are ready, the same team can design and build the office or manage the project for you.</p>
 <h3>Available inventory</h3>
@@ -560,7 +556,7 @@ add('real-estate', P => ({
 add('pmc', P => ({
   title: 'Project Management Consultancy (PMC) — Morphora Spaces', desc: 'Morphora’s PMC service keeps your office project on time, on budget and true to the design — even when we are not the designers.', active: '',
   body: [
-    phero(P, { tmq: ['On time', 'On budget', 'On site', 'No surprises'], tmqDark: true, crumb: [['Project Management']], h1: 'Project management, <em>done right.</em>', lead: 'Our Project Management Consultancy (PMC) makes sure your project is delivered quickly, clearly and under control — even when we are not the designers.', img: P.media('wp-content/uploads/2025/10/MicrosoftTeams-image-48-1024x731.jpg') }),
+    phero(P, { crumb: [['Project Management']], h1: 'Project management, <em>done right.</em>', lead: 'Our Project Management Consultancy (PMC) makes sure your project is delivered quickly, clearly and under control — even when we are not the designers.', img: P.media('wp-content/uploads/2025/10/MicrosoftTeams-image-48-1024x731.jpg') }),
     splitSec('( 01 — The service )', 'You stay in control, <em>we stay on site.</em>', `<p>Our PMC team makes sure your project is delivered accurately, on time, on budget and without surprises.</p>
 <p>We coordinate vendors, check quality and keep the work moving — so you stay in control without having to be on site every day.</p>`),
     whySec('( 02 — Why choose us )', 'What you <em>gain.</em>', [
@@ -585,7 +581,7 @@ add('pmc', P => ({
 add('portfolio', P => ({
   title: 'Portfolio — Offices We Have Delivered | Morphora Spaces', desc: 'A selection of offices designed, built and managed by Morphora Spaces across Mumbai, Thane and Ahmedabad.', active: 'portfolio',
   body: [
-    phero(P, { badge: true, tmq: ['Lafarge Holcim', 'Codal', 'Festival', 'Ishan Tech', 'Gro Value', 'I &amp; I Fidelis'], crumb: [['Portfolio']], h1: 'Our work, <em>delivered.</em>', lead: 'A selection of offices we have designed, built and managed — from compact studios to 18,000 sq ft corporate floors.' }),
+    phero(P, { badge: true, crumb: [['Portfolio']], h1: 'Our work, <em>delivered.</em>', lead: 'A selection of offices we have designed, built and managed — from compact studios to 18,000 sq ft corporate floors.' }),
     `<section class="sec" style="padding-top:20px">
   <div class="wrap">
     <div class="work-grid">
@@ -615,7 +611,7 @@ for (const pr of PROJECTS) {
     return {
       title: `${pr.name}, ${pr.city} — Office Interior Project | Morphora Spaces`, desc: `${pr.name} office in ${pr.city}: a ${pr.size} office interior project. ${pr.by}.`, active: 'portfolio',
       body: [
-        phero(P, { tmq: [esc(pr.name), pr.city, pr.size, 'Delivered'], crumb: [['Portfolio', 'portfolio'], [esc(pr.name)]], h1: `${esc(pr.name)}, <em>${pr.city}.</em>`, lead: `A ${pr.size} office in ${pr.city}. ${pr.by}.`, cta: 'Plan a similar office', img: P.img(pr.img), imgAlt: `${pr.name} office` }),
+        phero(P, { crumb: [['Portfolio', 'portfolio'], [esc(pr.name)]], h1: `${esc(pr.name)}, <em>${pr.city}.</em>`, lead: `A ${pr.size} office in ${pr.city}. ${pr.by}.`, cta: 'Plan a similar office', img: P.img(pr.img), imgAlt: `${pr.name} office` }),
         `<section class="sec" style="padding-top:60px">
   <div class="wrap">
     <div class="facts"><div><span class="mono">Client</span><b>${esc(pr.name)}</b></div><div><span class="mono">Location</span><b>${pr.city}</b></div><div><span class="mono">Area</span><b>${pr.size}</b></div><div><span class="mono">Delivery</span><b>${esc(pr.by)}</b></div></div>
@@ -643,7 +639,7 @@ add('resources', P => {
   return {
     title: 'Resources — Office Design Guides & Articles | Morphora Spaces', desc: 'Guides, tips and articles to help you plan, design and build a better office.', active: 'resources',
     body: [
-      phero(P, { tmq: ['Ideas', 'Guides', 'Trends', 'Costs', 'Planning tips'], crumb: [['Resources']], h1: 'Ideas for <em>better offices.</em>', lead: `Guides, tips and articles to help you plan, design and build a better office. ${POSTS.length} articles and counting.`, btns: false }),
+      phero(P, { crumb: [['Resources']], h1: 'Ideas for <em>better offices.</em>', lead: `Guides, tips and articles to help you plan, design and build a better office. ${POSTS.length} articles and counting.`, btns: false }),
       `<section class="sec" style="padding-top:20px">
   <div class="wrap">
     <a class="feat rv" href="${P.L('resources/' + first.slug)}"><div class="ph" data-tilt><img src="${postThumb(P, first)}" alt=""></div><div><span class="mono" style="color:var(--plum)">Latest · ${esc(first.cat)}</span><h2>${esc(first.title)}</h2><p>${esc(first.desc)}</p><span class="post"><span class="date">${fmtDate(first.date)}</span></span></div></a>
@@ -701,7 +697,7 @@ add('contact', P => ({
   title: 'Contact Us — Morphora Spaces', desc: 'Call, email or visit Morphora Spaces in Thane. Tell us about your office and we will call you back within one working day.', active: 'contact',
   footLabel: '( Send an enquiry )', footH2: 'Tell us about <em>your office.</em>',
   body: [
-    phero(P, { badge: true, tmq: ['Let’s talk', '+91 77191 55155', 'hello@morphoraspaces.com', 'Thane'], tmqDark: true, crumb: [['Contact']], h1: 'Let’s talk about <em>your office.</em>', lead: 'Call us, send a message or visit our office in Thane. We usually reply within one working day.', cta: 'Send an enquiry' }),
+    phero(P, { badge: true, crumb: [['Contact']], h1: 'Let’s talk about <em>your office.</em>', lead: 'Call us, send a message or visit our office in Thane. We usually reply within one working day.', cta: 'Send an enquiry' }),
     `<section class="sec" style="padding-top:10px">
   <div class="wrap">
     <div class="ccards">
@@ -709,7 +705,7 @@ add('contact', P => ({
       <a href="mailto:hello@morphoraspaces.com"><span class="mono">Email</span><b>hello@morphoraspaces.com</b></a>
       <a href="https://wa.me/917719155155" target="_blank" rel="noopener"><span class="mono">WhatsApp</span><b>Chat with us ↗</b></a>
     </div>
-    <div class="split" style="margin-bottom:40px"><div><span class="mono lbl">( Our office )</span><h2 class="disp" style="font-size:clamp(34px,4vw,60px)">Visit us <em>in Thane.</em></h2></div>
+    <div class="split" style="margin-bottom:40px"><div><span class="mono lbl">( Our office )</span><h2 class="disp" style="font-size:clamp(27.2px,3.2vw,48px)">Visit us <em>in Thane.</em></h2></div>
       <div class="prose"><p>1304, Dev Corpora, Eastern Express Highway, Khopat, Thane West, Thane, Maharashtra 400601 — near Cadbury Junction.</p><p><a href="https://maps.google.com/?q=Dev+Corpora+Cadbury+junction+Eastern+Express+Hwy+Thane+400601" target="_blank" rel="noopener">Get directions ↗</a></p></div></div>
     <div class="mapbox"><iframe src="https://maps.google.com/maps?q=Dev%20Corpora%20Cadbury%20junction%2C%20Eastern%20Express%20Hwy%2C%20Thane%2C%20Maharashtra%20400601&amp;t=m&amp;z=16&amp;output=embed&amp;iwloc=near" title="Morphora Spaces office on the map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
   </div>
@@ -721,7 +717,7 @@ add('contact', P => ({
 add('careers', P => ({
   title: 'Careers — Join Morphora Spaces', desc: 'Join Morphora Spaces. We are looking for creative people in interior design, project management and architecture.', active: '',
   body: [
-    phero(P, { tmq: ['Interior design', 'Project management', 'Architecture', 'Site execution'], crumb: [['Careers']], h1: 'We’re <em>hiring.</em>', lead: 'Join Morphora Spaces, where creativity meets practical design. We are looking for people who love turning workplaces into great places to work.', btns: false, img: P.media('wp-content/uploads/2025/10/slidebean-14s9hyeWOjM-unsplash-scaled.jpg') }),
+    phero(P, { crumb: [['Careers']], h1: 'We’re <em>hiring.</em>', lead: 'Join Morphora Spaces, where creativity meets practical design. We are looking for people who love turning workplaces into great places to work.', btns: false, img: P.media('wp-content/uploads/2025/10/slidebean-14s9hyeWOjM-unsplash-scaled.jpg') }),
     splitSec('( Open to )', 'Who we’re <em>looking for.</em>', `<p>We are always happy to hear from creative and committed people in:</p>
 <ul class="tick"><li>Interior design</li><li>Project management</li><li>Architecture</li><li>Site execution</li></ul>
 <h3>How to apply</h3>
@@ -749,7 +745,7 @@ for (const [slug, name] of [['privacy-policy', 'Privacy Policy'], ['terms-and-co
 add('locations', P => ({
   title: 'Locations — Office Interior Designers Across India | Morphora Spaces', desc: `Morphora Spaces designs and builds offices across India, including Mumbai, Thane, Pune, Bengaluru, Ahmedabad and Hyderabad.`, active: '',
   body: [
-    phero(P, { tmq: ['Mumbai', 'Thane', 'Pune', 'Bengaluru', 'Ahmedabad', 'Hyderabad', 'Delhi'], crumb: [['Locations']], h1: 'Office interiors <em>across India.</em>', lead: `We design, build and manage offices for clients across India. Our team works on-site or remotely, depending on the location and size of your project.` }),
+    phero(P, { crumb: [['Locations']], h1: 'Office interiors <em>across India.</em>', lead: `We design, build and manage offices for clients across India. Our team works on-site or remotely, depending on the location and size of your project.` }),
     panIndia(P, '( Where we work )'),
     `<section class="sec" style="padding-top:20px">
   <div class="wrap">
@@ -772,7 +768,7 @@ for (const c of CITIES) {
   add('office-interior-designer-in-' + c.slug, P => ({
     title: `Office Interior Designer in ${c.name} — Morphora Spaces`, desc: `Looking for an office interior designer in ${c.name}? Morphora Spaces designs and builds complete offices in ${c.name} in 60 days.`, active: '',
     body: [
-      phero(P, { badge: true, tmq: [c.name, 'Design', 'Build', 'In 60 days'], crumb: [['Locations', 'locations'], [c.name]], h1: `Office interior designer in <em>${c.name}.</em>`, lead: `Looking for an office interior designer in ${c.name}? We design and build complete offices in ${c.name} — from the first layout to the final handover, in just 60 days.`, btn2: ['See our work', P.L('portfolio')], img: P.img('images/ADI8415-scaled.jpg'), imgAlt: 'Office interior by Morphora Spaces' }),
+      phero(P, { badge: true, crumb: [['Locations', 'locations'], [c.name]], h1: `Office interior designer in <em>${c.name}.</em>`, lead: `Looking for an office interior designer in ${c.name}? We design and build complete offices in ${c.name} — from the first layout to the final handover, in just 60 days.`, btn2: ['See our work', P.L('portfolio')], img: P.img('images/ADI8415-scaled.jpg'), imgAlt: 'Office interior by Morphora Spaces' }),
       splitSec('( 01 — Our approach )', `Offices that work, <em>in ${c.name}.</em>`, `<p>We don’t just design office interiors in ${c.name} — we rethink how your space should work. By mixing smart planning with good design, we create offices that look good and help your team do their best work.</p>
 <p>With our 60-day delivery promise, your office is ready quickly without cutting corners on quality. Every space is planned around your needs today and how your company will grow.</p>
 <ul class="tick"><li><a href="${P.L('design-and-build')}">Office design &amp; build</a></li><li><a href="${P.L('real-estate')}">Finding office space</a></li><li><a href="${P.L('pmc')}">Project management</a></li><li>Handover &amp; support</li></ul>`),
@@ -797,8 +793,6 @@ for (const d of fs.readdirSync(SIG)) {
   if (d === 'media') { for (const c of fs.readdirSync(p)) fs.rmSync(path.join(p, c), { recursive: true, force: true }); }
   else fs.rmSync(p, { recursive: true, force: true });
 }
-// vendor logos used by the marquee in assets/site.js
-for (const f of ['Saint-Gobain_logo.png', 'Armstrong-Logo.png', 'Honeywell.png', 'Legrand_.png', 'Polycab.png', 'DAIKIN-logo.png', 'Philips-logo-scaled.jpg', 'gyproc-logo.png', 'Asian-Paints.png', 'Greenlam-Logo.png', 'merino-laminates-ltd-vector-logo.png', 'Feather-Lite-Logo.jpg', 'Hikvision-logo-scaled.png', 'wipro-logo.jpg', 'Welspun-logo.jpg', 'CommScope-logo-scaled.jpg', 'kubik-logo-1-scaled.png', 'Windor-e1753389106844.png', 'Amardeep-Designs-scaled.png']) USED.add('wp-content/uploads/2025/07/' + f);
 let n = 0;
 for (const [p, fn] of pages) {
   const P = ctx(p), o = fn(P), out = path.join(SIG, p, 'index.html');
