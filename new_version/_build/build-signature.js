@@ -657,9 +657,13 @@ add('contact', P => ({
       <a href="mailto:hello@morphoraspaces.com"><span class="mono">Email</span><b>hello@morphoraspaces.com</b></a>
       <a href="https://wa.me/917719155155" target="_blank" rel="noopener"><span class="mono">WhatsApp</span><b>Chat with us ↗</b></a>
     </div>
-    <div class="split" style="margin-bottom:40px"><div><span class="mono lbl">( Our office )</span><h2 class="disp" style="font-size:clamp(27.2px,3.2vw,48px)">Visit us <em>in Thane.</em></h2></div>
-      <div class="prose"><p>1304, Dev Corpora, Eastern Express Highway, Khopat, Thane West, Thane, Maharashtra 400601 — near Cadbury Junction.</p><p><a href="https://maps.google.com/?q=Dev+Corpora+Cadbury+junction+Eastern+Express+Hwy+Thane+400601" target="_blank" rel="noopener">Get directions ↗</a></p></div></div>
-    <div class="mapbox"><iframe src="https://maps.google.com/maps?q=Dev%20Corpora%20Cadbury%20junction%2C%20Eastern%20Express%20Hwy%2C%20Thane%2C%20Maharashtra%20400601&amp;t=m&amp;z=16&amp;output=embed&amp;iwloc=near" title="Morphora Spaces office on the map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+    <div class="split" style="margin-bottom:40px"><div><span class="mono lbl">( Our offices )</span><h2 class="disp" style="font-size:clamp(27.2px,3.2vw,48px)">Visit us <em>in Thane.</em></h2></div>
+      <div class="prose"><p>Drop by our head office in Wagle Estate to see materials and talk through your project. Please call ahead so the right person is there to meet you.</p></div></div>
+    <div class="offs">
+      <div><span class="mono">Head office</span><h3>Wagle Estate, Thane</h3><address>Chirag Infotech, 208, Road No. 16/Z, Indira Nagar, Wagle Estate, Thane West, Thane, Maharashtra 400604</address><a href="https://www.google.com/maps/place/Morphora+Spaces/@19.2035213,72.9539775,17z" target="_blank" rel="noopener">Get directions ↗</a></div>
+      <div><span class="mono">Registered office</span><h3>Khopat, Thane</h3><address>1304, Dev Corpora, Eastern Express Highway, Khopat, Thane West, Thane, Maharashtra 400601 — near Cadbury Junction</address><a href="https://maps.google.com/?q=Dev+Corpora+Cadbury+junction+Eastern+Express+Hwy+Thane+400601" target="_blank" rel="noopener">Get directions ↗</a></div>
+    </div>
+    <div class="mapbox"><iframe src="https://maps.google.com/maps?q=Morphora%20Spaces%2C%20Wagle%20Estate%2C%20Thane%20400604&amp;ll=19.2035213,72.9539775&amp;t=m&amp;z=16&amp;output=embed" title="Morphora Spaces head office on the map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
   </div>
 </section>`,
   ].join('\n\n'),
