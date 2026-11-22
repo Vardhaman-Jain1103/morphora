@@ -49,14 +49,15 @@
 </div>
 <!-- /@header -->
 
-<!-- HERO -->
-<section class="hero">
-  <div class="wrap">
-    <h1 class="disp">
-      <span class="ln"><span>Better offices,</span></span>
-      <span class="ln"><span>built <span class="pill-img"><img src="./images/petr-magera-P5TDvxkHWss-unsplash-scaled.jpg" alt=""></span> <em>on time.</em></span></span>
-    </h1>
-    <div class="hero-meta">
+<!-- HERO: headline + photo that grows to full screen on scroll -->
+<section class="hx" id="expand">
+  <div class="stick">
+    <div class="hx-text wrap" id="hxText">
+      <h1 class="disp">
+        <span class="ln"><span>Better offices,</span></span>
+        <span class="ln"><span>built <em>on time.</em></span></span>
+      </h1>
+      <div class="hero-meta">
       <span class="mono">( Office interiors · Mumbai )</span>
       <p>We design and build offices for growing companies — from the first layout to the final handover, in just 60 days.</p>
       <a class="circle-btn" href="#contact" data-cur="TALK">
@@ -64,14 +65,9 @@
         <span>Talk to us ↗</span>
       </a>
     </div>
-  </div>
-</section>
-
-<!-- EXPANDING IMAGE -->
-<section class="expand" id="expand">
-  <div class="stick">
-    <div class="frame" id="xFrame"><img id="xImg" src="./images/ADI8415-scaled.jpg" alt="Festival office, Mumbai"></div>
-    <div class="cap wrap mono"><span>Festival — Mumbai</span><span>3,000 sq ft · 60 days</span></div>
+    </div>
+    <div class="frame" id="xFrame"><img id="xImg" src="./images/morphora-office-8000-sqft-hero.jpg" alt="Open-plan workstations in an 8,000 sq ft office by Morphora Spaces" fetchpriority="high"><div class="shade" id="xShade"></div></div>
+    <div class="cap wrap mono" id="xCap"><span>8,000 sq ft office</span><span>Designed &amp; built by Morphora</span></div>
   </div>
 </section>
 
@@ -305,15 +301,17 @@ addEventListener('keydown',e=>{if(zg.hidden)return;if(e.key==='Escape')zgClose()
 let zgX=null;zgImg.parentNode.addEventListener('touchstart',e=>{zgX=e.touches[0].clientX},{passive:true});zgImg.parentNode.addEventListener('touchend',e=>{if(zgX===null)return;const dx=e.changedTouches[0].clientX-zgX;if(Math.abs(dx)>40)zgShow(zgI+(dx<0?1:-1));zgX=null});
 
 // scroll-driven: expand image, manifesto, horizontal
-const ex=$('#expand'),xf=$('#xFrame'),xi=$('#xImg'),hz=$('#work'),track=$('#hzTrack'),hp=$('#hzProg');
+const ex=$('#expand'),xf=$('#xFrame'),xi=$('#xImg'),xt=$('#hxText'),xs=$('#xShade'),xc=$('#xCap'),hz=$('#work'),track=$('#hzTrack'),hp=$('#hzProg');
+let t0=.6;function sizeHero(){t0=Math.min(.7,(xt.offsetTop+xt.offsetHeight+28)/innerHeight)}
+new ResizeObserver(()=>{sizeHero();onScroll()}).observe(xt);
 function sizeHz(){if(innerWidth>1000){hz.style.height=(track.scrollWidth-innerWidth+innerHeight+100)+'px'}else hz.style.height=''}
 function onScroll(){
   const r=ex.getBoundingClientRect(),p=clamp(-r.top/(r.height-innerHeight));
-  const ins=(1-p)*18,side=(1-p)*26,rad=(1-p)*300;xf.style.clipPath=`inset(${ins}% ${side}% ${ins}% ${side}% round ${rad}px)`;xi.style.transform=`scale(${1.25-p*.25})`;
+  const e=p*p*(3-2*p),k=1-e;xf.style.clipPath=`inset(${t0*k*100}% ${4*k}% ${4*k}% ${4*k}% round ${20*k}px)`;const tp=t0*k*100;xi.style.top=tp+"%";xi.style.height=(100-tp)+"%";xi.style.transform=`scale(${1.08-e*.08})`;xt.style.transform=`translateY(${-e*80}px)`;xt.style.opacity=1-clamp((e-.15)/.4);const c=clamp((e-.55)/.45);xs.style.opacity=c;xc.style.opacity=c;xc.style.transform=`translateY(${(1-c)*12}px)`;
   const mr=mf.getBoundingClientRect(),mp=clamp((innerHeight*.85-mr.top)/(mr.height+innerHeight*.3));const lit=Math.round(mp*words.length);words.forEach((w,i)=>w.classList.toggle('on',i<lit));
   if(innerWidth>1000){const hr=hz.getBoundingClientRect(),hpv=clamp(-hr.top/(hr.height-innerHeight));track.style.transform=`translateX(${-hpv*(track.scrollWidth-innerWidth+80)}px)`;hp.style.width=hpv*100+'%'}
 }
-addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',()=>{sizeHz();onScroll()});addEventListener('load',()=>{sizeHz();onScroll()});sizeHz();onScroll();
+addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',()=>{sizeHero();sizeHz();onScroll()});addEventListener('load',()=>{sizeHero();sizeHz();onScroll()});sizeHero();sizeHz();onScroll();
 </script>
 </body>
 </html>
