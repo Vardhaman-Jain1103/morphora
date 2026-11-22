@@ -28,6 +28,44 @@
   }
   if (hdr) { addEventListener('scroll', onHdr, { passive: true }); onHdr(); }
 
+  // ---- font switcher (client showcase; delete this block + the matching CSS once a font is picked) ----
+  // Each option sets the display (headings) and body fonts. ?font=1..5 in the URL preselects one; 0 = original Jost.
+  const FONTS = [
+    ['Original', 'Jost — current geometric', 'Jost', 'Jost'],
+    ['Luxe Serif', 'Cormorant Garamond + Manrope', 'Cormorant Garamond', 'Manrope'],
+    ['Editorial', 'Fraunces + DM Sans', 'Fraunces', 'DM Sans'],
+    ['Studio', 'Syne + Inter', 'Syne', 'Inter'],
+    ['Technical', 'Space Grotesk + IBM Plex Sans', 'Space Grotesk', 'IBM Plex Sans'],
+    ['Clean Modern', 'Plus Jakarta Sans', 'Plus Jakarta Sans', 'Plus Jakarta Sans'],
+  ];
+  const right = $('header .right');
+  if (right) {
+    const fl = document.createElement('link'); fl.rel = 'stylesheet';
+    fl.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Manrope:wght@300;400;500&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=DM+Sans:wght@300;400;500&family=Syne:wght@400;500;600&family=Inter:wght@300;400;500&family=Space+Grotesk:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap';
+    document.head.appendChild(fl);
+    const store = { get() { try { return localStorage.getItem('msFont'); } catch (e) { return null; } }, set(v) { try { localStorage.setItem('msFont', v); } catch (e) {} } };
+    const q = new URLSearchParams(location.search).get('font');
+    const fsw = document.createElement('div'); fsw.className = 'fsw';
+    fsw.innerHTML = `<button class="fsw-b" type="button" aria-haspopup="true" aria-expanded="false"><i>Aa</i><span>Fonts</span></button><div class="fsw-p" role="radiogroup" aria-label="Choose a font">${FONTS.map((f, i) => `<button type="button" role="radio" data-f="${i}"><b>0${i}</b><strong style="font-family:'${f[2]}',serif">${f[0]}</strong><small style="font-family:'${f[3]}',sans-serif">${f[1]}</small></button>`).join('')}</div>`;
+    right.insertBefore(fsw, right.firstChild);
+    const btn = fsw.querySelector('.fsw-b');
+    function applyFont(i) {
+      i = FONTS[i] ? +i : 0;
+      const f = FONTS[i], r = document.documentElement.style;
+      r.setProperty('--disp', `"${f[2]}",system-ui,sans-serif`);
+      r.setProperty('--sans', `"${f[3]}",system-ui,sans-serif`);
+      r.setProperty('--mono', `"${f[3]}",system-ui,sans-serif`);
+      fsw.querySelectorAll('[data-f]').forEach(b => b.setAttribute('aria-checked', b.dataset.f == i));
+      store.set(i);
+    }
+    function openFsw(o) { fsw.classList.toggle('on', o); btn.setAttribute('aria-expanded', o); }
+    applyFont(q !== null ? q : store.get() || 0);
+    btn.onclick = e => { e.stopPropagation(); openFsw(!fsw.classList.contains('on')); };
+    fsw.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { applyFont(b.dataset.f); dispatchEvent(new Event('resize')); });
+    addEventListener('click', e => { if (!fsw.contains(e.target)) openFsw(false); });
+    addEventListener('keydown', e => { if (e.key === 'Escape') openFsw(false); });
+  }
+
   // ---- footer year ----
   const yr = $('#yr'); if (yr) yr.textContent = new Date().getFullYear();
 
