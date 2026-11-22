@@ -163,8 +163,8 @@ header.open .menu-t b i:last-child{width:100%;transform:translateY(-3.25px) rota
 .proc{position:relative;z-index:1;padding:40px 0 140px}
 .proc-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:60px;gap:30px;flex-wrap:wrap}
 .proc-head h2{font-size:clamp(36.8px,4.8vw,80px)}
-.pcard{position:sticky;top:110px;background:var(--paper);border:1px solid var(--line);border-radius:6px;display:grid;grid-template-columns:120px 1fr 1.1fr;gap:40px;padding:40px;min-height:440px;margin-bottom:30px;transform-origin:center top;box-shadow:0 -20px 60px -40px rgba(0,0,0,.3)}
-.pcard:nth-child(2){top:130px}.pcard:nth-child(3){top:150px}.pcard:nth-child(4){top:170px}
+.pcard{position:sticky;top:calc(100px + var(--n,0)*84px);background:var(--paper);border:1px solid var(--line);border-radius:6px;display:grid;grid-template-columns:120px 1fr 1.1fr;gap:40px;padding:26px 40px 40px;min-height:420px;margin-bottom:30px;transform-origin:center top;box-shadow:0 -20px 60px -40px rgba(0,0,0,.3)}
+.pcard:nth-child(2){--n:1}.pcard:nth-child(3){--n:2}.pcard:nth-child(4){--n:3}
 .pcard .k{font-family:var(--disp);font-size:64px;font-weight:300;font-style:normal;color:var(--plum);line-height:.8}
 .pcard h3{font-family:var(--disp);font-weight:300;font-size:clamp(27.2px,2.7vw,43.2px);letter-spacing:-.01em;line-height:1}
 .pcard p{color:var(--mut);margin-top:20px;max-width:380px;font-size:15.2px}
@@ -173,19 +173,6 @@ header.open .menu-t b i:last-child{width:100%;transform:translateY(-3.25px) rota
 .pcard .ph img{width:100%;height:100%;object-fit:cover}
 
 /* services hover list */
-.svc{position:relative;z-index:1;padding:140px 0;background:var(--paper)}
-.svc .mono.lbl{color:var(--plum);display:block;margin-bottom:30px}
-.svc-row{display:grid;grid-template-columns:80px 1fr auto;align-items:center;gap:30px;padding:36px 0;border-top:1px solid var(--line);position:relative;transition:padding .6s var(--out)}
-.svc-row:last-child{border-bottom:1px solid var(--line)}
-.svc-row h3{font-family:var(--disp);font-weight:300;font-size:clamp(27.2px,4vw,64px);letter-spacing:-.01em;line-height:1;transition:font-style .3s,color .3s}
-.svc-row:hover{padding-left:30px}
-.svc-row:hover h3{font-style:normal;color:var(--plum)}
-.svc-row .mono{color:var(--mut)}
-.svc-row .tags{text-align:right;color:var(--mut);max-width:260px}
-.float-img{position:fixed;top:0;left:0;width:340px;height:240px;border-radius:4px;overflow:hidden;pointer-events:none;z-index:20;opacity:0;transform:translate(-50%,-50%) scale(.6) rotate(-6deg);transition:opacity .4s,transform .6s var(--out)}
-.float-img.on{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}
-.float-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s}
-.float-img img.on{opacity:1}
 
 /* project credit */
 .hz-card .by{display:block;font-size:14px;color:var(--mut);margin-top:6px}
@@ -274,11 +261,9 @@ header.open .menu-t b i:last-child{width:100%;transform:translateY(-3.25px) rota
   .why-grid,.faq-grid{grid-template-columns:1fr;gap:40px}
   .why h2{position:static}
   .blog-grid{grid-template-columns:1fr 1fr}
-  .pcard{grid-template-columns:1fr;gap:20px;padding:28px;min-height:auto}
-  .pcard .ph{aspect-ratio:16/9}
+  .pcard{grid-template-columns:auto 1fr;gap:18px 20px;padding:20px 22px 24px;min-height:auto;top:calc(84px + var(--n,0)*70px)}
+  .pcard .ph{aspect-ratio:16/9;grid-column:1/-1}
   .pcard .k{font-size:44.8px}
-  .svc-row{grid-template-columns:50px 1fr}
-  .svc-row .tags{display:none}
   .cta-grid{grid-template-columns:1fr;gap:48px}
   .ft{grid-template-columns:1fr 1fr}
   .nav,.hbtn{display:none}
@@ -296,14 +281,13 @@ header.open .menu-t b i:last-child{width:100%;transform:translateY(-3.25px) rota
   .hz-card .ph{height:auto;aspect-ratio:4/5}
   .hz-card:nth-child(even){margin-top:0}
   .hz-prog{display:none}
-  .float-img{display:none}
 }
 @media (max-width:640px){
   .hero{padding-top:118px}
   .hero h1{font-size:clamp(27.2px,8.6vw,43.2px)}
   .hero-meta{margin-top:40px;gap:24px}
   .expand{height:130vh}
-  .manifesto,.plan,.nums,.svc,.quote{padding:100px 0}
+  .manifesto,.plan,.nums,.quote{padding:100px 0}
   .hz-head{flex-direction:column;align-items:flex-start;gap:12px}
   .nums-grid{grid-template-columns:1fr 1fr}
   .n b{font-size:51.2px}

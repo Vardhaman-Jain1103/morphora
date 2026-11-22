@@ -198,27 +198,10 @@
   </div>
 </section>
 
-<!-- SERVICES -->
-<section class="svc" id="svc">
-  <div class="wrap">
-    <span class="mono lbl">( 06 — Services )</span>
-    <a class="svc-row" href="./design-and-build/index.html" data-i="0"><span class="mono">01</span><h3>Design &amp; Build</h3><span class="mono tags">Planning · 3D design · Civil work · Furniture</span></a>
-    <a class="svc-row" href="./real-estate/index.html" data-i="1"><span class="mono">02</span><h3>Real Estate Advisory</h3><span class="mono tags">Finding space · Site checks · Leasing</span></a>
-    <a class="svc-row" href="./pmc/index.html" data-i="2"><span class="mono">03</span><h3>Project Management</h3><span class="mono tags">Vendors · Cost · Quality · Time</span></a>
-    <a class="svc-row" href="./contact/index.html" data-i="3"><span class="mono">04</span><h3>Handover &amp; Support</h3><span class="mono tags">User guides · Maintenance · Upgrades</span></a>
-  </div>
-  <div class="float-img" id="flt">
-    <img src="./images/ADI8427-scaled.jpg" alt="">
-    <img src="./images/photo-1582407947304-fd86f028f716-1-scaled.jpg" alt="">
-    <img src="./images/IMG_20200919_173443-scaled.jpg" alt="">
-    <img src="./images/openart-image_jk5Yu86G_1759864469491_raw-scaled.jpg" alt="">
-  </div>
-</section>
-
 <!-- WHY US -->
 <section class="why">
   <div class="wrap why-grid">
-    <div><span class="mono" style="color:var(--plum)">( 07 — Why choose us )</span><h2 class="disp">Why work <em>with us.</em></h2></div>
+    <div><span class="mono" style="color:var(--plum)">( 06 — Why choose us )</span><h2 class="disp">Why work <em>with us.</em></h2></div>
     <ol>
       <li class="rv"><span class="mono">01</span><div><h3>Clear process, full transparency</h3><p>From start to finish you always know where your project stands, with live progress updates on a simple online dashboard.</p></div></li>
       <li class="rv"><span class="mono">02</span><div><h3>Design that works</h3><p>Offices that look good and are easy to work in — planned around your workflow, productivity and company culture.</p></div></li>
@@ -232,7 +215,7 @@
 <!-- BLOG -->
 <section class="blog">
   <div class="wrap">
-    <div class="blog-head"><div><span class="mono" style="color:var(--plum)">( 08 — From our blog )</span><h2 class="disp">Ideas for <em>better offices.</em></h2></div><a class="mono" href="./resources/index.html">All articles ↗</a></div>
+    <div class="blog-head"><div><span class="mono" style="color:var(--plum)">( 07 — From our blog )</span><h2 class="disp">Ideas for <em>better offices.</em></h2></div><a class="mono" href="./resources/index.html">All articles ↗</a></div>
     <div class="blog-grid">
       <a class="post rv" href="./resources/office-interior-design-in-60-days/index.html"><div class="ph"><img src="./media/2026/09/Website-images-for-Morphora-2-1024x576.webp" alt="" loading="lazy"></div><span class="mono">Design &amp; Build</span><h3>How we design your office in 60 days: a step-by-step process</h3></a>
       <a class="post rv" href="./resources/natural-light-in-office-design/index.html"><div class="ph"><img src="./media/2026/10/Natural-Light-in-Modern-Office-Design-1-1024x576.webp" alt="" loading="lazy"></div><span class="mono">Office design</span><h3>The impact of natural light in office design</h3></a>
@@ -244,7 +227,7 @@
 <!-- FAQ -->
 <section class="faq">
   <div class="wrap faq-grid">
-    <div><span class="mono" style="color:var(--plum)">( 09 — FAQs )</span><h2 class="disp">Common <em>questions.</em></h2><p>Still have a question? <a href="#contact">Talk to our team</a> and we will help you out.</p></div>
+    <div><span class="mono" style="color:var(--plum)">( 08 — FAQs )</span><h2 class="disp">Common <em>questions.</em></h2><p>Still have a question? <a href="#contact">Talk to our team</a> and we will help you out.</p></div>
     <div>
       <details><summary>What makes Morphora Spaces different from other office interior companies?</summary><p>We go beyond looks. Our team combines creative interior design with smart space planning to deliver offices that work well, match your brand and are ready for the future — all within 60 days.</p></details>
       <details><summary>How long does it take to design and build an office?</summary><p>We deliver complete office projects in 60 days. Design, buying materials and construction are all planned together, so there is very little downtime for your business.</p></details>
@@ -260,7 +243,7 @@
 <!-- CTA + FOOTER -->
 <section class="cta" id="contact">
   <div class="wrap">
-    <span class="mono">( 10 — Contact us )</span>
+    <span class="mono">( 09 — Contact us )</span>
     <h2 class="disp">Let’s plan <em>your office.</em></h2>
     <p class="cta-lead">Tell us a little about your space. Our team will call you back within one working day with next steps and a rough estimate.</p>
     <div class="cta-grid">
@@ -336,12 +319,6 @@ const zImgs=$$('#zPh img'),zones=$$('.zone');
 function zone(i){zones.forEach(g=>g.classList.toggle('on',+g.dataset.z===i));zImgs.forEach((im,k)=>im.classList.toggle('on',k===i));const z=Z[i];
   $('#zK').textContent=`Area ${String(i+1).padStart(2,'0')} · ${z[1]} of floor space`;$('#zT').textContent=z[0];$('#zD').textContent=z[2];$('#zL').innerHTML=z[3].map(x=>`<li>${x}</li>`).join('')}
 zones.forEach(g=>{g.onmouseenter=g.onclick=()=>zone(+g.dataset.z)});zone(0);
-
-// services floating image
-const flt=$('#flt'),fImgs=$$('#flt img');let fx=0,fy=0,tx=0,ty=0;
-$$('.svc-row').forEach(r=>{r.onmouseenter=()=>{flt.classList.add('on');fImgs.forEach((im,k)=>im.classList.toggle('on',k===+r.dataset.i))};r.onmouseleave=()=>flt.classList.remove('on')});
-addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY});
-(function fl(){fx+=(tx-fx)*.12;fy+=(ty-fy)*.12;flt.style.left=fx+'px';flt.style.top=fy+'px';requestAnimationFrame(fl)})();
 
 // scroll-driven: expand image, manifesto, horizontal
 const ex=$('#expand'),xf=$('#xFrame'),xi=$('#xImg'),hz=$('#work'),track=$('#hzTrack'),hp=$('#hzProg');

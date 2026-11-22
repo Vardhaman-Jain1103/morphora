@@ -806,11 +806,9 @@ for (const [p, fn] of pages) {
   let s = fs.readFileSync(f, 'utf8');
   s = s.replace(/<!-- @header -->[\s\S]*?<!-- \/@header -->/, `<!-- @header -->\n${header(P, '')}\n<!-- /@header -->`);
   s = s.replace(/<!-- @map -->[\s\S]*?<!-- \/@map -->/, `<!-- @map -->\n${panIndia(P, '( 04 — Pan-India )')}\n<!-- /@map -->`);
-  s = s.replace(/<!-- @footer -->[\s\S]*?<!-- \/@footer -->/, `<!-- @footer -->\n${footer(P, '( 10 — Contact us )')}\n<!-- /@footer -->`);
+  s = s.replace(/<!-- @footer -->[\s\S]*?<!-- \/@footer -->/, `<!-- @footer -->\n${footer(P, '( 09 — Contact us )')}\n<!-- /@footer -->`);
   s = s.replace(/href="(\.\.\/\.\.\/[^"]*)"/g, (m, h) => { const r = P.href(h); return r ? `href="${r.href}"` : m; });
   s = s.replace(/src="(?:\.\.\/\.\.\/|\.\/media\/)(?:wp-content\/uploads\/)?([^"]+)"/g, (m, r) => `src="${P.media('wp-content/uploads/' + r)}"`);
-  s = s.replace('href="./index.html" data-i="0"', `href="${P.L('design-and-build')}" data-i="0"`);
-  s = s.replace(/(<a class="svc-row" href=")[^"]*(" data-i="3")/, `$1${P.L('contact')}$2`);
   fs.writeFileSync(f, s);
 }
 
