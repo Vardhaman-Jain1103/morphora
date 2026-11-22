@@ -29,7 +29,7 @@
   if (hdr) { addEventListener('scroll', onHdr, { passive: true }); onHdr(); }
 
   // ---- font switcher (client showcase; delete this block + the matching CSS once a font is picked) ----
-  // Each option sets the display (headings) and body fonts. ?font=1..6 in the URL preselects one; 0 = original Jost.
+  // Each option sets the display (headings) and body fonts. ?font=1..7 in the URL preselects one; 0 = original Jost.
   const FONTS = [
     ['Original', 'Jost — current geometric', 'Jost', 'Jost'],
     ['Luxe Serif', 'Cormorant Garamond + Manrope', 'Cormorant Garamond', 'Manrope'],
@@ -37,14 +37,15 @@
     ['Studio', 'Syne + Inter', 'Syne', 'Inter'],
     ['Technical', 'Space Grotesk + IBM Plex Sans', 'Space Grotesk', 'IBM Plex Sans'],
     ['Clean Modern', 'Plus Jakarta Sans', 'Plus Jakarta Sans', 'Plus Jakarta Sans'],
-    // Megalito Slab is a commercial font: self-hosted from assets/fonts/ (see @font-face in site.css); Rokkitt stands in until the files are added
-    ['Slab Display', 'Megalito Slab + IBM Plex Sans', 'Megalito Slab, Rokkitt', 'IBM Plex Sans'],
+    // free look-alikes for Megalito Slab (condensed geometric slab serif, commercial)
+    ['Slab Condensed', 'Stint Ultra Condensed + IBM Plex Sans', 'Stint Ultra Condensed', 'IBM Plex Sans'],
+    ['Slab Geometric', 'Rokkitt + IBM Plex Sans', 'Rokkitt', 'IBM Plex Sans'],
   ];
   const stack = (f, g) => f.split(',').map(n => `"${n.trim()}"`).join(',') + ',' + g;
   const right = $('header .right');
   if (right) {
     const fl = document.createElement('link'); fl.rel = 'stylesheet';
-    fl.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Manrope:wght@300;400;500&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=DM+Sans:wght@300;400;500&family=Syne:wght@400;500;600&family=Inter:wght@300;400;500&family=Space+Grotesk:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&family=Plus+Jakarta+Sans:wght@300;400;500&family=Rokkitt:wght@300;400;500&display=swap';
+    fl.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Manrope:wght@300;400;500&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=DM+Sans:wght@300;400;500&family=Syne:wght@400;500;600&family=Inter:wght@300;400;500&family=Space+Grotesk:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&family=Plus+Jakarta+Sans:wght@300;400;500&family=Rokkitt:wght@300;400;500&family=Stint+Ultra+Condensed&display=swap';
     document.head.appendChild(fl);
     const store = { get() { try { return localStorage.getItem('msFont'); } catch (e) { return null; } }, set(v) { try { localStorage.setItem('msFont', v); } catch (e) {} } };
     const q = new URLSearchParams(location.search).get('font');

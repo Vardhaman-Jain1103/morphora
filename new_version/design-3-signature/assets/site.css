@@ -12,10 +12,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .disp{font-family:var(--disp);font-weight:300;letter-spacing:-.01em;line-height:1.05}
 .disp em{font-style:normal;color:var(--plum)}
 /* cursor */
-.cur{position:fixed;top:0;left:0;z-index:150;pointer-events:none;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--plum);transition:width .4s var(--out),height .4s var(--out),margin .4s var(--out),background .3s;display:grid;place-items:center;mix-blend-mode:normal}
-.cur span{font:500 11px var(--mono);letter-spacing:.08em;color:#fff;opacity:0;transition:opacity .3s}
-.cur.big{width:96px;height:96px;margin:-48px 0 0 -48px}
-.cur.big span{opacity:1}
+.cur{position:fixed;top:0;left:0;z-index:150;pointer-events:none;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--plum);transition:width .35s var(--out),height .35s var(--out),margin .35s var(--out)}
+/* hover label: a small pill beside the pointer, so it never covers what is underneath */
+.cur span{position:absolute;left:14px;top:14px;display:flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:999px;background:var(--char);color:var(--stone);border:1px solid rgba(236,231,223,.3);font:500 10px var(--mono);letter-spacing:.14em;white-space:nowrap;box-shadow:0 8px 20px -10px rgba(0,0,0,.5);opacity:0;transform:translate(-6px,-6px) scale(.85);transform-origin:top left;transition:opacity .25s,transform .4s var(--out)}
+.cur span::after{content:"↗";font-size:12px;letter-spacing:0;color:var(--plum-l)}
+.cur.big{width:6px;height:6px;margin:-3px 0 0 -3px}
+.cur.big span{opacity:1;transform:none}
 @media (hover:none){.cur{display:none}}
 
 /* header */
@@ -527,8 +529,6 @@ header.open .menu-t b i:last-child{width:100%;transform:translateY(-3.25px) rota
 
 /* ---- font switcher (client showcase; delete this block + the matching one in site.js once a font is picked) ---- */
 .circle-btn text{font-family:var(--sans)}
-/* Megalito Slab (deFharo, commercial licence) — put the licensed files in assets/fonts/ with these names */
-@font-face{font-family:"Megalito Slab";src:url("fonts/MegalitoSlab-Regular.woff2") format("woff2"),url("fonts/MegalitoSlab-Regular.otf") format("opentype"),url("fonts/MegalitoSlab-Regular.ttf") format("truetype");font-weight:100 900;font-style:normal;font-display:swap}
 .fsw{position:relative}
 .fsw-b{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border:1px solid currentColor;border-radius:999px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;transition:background .3s,color .3s}
 .fsw-b:hover,.fsw.on .fsw-b{background:var(--char);color:var(--stone);border-color:var(--char)}
