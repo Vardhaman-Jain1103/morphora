@@ -84,8 +84,28 @@
     });
   }
 
-  // ---- footer year ----
-  const yr = $('#yr'); if (yr) yr.textContent = new Date().getFullYear();
+  // ---- shared footer: ONE file (partials/footer.html) loaded into <div id="site-footer"> on every page ----
+  const footSlot = $('#site-footer');
+  if (footSlot) {
+    fetch(new URL('partials/footer.html', ROOT)).then(r => { if (!r.ok) throw new Error(r.status); return r.text(); }).then(html => {
+      const t = document.createElement('template'); t.innerHTML = html;
+      // links in the file are relative to the site root; resolve them so they work from any sub-folder
+      t.content.querySelectorAll('[href],[src]').forEach(el => {
+        const a = el.hasAttribute('href') ? 'href' : 'src', v = el.getAttribute(a);
+        if (!/^([a-z][a-z0-9+.-]*:|#|\/)/i.test(v)) el.setAttribute(a, new URL(v, ROOT).href);
+      });
+      if (footSlot.dataset.label) t.content.querySelector('[data-slot="label"]').textContent = footSlot.dataset.label;
+      if (footSlot.dataset.title) t.content.querySelector('[data-slot="title"]').innerHTML = footSlot.dataset.title;
+      footSlot.replaceWith(t.content);
+      initFooter();
+      if (location.hash) { const el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView(); }
+    }).catch(err => console.warn('Footer could not be loaded:', err));
+  }
+
+  function initFooter() {
+    const yr = $('#yr'); if (yr) yr.textContent = new Date().getFullYear();
+    initForm();
+  }
 
   // ---- cursor ----
   const cur = $('#cur');
@@ -149,7 +169,8 @@
   }), { threshold: .5 });
   $$('[data-c]').forEach(el => co.observe(el));
 
-  // ---- enquiry form → WhatsApp (static site, no backend) ----
+  // ---- enquiry form → WhatsApp (static site, no backend); runs once the shared footer is in the page ----
+  function initForm() {
   const form = $('#cform');
   if (form) form.onsubmit = e => {
     e.preventDefault();
@@ -160,6 +181,7 @@
     window.open('https://wa.me/917719155155?text=' + encodeURIComponent('New enquiry from the website (' + document.title + ')\n\n' + lines.join('\n')), '_blank', 'noopener');
     note.textContent = 'Thank you! Please press send in WhatsApp to share your details.'; note.style.color = ''; form.reset();
   };
+  }
 
   // ---- gallery lightbox ----
   const gal = $$('.gal a');

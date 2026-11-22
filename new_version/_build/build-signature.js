@@ -228,65 +228,13 @@ ${NAV.map((n, i) => `    <li><a href="${P.L(n[0])}"><b>0${i + 1}</b><span><stron
 </div>`;
 }
 
-function footer(P, label = '( Contact us )', h2 = 'Let’s plan <em>your office.</em>') {
-  const city = s => `<a href="${P.L('office-interior-designer-in-' + s)}">${CITIES.find(c => c.slug === s).name}</a>`;
-  return `<!-- CTA + FOOTER -->
-<section class="cta" id="contact">
-  <div class="wrap">
-    <div class="cta-grid">
-      <div class="cta-side">
-      <div class="cta-intro">
-        <span class="mono">${label}</span>
-        <h2 class="disp">${h2}</h2>
-        <p class="cta-lead">Tell us a little about your space. Our team will call you back within one working day with next steps and a rough estimate.</p>
-      </div>
-      <div class="cinfo">
-        <div><span class="mono">Call us</span><a class="big" href="tel:+917719155155">+91 77191 55155</a></div>
-        <div><span class="mono">Email</span><a class="big" href="mailto:hello@morphoraspaces.com">hello@morphoraspaces.com</a></div>
-        <div><span class="mono">WhatsApp</span><a class="big" href="https://wa.me/917719155155" target="_blank" rel="noopener">Chat with us ↗</a></div>
-        <div><span class="mono">Office</span><address>1304, Dev Corpora, Eastern Express Highway, Khopat, Thane West, Maharashtra 400601</address><a class="map" href="https://maps.google.com/?q=Dev+Corpora+Cadbury+junction+Eastern+Express+Hwy+Thane+400601" target="_blank" rel="noopener">Get directions ↗</a></div>
-        <div><span class="mono">We work in</span><p class="cities">Mumbai · Thane · Pune · Ahmedabad · Bengaluru · Delhi · Hyderabad · <a href="${P.L('locations')}" style="color:var(--plum-l)">all locations</a></p></div>
-      </div>
-      </div>
-      <form class="cform" id="cform" novalidate>
-        <h3>Send us an enquiry</h3>
-        <label>Your name<input name="name" type="text" autocomplete="name" placeholder="Full name" required></label>
-        <label>Company<input name="company" type="text" autocomplete="organization" placeholder="Company name"></label>
-        <label>Phone<input name="phone" type="tel" autocomplete="tel" placeholder="+91" required></label>
-        <label>Email<input name="email" type="email" autocomplete="email" placeholder="you@company.com"></label>
-        <label>City<input name="city" type="text" placeholder="e.g. Mumbai"></label>
-        <label>Office size
-          <select name="size">
-            <option value="">Select size</option>
-            <option>Under 2,000 sq ft</option>
-            <option>2,000 – 5,000 sq ft</option>
-            <option>5,000 – 10,000 sq ft</option>
-            <option>10,000 – 25,000 sq ft</option>
-            <option>Over 25,000 sq ft</option>
-          </select>
-        </label>
-        <label class="full">What do you need?
-          <select name="service">
-            <option value="">Select a service</option>
-            <option>Office design &amp; build</option>
-            <option>Finding office space</option>
-            <option>Project management</option>
-            <option>Not sure yet</option>
-          </select>
-        </label>
-        <label class="full">Message<textarea name="msg" placeholder="Tell us about your project, timeline or budget"></textarea></label>
-        <div class="send"><button type="submit">Send enquiry →</button><span class="note" id="cnote">Opens WhatsApp with your details filled in.</span></div>
-      </form>
-    </div>
-    <div class="ft">
-      <div><span class="mono">Company</span><a href="${P.L('about')}">About us</a><a href="${P.L('portfolio')}">Portfolio</a><a href="${P.L('resources')}">Resources</a><a href="${P.L('careers')}">Careers</a><a href="${P.L('contact')}">Contact us</a></div>
-      <div><span class="mono">Services</span><a href="${P.L('design-and-build')}">Design &amp; Build</a><a href="${P.L('real-estate')}">Real Estate Advisory</a><a href="${P.L('pmc')}">Project Management</a></div>
-      <div><span class="mono">Locations</span>${['mumbai', 'thane', 'pune', 'bengaluru'].map(city).join('')}</div>
-      <div><span class="mono">&nbsp;</span>${['ahmedabad', 'delhi', 'hyderabad'].map(city).join('')}<a href="${P.L('locations')}">All locations →</a></div>
-    </div>
-    <div class="legal mono"><span>© <span id="yr">${new Date().getFullYear()}</span> Morphora Spaces</span><span><a href="${P.L('privacy-policy')}">Privacy</a> · <a href="${P.L('terms-and-conditions')}">Terms</a></span></div>
-  </div>
-</section>`;
+// The contact section + footer live in ONE file, design-3-signature/partials/footer.html,
+// which assets/site.js loads into this placeholder on every page. Pages can override its
+// label and heading (data-label / data-title); the <noscript> keeps the contact details reachable without JS.
+function footer(P, label, h2) {
+  return `<!-- CTA + FOOTER: loaded from partials/footer.html by assets/site.js -->
+<div id="site-footer"${label ? ` data-label="${esc(label)}"` : ''}${h2 ? ` data-title="${esc(h2)}"` : ''}></div>
+<noscript><section class="cta" id="contact"><div class="wrap"><p class="cta-lead">Call <a href="tel:+917719155155">+91 77191 55155</a> · <a href="mailto:hello@morphoraspaces.com">hello@morphoraspaces.com</a> · <a href="${P.L('contact')}">Contact page</a></p></div></section></noscript>`;
 }
 
 function layout(P, o) {
@@ -789,7 +737,7 @@ for (const c of CITIES) {
 
 /* ------------------------------------------------------------------ write */
 // remove previously generated output (everything except the hand-made home, its images and shared assets)
-const KEEP = new Set(['index.html', 'images', 'assets']);
+const KEEP = new Set(['index.html', 'images', 'assets', 'partials']); // partials/footer.html is the hand-edited shared footer
 for (const d of fs.readdirSync(SIG)) {
   if (KEEP.has(d)) continue;
   const p = path.join(SIG, d);
