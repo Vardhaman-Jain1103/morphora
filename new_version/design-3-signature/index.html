@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&text=g&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./assets/site.css">
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -102,7 +103,7 @@
     </div>
     <div class="plan-body">
       <div>
-        <svg viewBox="0 0 1000 620" id="planSvg" role="img" aria-label="Interactive office floor plan">
+        <svg viewBox="-96 0 1096 620" id="planSvg" role="img" aria-label="Interactive office floor plan">
           <g class="dims"><text x="0" y="14">A — 100'</text><text x="940" y="14">N ↑</text></g>
           <!-- zones -->
           <g class="zone" data-z="0"><rect class="z" x="20" y="400" width="240" height="200"/><text x="36" y="426">RECEPTION</text>
@@ -123,6 +124,12 @@
             <path class="furn" d="M840 420v180M730 490h80v40h-80zM870 490h80v40h-80z"/></g>
           <rect class="walls" x="20" y="30" width="960" height="570"/>
           <path d="M20 470v60" stroke="var(--char)" stroke-width="6"/>
+          <!-- main entrance: door opening into reception, with arrow from outside -->
+          <g class="entry" aria-hidden="true">
+            <path class="door" d="M20 470h60"/><path class="swing" d="M80 470A60 60 0 0 1 20 530"/>
+            <text x="-92" y="484">ENTRANCE</text>
+            <path class="arr" d="M-90 500h96M-4 491l10 9-10 9"/>
+          </g>
         </svg>
         <p class="plan-hint mono">↳ Hover to preview · click an area to see its photos</p>
       </div>
