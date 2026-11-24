@@ -19,13 +19,8 @@
   addEventListener('keydown', e => { if (e.key === 'Escape') { setMenu(false); closeLb(); } });
   addEventListener('resize', () => { if (innerWidth > 1000 && mnav && mnav.classList.contains('open')) setMenu(false); });
 
-  // ---- sticky header: solid after 40px, hides on scroll down, returns on scroll up ----
-  let lastY = scrollY;
-  function onHdr() {
-    const y = Math.max(0, scrollY);
-    hdr.classList.toggle('solid', y > 40);
-    if (!hdr.classList.contains('open') && Math.abs(y - lastY) > 4) { hdr.classList.toggle('hide', y > lastY && y > 400); lastY = y; }
-  }
+  // ---- sticky header: always on screen, turns solid after 40px ----
+  function onHdr() { hdr.classList.toggle('solid', scrollY > 40); }
   if (hdr) { addEventListener('scroll', onHdr, { passive: true }); onHdr(); }
 
   // ---- pan-India map: draw routes when in view; list rows and pins highlight each other ----
@@ -201,4 +196,89 @@
     fb.forEach(x => x.classList.toggle('on', x === b));
     $$('.blog-grid.all .post').forEach(p => p.hidden = b.dataset.cat !== '*' && p.dataset.cat !== b.dataset.cat);
   });
+
+  // ---- chat assistant (bottom-right on every page): asks a few questions, then hands off to WhatsApp ----
+  // Options mirror the enquiry form in partials/footer.html — keep the two lists in sync.
+  const CB_CITIES = ['Mumbai', 'Thane', 'Pune', 'Ahmedabad', 'Bengaluru'];
+  const CB_SERVICES = ['Office design & build', 'Finding office space', 'Project management', 'Not sure yet'];
+  const CB_SIZES = ['Under 2,000 sq ft', '2,000 – 5,000 sq ft', '5,000 – 10,000 sq ft', '10,000 – 25,000 sq ft', 'Over 25,000 sq ft'];
+  const cb = document.createElement('div'); cb.className = 'cb';
+  cb.innerHTML = `
+    <div class="cb-nudge" hidden><button class="cb-nx" type="button" aria-label="Dismiss">✕</button><span>Planning a new office? Let’s talk.</span></div>
+    <section class="cb-panel" role="dialog" aria-label="Chat with Morphora Spaces" aria-modal="false" hidden>
+      <header class="cb-head"><i class="cb-av">M</i><div><strong>Morphora Spaces</strong><small><b></b>Usually replies within minutes</small></div><button class="cb-x" type="button" aria-label="Close chat">✕</button></header>
+      <div class="cb-log" aria-live="polite"></div>
+      <div class="cb-in"></div>
+    </section>
+    <button class="cb-btn" type="button" aria-label="Open chat" aria-expanded="false"><svg class="cb-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.2 3.6c-.5.4-1.3.1-1.3-.6V16A2.5 2.5 0 0 1 4 13.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="8.5" cy="9.5" r="1" fill="currentColor"/><circle cx="12" cy="9.5" r="1" fill="currentColor"/><circle cx="15.5" cy="9.5" r="1" fill="currentColor"/></svg><svg class="cb-ic2" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>`;
+  document.body.append(cb);
+  const cbP = cb.querySelector('.cb-panel'), cbLog = cb.querySelector('.cb-log'), cbIn = cb.querySelector('.cb-in'), cbB = cb.querySelector('.cb-btn'), cbN = cb.querySelector('.cb-nudge');
+  const ss = { get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} } };
+  let cbData = {}, cbStarted = false;
+  const cbScroll = () => { cbLog.scrollTop = cbLog.scrollHeight; };
+  function cbMsg(text, who) { const m = document.createElement('div'); m.className = 'cb-m ' + (who || 'bot'); m.textContent = text; cbLog.append(m); cbScroll(); return m; }
+  // bot replies after a short "typing" pause
+  function cbSay(lines, then) {
+    cbIn.innerHTML = '';
+    const run = i => {
+      if (i >= lines.length) { if (then) then(); return; }
+      const t = document.createElement('div'); t.className = 'cb-m bot cb-typing'; t.innerHTML = '<i></i><i></i><i></i>'; cbLog.append(t); cbScroll();
+      setTimeout(() => { t.remove(); cbMsg(lines[i]); run(i + 1); }, reduce ? 120 : 650);
+    };
+    run(0);
+  }
+  function cbText({ type = 'text', placeholder, check, chips }, done) {
+    cbIn.innerHTML = '';
+    if (chips) cbChips(chips, done, true);
+    const f = document.createElement('form'); f.className = 'cb-f'; f.noValidate = true;
+    f.innerHTML = `<input type="${type}" autocomplete="${type === 'tel' ? 'tel' : 'off'}" placeholder="${placeholder}" aria-label="${placeholder}"><button type="submit" aria-label="Send">↑</button>`;
+    const inp = f.querySelector('input');
+    f.onsubmit = e => {
+      e.preventDefault();
+      const v = inp.value.trim(), err = v ? check && check(v) : 'Please type an answer.';
+      if (err) { inp.setCustomValidity(err); f.classList.add('bad'); f.dataset.err = err; inp.focus(); return; }
+      done(v);
+    };
+    inp.oninput = () => { f.classList.remove('bad'); inp.setCustomValidity(''); };
+    cbIn.append(f); setTimeout(() => inp.focus({ preventScroll: true }), 30);
+  }
+  function cbChips(opts, done, keep) {
+    if (!keep) cbIn.innerHTML = '';
+    const w = document.createElement('div'); w.className = 'cb-chips';
+    opts.forEach(o => { const b = document.createElement('button'); b.type = 'button'; b.textContent = o; b.onclick = () => done(o); w.append(b); });
+    cbIn.append(w);
+  }
+  const answer = v => cbMsg(v, 'me');
+  const STEPS = [
+    () => cbSay(['Hi! I’m here to help you plan your new office.', 'To start, what’s your name?'], () => cbText({ placeholder: 'Your name' }, v => { cbData.name = v; answer(v); next(); })),
+    () => cbSay([`Nice to meet you, ${cbData.name.split(' ')[0]}. What’s the best phone number to reach you on?`], () => cbText({ type: 'tel', placeholder: '+91 98765 43210', check: v => v.replace(/\D/g, '').length < 10 ? 'Please enter a valid phone number (at least 10 digits).' : '' }, v => { cbData.phone = v; answer(v); next(); })),
+    () => cbSay(['Which city is the office in?'], () => cbText({ placeholder: 'Or type another city', chips: CB_CITIES }, v => { cbData.city = v; answer(v); next(); })),
+    () => cbSay(['What would you like help with?'], () => cbChips(CB_SERVICES, v => { cbData.service = v; answer(v); next(); })),
+    () => cbSay(['Roughly how big is the office?'], () => cbChips([...CB_SIZES, 'Not sure'], v => { cbData.size = v; answer(v); next(); })),
+    () => cbSay([`Thanks, ${cbData.name.split(' ')[0]}! Tap below to send your details to our team on WhatsApp. We’ll get back to you shortly.`], cbFinish),
+  ];
+  let cbStep = 0;
+  const next = () => { cbStep++; if (STEPS[cbStep]) STEPS[cbStep](); };
+  function cbFinish() {
+    cbIn.innerHTML = '';
+    const sum = document.createElement('dl'); sum.className = 'cb-sum';
+    [['Name', cbData.name], ['Phone', cbData.phone], ['City', cbData.city], ['Service', cbData.service], ['Office size', cbData.size]].forEach(([k, v]) => { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; sum.append(dt, dd); });
+    cbLog.append(sum); cbScroll();
+    const a = document.createElement('a'); a.className = 'cb-go'; a.target = '_blank'; a.rel = 'noopener';
+    a.href = 'https://wa.me/917719155155?text=' + encodeURIComponent('New enquiry from the website chat (' + document.title + ')\n\nName: ' + cbData.name + '\nPhone: ' + cbData.phone + '\nCity: ' + cbData.city + '\nService: ' + cbData.service + '\nOffice size: ' + cbData.size);
+    a.textContent = 'Send on WhatsApp ↗';
+    const r = document.createElement('button'); r.type = 'button'; r.className = 'cb-re'; r.textContent = 'Start over';
+    r.onclick = () => { cbLog.innerHTML = ''; cbData = {}; cbStep = 0; STEPS[0](); };
+    cbIn.append(a, r);
+  }
+  function cbOpen(o) {
+    cb.classList.toggle('on', o); cbP.hidden = !o; cbB.setAttribute('aria-expanded', o); cbB.setAttribute('aria-label', o ? 'Close chat' : 'Open chat');
+    if (o) { cbN.hidden = true; ss.set('cbSeen', 1); if (!cbStarted) { cbStarted = true; STEPS[0](); } else { const i = cbIn.querySelector('input'); if (i) i.focus({ preventScroll: true }); } }
+  }
+  cbB.onclick = () => cbOpen(!cb.classList.contains('on'));
+  cb.querySelector('.cb-x').onclick = () => { cbOpen(false); cbB.focus(); };
+  cbN.querySelector('span').onclick = () => cbOpen(true);
+  cbN.querySelector('.cb-nx').onclick = () => { cbN.hidden = true; ss.set('cbSeen', 1); };
+  addEventListener('keydown', e => { if (e.key === 'Escape' && cb.classList.contains('on')) { cbOpen(false); cbB.focus(); } });
+  if (!ss.get('cbSeen')) setTimeout(() => { if (!cb.classList.contains('on')) cbN.hidden = false; }, 6000);
 })();
