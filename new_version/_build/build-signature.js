@@ -252,7 +252,7 @@ function layout(P, o) {
 <meta property="og:url" content="${canonical}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="${P.root}assets/site.css">
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -334,7 +334,7 @@ ${METROS.map(([n, s], i) => `        <li><a href="${href(s)}" data-city="${s}"><
 
 /* ---------------------------------------------------------- section kits */
 const crumbs = (P, items) => `<nav class="crumb mono" aria-label="Breadcrumb"><a href="${P.L('')}">Home</a>${items.map(([t, p]) => ` <span>/</span> ${p !== undefined ? `<a href="${P.L(p)}">${t}</a>` : `<span aria-current="page">${t}</span>`}`).join('')}</nav>`;
-const badge = () => `<a class="circle-btn" href="#contact" data-cur="TALK"><svg viewBox="0 0 134 134" aria-hidden="true"><defs><path id="cpb" d="M67,67 m-56,0 a56,56 0 1,1 112,0 a56,56 0 1,1 -112,0"/></defs><text fill="currentColor" font-size="10" font-weight="500" letter-spacing="3.6" font-family="Jost"><textPath href="#cpb">START A PROJECT · 60 DAYS · START A PROJECT · </textPath></text></svg><span>Let’s talk ↗</span></a>`;
+const badge = () => `<a class="circle-btn" href="#contact" data-cur="TALK"><svg viewBox="0 0 134 134" aria-hidden="true"><defs><path id="cpb" d="M67,67 m-56,0 a56,56 0 1,1 112,0 a56,56 0 1,1 -112,0"/></defs><text fill="currentColor" font-size="10" font-weight="500" letter-spacing="3.6" font-family="Inter"><textPath href="#cpb">START A PROJECT · 60 DAYS · START A PROJECT · </textPath></text></svg><span>Let’s talk ↗</span></a>`;
 const phero = (P, o) => `<section class="phero">
   <div class="wrap">
     ${crumbs(P, o.crumb)}

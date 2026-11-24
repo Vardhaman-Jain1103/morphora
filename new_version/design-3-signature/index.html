@@ -7,7 +7,7 @@
 <meta name="description" content="Morphora Spaces — commercial office interiors designed and built in 60 days.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./assets/site.css">
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -49,19 +49,22 @@
 </div>
 <!-- /@header -->
 
-<!-- HERO: headline + photo that grows to full screen on scroll -->
+<!-- HERO: headline with a photo on its right; the photo grows to full screen on scroll -->
 <section class="hx" id="expand">
   <div class="stick">
     <div class="hx-text wrap" id="hxText">
-      <h1 class="disp">
-        <span class="ln"><span>Better offices,</span></span>
-        <span class="ln"><span>built <em>on time.</em></span></span>
-      </h1>
+      <div class="hx-top">
+        <h1 class="disp">
+          <span class="ln"><span>Better offices,</span></span>
+          <span class="ln"><span>built <em>on time.</em></span></span>
+        </h1>
+        <div class="hx-slot" id="xSlot" aria-hidden="true"></div>
+      </div>
       <div class="hero-meta">
       <span class="mono">( Office interiors · Mumbai )</span>
       <p>We design and build offices for growing companies — from the first layout to the final handover, in just 60 days.</p>
       <a class="circle-btn" href="#contact" data-cur="TALK">
-        <svg viewBox="0 0 134 134"><defs><path id="cp" d="M67,67 m-56,0 a56,56 0 1,1 112,0 a56,56 0 1,1 -112,0"/></defs><text fill="currentColor" font-size="10" font-weight="500" letter-spacing="3.6" font-family="Jost"><textPath href="#cp">START A PROJECT · 60 DAYS · START A PROJECT · </textPath></text></svg>
+        <svg viewBox="0 0 134 134"><defs><path id="cp" d="M67,67 m-56,0 a56,56 0 1,1 112,0 a56,56 0 1,1 -112,0"/></defs><text fill="currentColor" font-size="10" font-weight="500" letter-spacing="3.6" font-family="Inter"><textPath href="#cp">START A PROJECT · 60 DAYS · START A PROJECT · </textPath></text></svg>
         <span>Talk to us ↗</span>
       </a>
     </div>
@@ -301,13 +304,14 @@ addEventListener('keydown',e=>{if(zg.hidden)return;if(e.key==='Escape')zgClose()
 let zgX=null;zgImg.parentNode.addEventListener('touchstart',e=>{zgX=e.touches[0].clientX},{passive:true});zgImg.parentNode.addEventListener('touchend',e=>{if(zgX===null)return;const dx=e.changedTouches[0].clientX-zgX;if(Math.abs(dx)>40)zgShow(zgI+(dx<0?1:-1));zgX=null});
 
 // scroll-driven: expand image, manifesto, horizontal
-const ex=$('#expand'),xf=$('#xFrame'),xi=$('#xImg'),xt=$('#hxText'),xs=$('#xShade'),xc=$('#xCap'),hz=$('#work'),track=$('#hzTrack'),hp=$('#hzProg');
-let t0=.6;function sizeHero(){t0=Math.min(.7,(xt.offsetTop+xt.offsetHeight+28)/innerHeight)}
+const ex=$('#expand'),xf=$('#xFrame'),xi=$('#xImg'),xt=$('#hxText'),xsl=$('#xSlot'),xs=$('#xShade'),xc=$('#xCap'),hz=$('#work'),track=$('#hzTrack'),hp=$('#hzProg');
+// start box = the empty slot right of the headline (measured in layout px, so the text's scroll transform doesn't skew it)
+let S={x:0,y:0,w:0,h:0};function sizeHero(){const st=xt.offsetParent;S={x:xt.offsetLeft+xsl.offsetLeft,y:xt.offsetTop+xsl.offsetTop,w:xsl.offsetWidth,h:xsl.offsetHeight,W:st.clientWidth,H:st.clientHeight}}
 new ResizeObserver(()=>{sizeHero();onScroll()}).observe(xt);
 function sizeHz(){if(innerWidth>1000){hz.style.height=(track.scrollWidth-innerWidth+innerHeight+100)+'px'}else hz.style.height=''}
 function onScroll(){
   const r=ex.getBoundingClientRect(),p=clamp(-r.top/(r.height-innerHeight));
-  const e=p*p*(3-2*p),k=1-e;xf.style.clipPath=`inset(${t0*k*100}% ${4*k}% ${4*k}% ${4*k}% round ${20*k}px)`;const tp=t0*k*100;xi.style.top=tp+"%";xi.style.height=(100-tp)+"%";xi.style.transform=`scale(${1.08-e*.08})`;xt.style.transform=`translateY(${-e*80}px)`;xt.style.opacity=1-clamp((e-.15)/.4);const c=clamp((e-.55)/.45);xs.style.opacity=c;xc.style.opacity=c;xc.style.transform=`translateY(${(1-c)*12}px)`;
+  const e=p*p*(3-2*p),k=1-e;const L=S.x*k,T=S.y*k,R=(S.W-S.x-S.w)*k,B=(S.H-S.y-S.h)*k;xf.style.clipPath=`inset(${T}px ${R}px ${B}px ${L}px round ${16*k}px)`;xi.style.left=L+'px';xi.style.top=T+'px';xi.style.width=(S.W-L-R)+'px';xi.style.height=(S.H-T-B)+'px';xi.style.transform=`scale(${1.08-e*.08})`;xt.style.transform=`translateY(${-e*80}px)`;xt.style.opacity=1-clamp((e-.15)/.4);const c=clamp((e-.55)/.45);xs.style.opacity=c;xc.style.opacity=c;xc.style.transform=`translateY(${(1-c)*12}px)`;
   const mr=mf.getBoundingClientRect(),mp=clamp((innerHeight*.85-mr.top)/(mr.height+innerHeight*.3));const lit=Math.round(mp*words.length);words.forEach((w,i)=>w.classList.toggle('on',i<lit));
   if(innerWidth>1000){const hr=hz.getBoundingClientRect(),hpv=clamp(-hr.top/(hr.height-innerHeight));track.style.transform=`translateX(${-hpv*(track.scrollWidth-innerWidth+80)}px)`;hp.style.width=hpv*100+'%'}
 }

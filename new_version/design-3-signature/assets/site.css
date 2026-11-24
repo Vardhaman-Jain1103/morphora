@@ -1,6 +1,6 @@
 :root{
   --stone:#ECE7DF; --stone-2:#E2DBD0; --paper:#F5F2EC; --char:#151215; --char-2:#221C23; --plum:#8422A2; --plum-l:#C784DE; --brass:#B08D57; --mut:#6F6870; --line:rgba(21,18,21,.14);
-  --disp:"Jost",system-ui,sans-serif; --sans:"Jost",system-ui,sans-serif; --mono:"Jost",system-ui,sans-serif; --ease:cubic-bezier(.7,0,.2,1); --out:cubic-bezier(.16,1,.3,1);
+  --disp:"Syne",system-ui,sans-serif; --sans:"Inter",system-ui,sans-serif; --mono:"Inter",system-ui,sans-serif; --ease:cubic-bezier(.7,0,.2,1); --out:cubic-bezier(.16,1,.3,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--sans);background:var(--stone);color:var(--char);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.5}
@@ -75,7 +75,7 @@ header.open .menu-t b i:last-child{width:100%;transform:translateY(-3.25px) rota
 /* hero */
 .hero{position:relative;z-index:1;padding:170px 0 60px}
 .hero h1{font-size:clamp(43.2px,8vw,136px)}
-.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.08em}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.24em;margin-bottom:-.16em}
 .hero h1 .ln>span{display:inline-flex;align-items:center;gap:.18em}
 .pill-img{display:inline-block;width:1.9em;height:.78em;border-radius:999px;overflow:hidden;vertical-align:middle;position:relative;top:-.02em}
 .pill-img img{width:100%;height:100%;object-fit:cover}
@@ -88,20 +88,23 @@ header.open .menu-t b i:last-child{width:100%;transform:translateY(-3.25px) rota
 @keyframes rot{to{transform:rotate(360deg)}}
 
 /* expanding image */
-/* home hero: headline on stone, photo panel below grows to full screen on scroll */
-.hx{position:relative;z-index:1;height:230vh}
+/* home hero: headline on the left, photo on the right; on scroll the photo grows to full screen */
+.hx{position:relative;z-index:1;height:240vh}
 .hx .stick{position:sticky;top:0;height:100vh;overflow:hidden}
-.hx-text{position:relative;z-index:1;padding-top:118px;will-change:transform}
-.hx h1{font-size:clamp(40px,7.2vw,118px)}
-.hx h1 .ln{display:block;overflow:hidden;padding-bottom:.06em}
-.hx .hero-meta{margin-top:26px}
+.hx-text{position:relative;z-index:1;padding-top:128px;will-change:transform}
+.hx-top{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(28px,3.4vw,64px);align-items:end}
+.hx h1{font-size:clamp(40px,5.6vw,100px)}
+.hx h1 .ln{display:block;overflow:hidden;padding-bottom:.24em;margin-bottom:-.16em}
+.hx-slot{height:clamp(240px,46vh,500px);border-radius:16px}
+.hx .hero-meta{margin-top:30px}
 .hx .circle-btn{width:118px;height:118px;font-size:13px}
-.hx .frame{position:absolute;inset:0;z-index:2;overflow:hidden;clip-path:inset(60% 4% 4% 4% round 20px);will-change:clip-path}
-.hx .frame img{position:absolute;left:0;top:60%;width:100%;height:40%;object-fit:cover;object-position:50% 45%;transform:scale(1.08);will-change:transform}
+.hx .frame{position:absolute;inset:0;z-index:2;overflow:hidden;clip-path:inset(30% 4% 30% 55% round 16px);will-change:clip-path}
+.hx .frame img{position:absolute;left:55%;top:30%;width:41%;height:40%;object-fit:cover;object-position:50% 45%;transform:scale(1.08);will-change:transform}
 .hx .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(21,18,21,.62),rgba(21,18,21,0) 38%);opacity:0;pointer-events:none}
 .hx .cap{position:absolute;z-index:3;bottom:34px;left:0;right:0;display:flex;justify-content:space-between;gap:20px;color:#fff;opacity:0;pointer-events:none}
 @media (max-width:1000px){.hx .hero-meta{grid-template-columns:1fr 1fr;gap:20px}.hx .hero-meta .mono{grid-column:1/-1}.hx .circle-btn{justify-self:end;width:104px;height:104px}}
-@media (max-width:600px){.hx-text{padding-top:100px}.hx h1{font-size:clamp(34px,10.5vw,46px)}.hx .hero-meta{grid-template-columns:1fr auto;margin-top:18px}.hx .hero-meta p{font-size:14px}.hx .circle-btn{width:92px;height:92px;font-size:11px}.hx .cap{flex-direction:column;gap:4px;bottom:22px}}
+@media (max-width:760px){.hx-top{grid-template-columns:1fr;gap:22px}.hx-slot{height:clamp(200px,32vh,320px)}}
+@media (max-width:600px){.hx-text{padding-top:100px}.hx h1{font-size:clamp(32px,9.6vw,44px)}.hx .hero-meta{grid-template-columns:1fr auto;margin-top:18px}.hx .hero-meta p{font-size:14px}.hx .circle-btn{width:92px;height:92px;font-size:11px}.hx .cap{flex-direction:column;gap:4px;bottom:22px}}
 .expand{position:relative;z-index:1;height:180vh}
 .expand .stick{position:sticky;top:0;height:100vh;display:grid;place-items:center;overflow:hidden}
 .expand .frame{width:100%;height:100%;overflow:hidden;clip-path:inset(18% 26% 18% 26% round 300px);will-change:clip-path}
@@ -533,7 +536,7 @@ header.open .menu-t b i:last-child{width:100%;transform:translateY(-3.25px) rota
 /* reading / scroll progress */
 .prog{position:fixed;top:0;left:0;right:0;height:2px;background:var(--plum);transform-origin:0 50%;transform:scaleX(0);z-index:70;pointer-events:none}
 /* hero heading: words rise in, highlighted words get an underline that draws in */
-.sw{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em;margin-bottom:-.08em}
+.sw{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.24em;margin-bottom:-.24em}
 .sw>span{display:inline-block;transform:translateY(105%);animation:swUp 1.1s var(--out) forwards;animation-delay:calc(var(--i) * 70ms + .15s)}
 @keyframes swUp{to{transform:none}}
 .phero h1 em,.art-head h1 em{background:linear-gradient(var(--plum),var(--plum)) 0 96%/0 2px no-repeat;animation:ul 1.2s var(--out) 1.2s forwards}
@@ -579,23 +582,7 @@ header.open .menu-t b i:last-child{width:100%;transform:translateY(-3.25px) rota
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}.sw>span{transform:none}.phero .crumb,.phero-meta,.art-head .crumb,.art-meta{opacity:1;transform:none}.pimg .wrap>div,.art-img .wrap>div,.ir{clip-path:none}}
 
-/* ---- font switcher (client showcase; delete this block + the matching one in site.js once a font is picked) ---- */
 .circle-btn text{font-family:var(--sans)}
-.fsw{position:relative}
-.fsw-b{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border:1px solid currentColor;border-radius:999px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;transition:background .3s,color .3s}
-.fsw-b:hover,.fsw.on .fsw-b{background:var(--char);color:var(--stone);border-color:var(--char)}
-.fsw-b i{font-style:normal;font-family:var(--disp);font-size:15.6px;letter-spacing:0;text-transform:none;line-height:1}
-.fsw-p{position:absolute;top:calc(100% + 14px);right:0;width:300px;background:var(--paper);color:var(--char);border-radius:8px;padding:8px;box-shadow:0 26px 50px -22px rgba(0,0,0,.45);list-style:none;opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .3s,transform .45s var(--out),visibility .3s}
-.fsw.on .fsw-p{opacity:1;visibility:visible;transform:none}
-.fsw-p button{display:grid;grid-template-columns:28px 1fr;gap:2px 10px;width:100%;text-align:left;padding:12px;border-radius:6px;transition:background .25s}
-.fsw-p button:hover{background:var(--stone-2)}
-.fsw-p button[aria-checked="true"]{background:var(--char);color:var(--stone)}
-.fsw-p button b{grid-row:span 2;font-weight:400;font-size:12px;color:var(--brass);padding-top:6px}
-.fsw-p button strong{font-weight:400;font-size:22.1px;line-height:1.1}
-.fsw-p button small{font-size:12px;opacity:.6}
-@media (max-width:1000px){.fsw-b span{display:none}.fsw-b{padding:9px 13px}header.open .fsw{display:none}}
-@media (max-width:640px){.fsw-p{position:fixed;top:70px;left:16px;right:16px;width:auto}}
-@media (max-width:1240px){.fsw-b span{display:none}.fsw-b{padding:9px 13px}}
 
 /* ---- pan-India map ---- */
 .pan{position:relative;z-index:1;background:var(--char);color:var(--stone);padding:130px 0;overflow:hidden}
