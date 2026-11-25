@@ -1,0 +1,54 @@
+<script>
+// home-only behaviour (shared behaviour lives in assets/site.js)
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const U='/images/';
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+
+// manifesto words
+const mf=$('#mf');mf.innerHTML=mf.innerHTML.replace(/(<em>.*?<\/em>)|([^\s<]+)/g,(m)=>`<span>${m}</span>`);const words=$$('#mf>span');
+
+// floor plan zones
+const Z=[
+ ['Reception','~8%','The first thing visitors see. We design a welcome area that shows who you are within seconds.',['Brand wall','Waiting lounge','Access control'],'IMG_20200919_174146-scaled.jpg'],
+ ['Open workstations','~38%','Comfortable desk areas with good sound control, plenty of natural light and neatly hidden cables.',['Desks','Storage','Desk lighting','Sound control'],'IMG_20200919_173813-scaled.jpg'],
+ ['Cabins','~10%','Private offices with glass walls, so managers stay connected to the rest of the team.',['Glass partitions','Custom furniture','Privacy film'],'ADI8340-scaled.jpg'],
+ ['Boardroom & meeting','~14%','Meeting rooms of the right size, ready for video calls and comfortable for long meetings.',['Screens & video calls','Sound panels','Room booking'],'room-used-official-event-1-scaled.jpg'],
+ ['Breakout','~12%','A relaxed space for informal chats and team time — a good reason for people to come to the office.',['Lounge seating','Games area','Indoor plants'],'IMG_1650-scaled.jpg'],
+ ['Café','~8%','A pantry turned into a friendly space where the team eats, talks and connects.',['Pantry','Counter seating','Plumbing & electrical'],'IMG_1645-scaled.jpg'],
+ ['Focus & pods','~10%','Quiet rooms, phone booths and pods for focused work and private calls.',['Phone booths','Quiet rooms','Soundproofing'],'IMG_1675-scaled.jpg']];
+// photos per zone (opened in the gallery on click)
+const ZG=[["01-ENTRANCE-FOYER.jpg","03-ENTRANCE-02.jpg","04-RECEPTION-WAITING-01.jpg","MicrosoftTeams-image-48-1024x731.jpg","office-interior-design-santacruz-mumbai-grovalue03-1.jpg","ADI8276-scaled.jpg"],["ADI8397-scaled.jpg","ADI8415-scaled.jpg","ADI8427-scaled.jpg","IMG_20200919_173257-scaled.jpg","IMG_20200919_173919-scaled.jpg","17-I-I-STAFF.jpg"],["11-MD-CABIN-FIDELIS.jpg","17-CABIN-I-I.jpg","ADI8340-scaled.jpg","ADI8325-scaled.jpg","09-FIDELIS-CABINS.jpg","office-interior-design-santacruz-mumbai-grovalue05-1.jpg"],["07-CONFERANCE.jpg","Conference_01.jpg","IMG_20200919_173345-scaled.jpg","ADI8358-scaled.jpg","PAB_1864-scaled.jpg","8-Pax-Meeting-Room_02.jpg"],["14-LOUNGE-2.jpg","Flexi-Area_01.jpg","IMG_1676-scaled.jpg","IMG_20200919_173443-scaled.jpg","IMG_20200919_174008-scaled.jpg","MicrosoftTeams-image-56.jpg"],["IMG_1645-scaled.jpg","IMG_20200919_173755-scaled.jpg","IMG_20200919_173813-scaled.jpg","IMG_1650-scaled.jpg","MicrosoftTeams-image-52.jpg","MicrosoftTeams-image-53.jpg"],["IMG_1675-scaled.jpg","2-Pax-Meeting-Room.jpg","MicrosoftTeams-image-57.jpg","office-interior-design-santacruz-mumbai-grovalue02-1.jpg","MicrosoftTeams-image-54.jpg","IMG_20200919_174259-scaled.jpg"]].map(a=>a.map(x=>'/media/2025/10/'+x));
+$('#zPh').innerHTML=Z.map(z=>`<img src="${U+z[4]}" alt="${z[0]}" loading="lazy">`).join('');
+const zImgs=$$('#zPh img'),zones=$$('.zone');
+function zone(i){zones.forEach(g=>g.classList.toggle('on',+g.dataset.z===i));zImgs.forEach((im,k)=>im.classList.toggle('on',k===i));const z=Z[i];
+  $('#zK').textContent=`Area ${String(i+1).padStart(2,'0')} · ${z[1]} of floor space`;$('#zT').textContent=z[0];$('#zD').textContent=z[2];$('#zL').innerHTML=z[3].map(x=>`<li>${x}</li>`).join('');$('#zBtn').firstChild.textContent=`View ${z[0].toLowerCase()} photos (${ZG[i].length}) `}
+let zCur=0;
+zones.forEach(g=>{g.onmouseenter=()=>{zCur=+g.dataset.z;zone(zCur)};g.onclick=()=>{zCur=+g.dataset.z;zone(zCur);zgOpen(zCur)}});zone(0);
+$('#zBtn').onclick=()=>zgOpen(zCur);$('#zPh').onclick=()=>zgOpen(zCur);
+// zone gallery
+const zg=$('#zg'),zgImg=$('#zgImg'),zgTh=$('#zgThumbs');let zgZ=0,zgI=0,zgLast=null;
+function zgShow(k){const a=ZG[zgZ];zgI=(k+a.length)%a.length;zgImg.classList.remove('on');const src=a[zgI];const im=new Image();im.onload=()=>{zgImg.src=src;zgImg.alt=Z[zgZ][0]+' — photo '+(zgI+1);zgImg.classList.add('on')};im.src=src;
+  $('#zgCount').textContent=String(zgI+1).padStart(2,'0')+' / '+String(a.length).padStart(2,'0');zgTh.querySelectorAll('button').forEach((b,j)=>b.classList.toggle('on',j===zgI))}
+function zgOpen(z){zgZ=z;zgLast=document.activeElement;$('#zgK').textContent='Area '+String(z+1).padStart(2,'0');$('#zgT').textContent=Z[z][0];
+  zgTh.innerHTML=ZG[z].map((src,j)=>`<button type="button" aria-label="Photo ${j+1}"><img src="${src}" alt="" loading="lazy"></button>`).join('');
+  zgTh.querySelectorAll('button').forEach((b,j)=>b.onclick=()=>zgShow(j));zgShow(0);zg.hidden=false;requestAnimationFrame(()=>zg.classList.add('open'));document.documentElement.style.overflow='hidden';$('#zgClose').focus()}
+function zgClose(){zg.classList.remove('open');document.documentElement.style.overflow='';setTimeout(()=>{zg.hidden=true},350);if(zgLast)zgLast.focus()}
+$('#zgClose').onclick=zgClose;$('#zgPrev').onclick=()=>zgShow(zgI-1);$('#zgNext').onclick=()=>zgShow(zgI+1);
+zg.addEventListener('click',e=>{if(e.target===zg)zgClose()});
+addEventListener('keydown',e=>{if(zg.hidden)return;if(e.key==='Escape')zgClose();else if(e.key==='ArrowRight')zgShow(zgI+1);else if(e.key==='ArrowLeft')zgShow(zgI-1)});
+let zgX=null;zgImg.parentNode.addEventListener('touchstart',e=>{zgX=e.touches[0].clientX},{passive:true});zgImg.parentNode.addEventListener('touchend',e=>{if(zgX===null)return;const dx=e.changedTouches[0].clientX-zgX;if(Math.abs(dx)>40)zgShow(zgI+(dx<0?1:-1));zgX=null});
+
+// scroll-driven: expand image, manifesto, horizontal
+const ex=$('#expand'),xf=$('#xFrame'),xi=$('#xImg'),xt=$('#hxText'),xsl=$('#xSlot'),xs=$('#xShade'),xc=$('#xCap'),hz=$('#work'),track=$('#hzTrack'),hp=$('#hzProg');
+// start box = the empty slot right of the headline (measured in layout px, so the text's scroll transform doesn't skew it)
+let S={x:0,y:0,w:0,h:0};function sizeHero(){const st=xt.offsetParent;S={x:xt.offsetLeft+xsl.offsetLeft,y:xt.offsetTop+xsl.offsetTop,w:xsl.offsetWidth,h:xsl.offsetHeight,W:st.clientWidth,H:st.clientHeight}}
+new ResizeObserver(()=>{sizeHero();onScroll()}).observe(xt);
+function sizeHz(){if(innerWidth>1000){hz.style.height=(track.scrollWidth-innerWidth+innerHeight+100)+'px'}else hz.style.height=''}
+function onScroll(){
+  const r=ex.getBoundingClientRect(),p=clamp(-r.top/(r.height-innerHeight));
+  const e=p*p*(3-2*p),k=1-e;const L=S.x*k,T=S.y*k,R=(S.W-S.x-S.w)*k,B=(S.H-S.y-S.h)*k;xf.style.clipPath=`inset(${T}px ${R}px ${B}px ${L}px round ${16*k}px)`;xi.style.left=L+'px';xi.style.top=T+'px';xi.style.width=(S.W-L-R)+'px';xi.style.height=(S.H-T-B)+'px';xi.style.transform=`scale(${1.08-e*.08})`;xt.style.transform=`translateY(${-e*80}px)`;xt.style.opacity=1-clamp((e-.15)/.4);const c=clamp((e-.55)/.45);xs.style.opacity=c;xc.style.opacity=c;xc.style.transform=`translateY(${(1-c)*12}px)`;
+  const mr=mf.getBoundingClientRect(),mp=clamp((innerHeight*.85-mr.top)/(mr.height+innerHeight*.3));const lit=Math.round(mp*words.length);words.forEach((w,i)=>w.classList.toggle('on',i<lit));
+  if(innerWidth>1000){const hr=hz.getBoundingClientRect(),hpv=clamp(-hr.top/(hr.height-innerHeight));track.style.transform=`translateX(${-hpv*(track.scrollWidth-innerWidth+80)}px)`;hp.style.width=hpv*100+'%'}
+}
+addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',()=>{sizeHero();sizeHz();onScroll()});addEventListener('load',()=>{sizeHero();sizeHz();onScroll()});sizeHero();sizeHz();onScroll();
+</script>

@@ -168,6 +168,20 @@ function ctx(pagePath) {
   return P;
 }
 
+// Same as ctx(), but with root-absolute clean URLs (/about/, /media/…) — used by the PHP site export.
+function ctxAbs(pagePath) {
+  const P = ctx(pagePath);
+  P.root = '/';
+  P.L = p => p ? '/' + p + '/' : '/';
+  P.img = p => '/' + p;
+  P.media = rel => { USED.add(rel); return '/media/' + rel.replace(/^wp-content\/uploads\//, ''); };
+  return P;
+}
+// When true, the sections whose content lives in the database (projects, posts, …) are emitted as
+// shortcodes (<!--sc:name {json}-->) that the PHP site renders live, instead of as fixed HTML.
+let SC = false;
+const sc = (name, o) => `<!--sc:${name} ${JSON.stringify(o)}-->`;
+
 /* -------------------------------------------------------- HTML sanitising */
 const ALLOWED = new Set(['h2', 'h3', 'h4', 'p', 'ul', 'ol', 'li', 'strong', 'b', 'em', 'i', 'a', 'img', 'blockquote', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'br']);
 function clean(html, P) {
@@ -296,6 +310,7 @@ const METROS = [
   ['Ahmedabad', 'ahmedabad', 23.02, 72.57, 'l'],
 ];
 function panIndia(P, label = '( Pan-India )') {
+  if (SC) return sc('map', { label });
   const [hx, hy] = proj(HQ.lat, HQ.lon);
   const href = s => P.L('office-interior-designer-in-' + s);
   const arcs = METROS.filter(m => m[1] !== 'mumbai').map(([, s, lat, lon], i) => {
@@ -368,7 +383,7 @@ const splitSec = (label, h2, inner, alt) => `<section class="sec${alt ? ' alt' :
   </div>
 </section>`;
 const wcard = (P, p) => `<a class="wcard rv" href="${P.L('portfolio/' + p.slug)}" data-cur="VIEW"><div class="ph" data-tilt><img src="${P.img(p.img)}" alt="${esc(p.name)} office, ${p.city}" loading="lazy"></div><div class="meta"><div><h3>${esc(p.name)}</h3><span class="by">${esc(p.by)}</span></div><span class="mono">${p.city}<br>${p.size}</span></div></a>`;
-const workSec = (P, label, h2, list, three) => `<section class="sec">
+const workSec = (P, label, h2, list, three) => SC ? sc('projects', { label, h2, slugs: list.map(p => p.slug), three: !!three }) : `<section class="sec">
   <div class="wrap">
     <div class="sec-head"><div><span class="mono lbl">${label}</span><h2 class="disp">${h2}</h2></div><a class="btn ghost" href="${P.L('portfolio')}">All projects</a></div>
     <div class="work-grid${three ? ' three' : ''}">
@@ -379,7 +394,7 @@ ${list.map(p => '      ' + wcard(P, p)).join('\n')}
 const postThumb = (P, p) => { const r = p.og && pickImg(p.og, ['1024x', '768x', 'orig', 'scaled']); return r ? P.media(r) : P.img('images/ADI8340-scaled.jpg'); };
 const fmtDate = d => new Date(d + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 const postCard = (P, p, all) => `<a class="post rv" href="${P.L('resources/' + p.slug)}"${all ? ` data-cat="${esc(p.cat)}"` : ''}><div class="ph"><img src="${postThumb(P, p)}" alt="" loading="lazy"></div><span class="mono">${esc(p.cat)}</span><h3>${esc(p.title)}</h3><span class="date">${fmtDate(p.date)}</span></a>`;
-const blogSec = (P, label, posts) => `<section class="blog">
+const blogSec = (P, label, posts) => SC ? sc('posts', { label, limit: posts.length }) : `<section class="blog">
   <div class="wrap">
     <div class="blog-head"><div><span class="mono" style="color:var(--plum)">${label}</span><h2 class="disp">Ideas for <em>better offices.</em></h2></div><a class="mono" href="${P.L('resources')}">All articles ↗</a></div>
     <div class="blog-grid">
@@ -387,7 +402,7 @@ ${posts.map(p => '      ' + postCard(P, p)).join('\n')}
     </div>
   </div>
 </section>`;
-const faqSec = (P, label, items) => `<section class="faq">
+const faqSec = (P, label, items) => SC ? sc('faq', { label, items }) : `<section class="faq">
   <div class="wrap faq-grid">
     <div><span class="mono" style="color:var(--plum)">${label}</span><h2 class="disp">Common <em>questions.</em></h2><p>Still have a question? <a href="#contact">Talk to our team</a> and we will help you out.</p></div>
     <div>
@@ -395,7 +410,7 @@ ${items.map(([q, a]) => `      <details><summary>${q}</summary><p>${a}</p></deta
     </div>
   </div>
 </section>`;
-const numsSec = () => `<section class="nums">
+const numsSec = () => SC ? sc('nums', {}) : `<section class="nums">
   <div class="wrap nums-grid">
     <div class="n rv"><b><span data-c="60">0</span><sup>d</sup></b><span class="mono">Days from design to handover</span></div>
     <div class="n rv"><b><span data-c="2">0</span><sup>M+</sup></b><span class="mono">Sq. ft. of office space designed</span></div>
@@ -404,7 +419,7 @@ const numsSec = () => `<section class="nums">
     <div class="n rv"><b><span data-c="100">0</span><sup>%</sup></b><span class="mono">Clients who come back for their next office</span></div>
   </div>
 </section>`;
-const procSec = (P, label) => `<section class="proc">
+const procSec = (P, label) => SC ? sc('process', { label }) : `<section class="proc">
   <div class="wrap">
     <div class="proc-head"><h2 class="disp">Four steps, <em>60 days.</em></h2><span class="mono" style="color:var(--mut)">${label}</span></div>
     <div>
@@ -546,19 +561,25 @@ ${PROJECTS.map(p => '      ' + wcard(P, p)).join('\n')}
   ].join('\n\n'),
 }));
 
+// [thumb, full] image pairs from the live project page's gallery
+function projectGallery(pr, P) {
+  const h = read('portfolio/' + pr.slug + '/index.html');
+  const a = h.indexOf('>Gallery<'), b = h.indexOf('See More Work', a);
+  const region = a >= 0 ? h.slice(a, b > a ? b : undefined) : '';
+  const seen = new Set(), gal = [];
+  for (const m of region.matchAll(/wp-content\/uploads\/[^"' )?]+?\.(?:jpe?g|png|webp)/gi)) {
+    const rel = m[0], key = path.posix.dirname(rel) + '/' + imgBase(path.posix.basename(rel));
+    if (seen.has(key) || /logo/i.test(rel)) continue; seen.add(key);
+    const thumb = pickImg(rel, ['768x', '1024x', 'scaled', 'orig']), full = pickImg(rel, ['1536x', '1024x', 'scaled', 'orig']);
+    if (thumb) gal.push([P.media(thumb), P.media(full || thumb)]);
+  }
+  return gal;
+}
+
 // ---- Project pages ----
 for (const pr of PROJECTS) {
   add('portfolio/' + pr.slug, P => {
-    const h = read('portfolio/' + pr.slug + '/index.html');
-    const a = h.indexOf('>Gallery<'), b = h.indexOf('See More Work', a);
-    const region = a >= 0 ? h.slice(a, b > a ? b : undefined) : '';
-    const seen = new Set(), gal = [];
-    for (const m of region.matchAll(/wp-content\/uploads\/[^"' )?]+?\.(?:jpe?g|png|webp)/gi)) {
-      const rel = m[0], key = path.posix.dirname(rel) + '/' + imgBase(path.posix.basename(rel));
-      if (seen.has(key) || /logo/i.test(rel)) continue; seen.add(key);
-      const thumb = pickImg(rel, ['768x', '1024x', 'scaled', 'orig']), full = pickImg(rel, ['1536x', '1024x', 'scaled', 'orig']);
-      if (thumb) gal.push([P.media(thumb), P.media(full || thumb)]);
-    }
+    const gal = projectGallery(pr, P);
     const others = PROJECTS.filter(x => x !== pr).slice(0, 3);
     return {
       title: `${pr.name}, ${pr.city} — Office Interior Project | Morphora Spaces`, desc: `${pr.name} office in ${pr.city}: a ${pr.size} office interior project. ${pr.by}.`, active: 'portfolio',
@@ -604,16 +625,20 @@ ${rest.map(p => '      ' + postCard(P, p, true)).join('\n')}
   };
 });
 
+// article body without the repeated title / featured image the live posts start with
+function articleBody(post, P) {
+  let body = clean(post.raw, P);
+  const norm = s => text(s).toLowerCase().replace(/[^a-z0-9]+/g, '');
+  if (post.og) { const ob = imgBase(path.posix.basename(post.og)); body = body.replace(/<img [^>]*>/g, m => (m.includes('/' + ob + '-') || m.includes('/' + ob + '.')) ? '' : m); }
+  body = body.replace(/<h2>([\s\S]*?)<\/h2>/, (m, t) => norm(t) === norm(post.title) ? '' : m).replace(/^(\s|<p>\s*<\/p>)+/, '');
+  return { body, hero: post.og && pickImg(post.og, ['1536x', '1024x', 'scaled', 'orig']) };
+}
+
 // ---- Articles ----
 for (const post of POSTS) {
   add('resources/' + post.slug, P => {
-    let body = clean(post.raw, P);
-    // live posts repeat the featured image and the title at the top of the content — drop the repeats
-    const norm = s => text(s).toLowerCase().replace(/[^a-z0-9]+/g, '');
-    if (post.og) { const ob = imgBase(path.posix.basename(post.og)); body = body.replace(/<img [^>]*>/g, m => (m.includes('/' + ob + '-') || m.includes('/' + ob + '.')) ? '' : m); }
-    body = body.replace(/<h2>([\s\S]*?)<\/h2>/, (m, t) => norm(t) === norm(post.title) ? '' : m).replace(/^(\s|<p>\s*<\/p>)+/, '');
+    const { body, hero } = articleBody(post, P);
     const words = text(body).split(' ').length;
-    const hero = post.og && pickImg(post.og, ['1536x', '1024x', 'scaled', 'orig']);
     const related = [...POSTS.filter(p => p !== post && p.cat === post.cat), ...POSTS.filter(p => p !== post && p.cat !== post.cat)].slice(0, 3);
     return {
       title: `${post.title} | Morphora Spaces`, desc: post.desc || post.title, active: 'resources', ogType: 'article',
@@ -740,6 +765,9 @@ for (const c of CITIES) {
 }
 
 /* ------------------------------------------------------------------ write */
+module.exports = { REPO, SIG, LIVE, USED, PROJECTS, POSTS, CITIES, TOP_CITIES, METROS, HQ, INDIA, proj, DISCLAIMER, ADVANTAGES, FAQ, POST_ALIAS, POST_RENAME, CITY_ALIAS,
+  pages, ctxAbs, articleBody, panIndiaAbs: () => { const was = SC; SC = false; const h = panIndia(ctxAbs(''), '{{label}}').replace(`See all ${CITIES.length} cities`, 'See all {{count}} cities'); SC = was; return h; }, projectGallery, postThumbRel: p => p.og && pickImg(p.og, ['1024x', '768x', 'orig', 'scaled']), setShortcodes: v => { SC = v; } };
+if (require.main === module) {
 // remove previously generated output (everything except the hand-made home, its images and shared assets)
 const KEEP = new Set(['index.html', 'images', 'assets', 'partials']); // partials/footer.html is the hand-edited shared footer
 for (const d of fs.readdirSync(SIG)) {
@@ -777,3 +805,4 @@ for (const rel of USED) {
 }
 console.log(`Copied ${USED.size} images into media/ (${(bytes / 1048576).toFixed(1)} MB).`);
 console.log(`Built ${n} pages (+ home): ${POSTS.length} articles, ${CITIES.length} cities, ${PROJECTS.length} projects.`);
+}

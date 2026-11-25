@@ -59,6 +59,22 @@
     const yr = $('#yr'); if (yr) yr.textContent = new Date().getFullYear();
     initForm();
   }
+  // PHP site: the footer is already in the page (rendered by the server), so wire it up straight away
+  if (!footSlot && $('#cform')) initFooter();
+
+  // ---- enquiries: the PHP site sets <body data-api="/api/enquiry/">; the static site has no backend and uses WhatsApp ----
+  const API = document.body.dataset.api || '';
+  const WA = document.body.dataset.wa || '917719155155';
+  const waLink = text => 'https://wa.me/' + WA + '?text=' + encodeURIComponent(text);
+  function sendEnquiry(data) {
+    const fd = new FormData();
+    Object.entries(data).forEach(([k, v]) => fd.append(k, v == null ? '' : v));
+    fd.append('page', location.pathname); fd.append('ref', document.referrer || '');
+    const q = new URLSearchParams(location.search), utm = ['utm_source', 'utm_medium', 'utm_campaign'].map(k => q.get(k)).filter(Boolean).join(' / ');
+    if (utm) fd.append('utm', utm);
+    return fetch(API, { method: 'POST', body: fd, headers: { Accept: 'application/json' }, credentials: 'same-origin' })
+      .then(r => r.json().catch(() => ({ ok: false })).then(j => { if (!r.ok || !j.ok) throw j; return j; }));
+  }
 
   // ---- cursor ----
   const cur = $('#cur');
@@ -122,17 +138,24 @@
   }), { threshold: .5 });
   $$('[data-c]').forEach(el => co.observe(el));
 
-  // ---- enquiry form → WhatsApp (static site, no backend); runs once the shared footer is in the page ----
+  // ---- enquiry form: saved by the PHP backend when there is one, otherwise handed to WhatsApp ----
   function initForm() {
   const form = $('#cform');
   if (form) form.onsubmit = e => {
     e.preventDefault();
-    const d = Object.fromEntries(new FormData(form)), note = $('#cnote');
-    if (!d.name.trim() || !d.phone.trim()) { note.textContent = 'Please enter your name and phone number.'; note.style.color = 'var(--plum-l)'; return; }
+    const d = Object.fromEntries(new FormData(form)), note = $('#cnote'), btn = form.querySelector('button[type=submit]');
+    const say = (t, bad) => { note.textContent = t; note.style.color = bad ? 'var(--plum-l)' : ''; };
+    if (!d.name.trim() || !d.phone.trim()) { say('Please enter your name and phone number.', true); return; }
+    if (d.phone.replace(/\D/g, '').length < 10) { say('Please enter a valid phone number.', true); return; }
     const lines = [['Name', d.name], ['Company', d.company], ['Phone', d.phone], ['Email', d.email], ['City', d.city], ['Office size', d.size], ['Service', d.service], ['Message', d.msg]]
       .filter(x => x[1] && x[1].trim()).map(x => `${x[0]}: ${x[1].trim()}`);
-    window.open('https://wa.me/917719155155?text=' + encodeURIComponent('New enquiry from the website (' + document.title + ')\n\n' + lines.join('\n')), '_blank', 'noopener');
-    note.textContent = 'Thank you! Please press send in WhatsApp to share your details.'; note.style.color = ''; form.reset();
+    const wa = waLink('New enquiry from the website (' + document.title + ')\n\n' + lines.join('\n'));
+    if (!API) { window.open(wa, '_blank', 'noopener'); say('Thank you! Please press send in WhatsApp to share your details.'); form.reset(); return; }
+    btn.disabled = true; say('Sending…');
+    sendEnquiry({ ...d, source: 'form' })
+      .then(() => { form.reset(); say('Thank you! Our team will call you back within one working day.'); })
+      .catch(j => { if (j && j.error) say(j.error, true); else { window.open(wa, '_blank', 'noopener'); say('We could not send that just now, so WhatsApp is opening with your details instead.'); } })
+      .finally(() => { btn.disabled = false; });
   };
   }
 
@@ -255,7 +278,7 @@
     () => cbSay(['Which city is the office in?'], () => cbText({ placeholder: 'Or type another city', chips: CB_CITIES }, v => { cbData.city = v; answer(v); next(); })),
     () => cbSay(['What would you like help with?'], () => cbChips(CB_SERVICES, v => { cbData.service = v; answer(v); next(); })),
     () => cbSay(['Roughly how big is the office?'], () => cbChips([...CB_SIZES, 'Not sure'], v => { cbData.size = v; answer(v); next(); })),
-    () => cbSay([`Thanks, ${cbData.name.split(' ')[0]}! Tap below to send your details to our team on WhatsApp. We’ll get back to you shortly.`], cbFinish),
+    () => API ? cbFinish() : cbSay([`Thanks, ${cbData.name.split(' ')[0]}! Tap below to send your details to our team on WhatsApp. We’ll get back to you shortly.`], cbFinish),
   ];
   let cbStep = 0;
   const next = () => { cbStep++; if (STEPS[cbStep]) STEPS[cbStep](); };
@@ -265,11 +288,17 @@
     [['Name', cbData.name], ['Phone', cbData.phone], ['City', cbData.city], ['Service', cbData.service], ['Office size', cbData.size]].forEach(([k, v]) => { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; sum.append(dt, dd); });
     cbLog.append(sum); cbScroll();
     const a = document.createElement('a'); a.className = 'cb-go'; a.target = '_blank'; a.rel = 'noopener';
-    a.href = 'https://wa.me/917719155155?text=' + encodeURIComponent('New enquiry from the website chat (' + document.title + ')\n\nName: ' + cbData.name + '\nPhone: ' + cbData.phone + '\nCity: ' + cbData.city + '\nService: ' + cbData.service + '\nOffice size: ' + cbData.size);
+    a.href = waLink('New enquiry from the website chat (' + document.title + ')\n\nName: ' + cbData.name + '\nPhone: ' + cbData.phone + '\nCity: ' + cbData.city + '\nService: ' + cbData.service + '\nOffice size: ' + cbData.size);
     a.textContent = 'Send on WhatsApp ↗';
     const r = document.createElement('button'); r.type = 'button'; r.className = 'cb-re'; r.textContent = 'Start over';
     r.onclick = () => { cbLog.innerHTML = ''; cbData = {}; cbStep = 0; STEPS[0](); };
-    cbIn.append(a, r);
+    if (!API) { cbIn.append(a, r); return; }
+    // PHP site: save the lead first; WhatsApp stays available as a second option
+    const first = cbData.name.split(' ')[0];
+    cbIn.innerHTML = '<p class="cb-wait">Sending your details…</p>';
+    sendEnquiry({ source: 'chat', name: cbData.name, phone: cbData.phone, city: cbData.city, service: cbData.service, size: cbData.size })
+      .then(() => cbSay([`Thanks, ${first}! Our team has your details and will call you within one working day.`, 'Prefer to chat now? You can also message us on WhatsApp.'], () => { a.textContent = 'Chat on WhatsApp ↗'; cbIn.innerHTML = ''; cbIn.append(a, r); }))
+      .catch(() => cbSay([`Thanks, ${first}! Tap below to send your details to our team on WhatsApp.`], () => { cbIn.innerHTML = ''; cbIn.append(a, r); }));
   }
   function cbOpen(o) {
     cb.classList.toggle('on', o); cbP.hidden = !o; cbB.setAttribute('aria-expanded', o); cbB.setAttribute('aria-label', o ? 'Close chat' : 'Open chat');

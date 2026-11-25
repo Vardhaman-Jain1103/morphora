@@ -696,3 +696,18 @@ body.lock .cb{display:none}
   .cb-panel{position:fixed;left:12px;right:12px;bottom:82px;width:auto;height:min(540px,calc(100dvh - 110px))}
   .cb-nudge{max-width:210px}
 }
+.cb-wait{font-size:13.5px;color:var(--mut);text-align:center;padding:6px 0}
+
+/* ---- careers (PHP site): open positions + application form ---- */
+.jobs{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.job{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:26px 28px;background:var(--stone);transition:background .3s}
+.job:hover{background:var(--paper)}
+.job h3{font-weight:400;font-size:clamp(20px,2vw,26px);margin-bottom:6px}
+.job .mono{color:var(--mut)}
+.job .go{flex:none;color:var(--plum);font-size:14px}
+.apply-sec .cform{position:relative}
+.note-ok,.note-err{padding:12px 14px;border-radius:6px;font-size:14px}
+.note-ok{background:rgba(62,207,110,.15);color:#bff3cf}
+.note-err{background:rgba(192,57,43,.2);color:#ffd2cc}
+.cform input[type=file]{padding:10px 0;font-size:14px}
+@media (max-width:640px){.job{flex-direction:column;align-items:flex-start;padding:22px 18px}}
