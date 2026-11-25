@@ -1,6 +1,10 @@
 <?php
 /** @var string $body  @var array $meta */
 $ver = @filemtime(ROOT . '/assets/site.css') ?: 1;   // cache-busting for CSS/JS after deploys
+$sectionNumber = '/\(\s*\d{2}\s*—\s*/u';
+$body = preg_replace($sectionNumber, '( ', $body);
+$body = preg_replace('/<a\b[^>]*class=["\'][^"\']*\bcircle-btn\b[^"\']*["\'][^>]*>.*?<\/a>/is', '', $body);
+$meta['foot_label'] = preg_replace($sectionNumber, '( ', (string)($meta['foot_label'] ?? ''));
 ?><!doctype html>
 <html lang="en-IN">
 <head>
@@ -19,7 +23,7 @@ $ver = @filemtime(ROOT . '/assets/site.css') ?: 1;   // cache-busting for CSS/JS
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css?v=<?= $ver ?>">
 </head>
-<body data-api="/api/enquiry/" data-wa="<?= e(setting('whatsapp', '917719155155')) ?>">
+<body<?= ($meta['path'] ?? '') === '/about/' ? ' class="about-page"' : '' ?> data-api="/api/enquiry/" data-wa="<?= e(setting('whatsapp', '917719155155')) ?>">
 <div class="cur" id="cur"><span>VIEW</span></div>
 <?= view('partials/header', ['active' => $meta['nav'] ?? '']) ?>
 

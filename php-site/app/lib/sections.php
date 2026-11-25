@@ -4,10 +4,11 @@
  * that assets/site.css and assets/site.js expect.
  *
  * Page bodies stored in the database can include live sections as shortcodes:
- *   <!--sc:projects {"label":"( 04 — Our work )","h2":"Recent <em>projects.</em>","slugs":["codal-ahmedabad"],"three":false}-->
+ *   <!--sc:projects {"label":"( Our work )","h2":"Recent <em>projects.</em>","slugs":["codal-ahmedabad"],"three":false}-->
  *   <!--sc:posts {"label":"( Keep reading )","limit":3}-->
- *   <!--sc:faq {"label":"( 05 — FAQs )","items":[["Question","Answer"],…]}-->
- *   <!--sc:nums {}-->   <!--sc:process {"label":"( 02 — How we work )"}-->   <!--sc:map {"label":"( Pan-India )"}-->
+ *   <!--sc:faq {"label":"( FAQs )","items":[["Question","Answer"],…]}-->
+ *   <!--sc:nums {}-->   <!--sc:testimonials {}-->   <!--sc:map {"label":"( Pan-India )"}-->
+ * Legacy <!--sc:process {...}--> markers render testimonials.
  *   <!--sc:founder {}-->  <!--sc:vision {}-->  <!--sc:team {}-->  <!--sc:testimonials {}-->   (About page; optional "label" / "h2")
  */
 
@@ -37,17 +38,12 @@ function crumbs_html(array $items): string
     return $h . '</nav>';
 }
 
-function badge(): string
-{
-    return '<a class="circle-btn" href="#contact" data-cur="TALK"><svg viewBox="0 0 134 134" aria-hidden="true"><defs><path id="cpb" d="M67,67 m-56,0 a56,56 0 1,1 112,0 a56,56 0 1,1 -112,0"/></defs><text fill="currentColor" font-size="10" font-weight="500" letter-spacing="3.6" font-family="Inter"><textPath href="#cpb">START A PROJECT · 60 DAYS · START A PROJECT · </textPath></text></svg><span>Let’s talk ↗</span></a>';
-}
-
-/** Page hero. $o: crumb, h1 (HTML), lead (HTML), badge, btns(false = none), cta, btn2 [label, href], img, imgAlt */
+/** Page hero. $o: crumb, h1 (HTML), lead (HTML), btns(false = none), cta, btn2 [label, href], img, imgAlt */
 function phero(array $o): string
 {
-    $act = !empty($o['badge']) ? badge() : (($o['btns'] ?? true) === false ? '' :
+    $act = ($o['btns'] ?? true) === false ? '' :
         '<div class="btns"><a class="btn" href="#contact">' . e($o['cta'] ?? 'Get a free consultation') . '</a>' .
-        (!empty($o['btn2']) ? '<a class="btn ghost" href="' . e($o['btn2'][1]) . '">' . e($o['btn2'][0]) . '</a>' : '') . '</div>');
+        (!empty($o['btn2']) ? '<a class="btn ghost" href="' . e($o['btn2'][1]) . '">' . e($o['btn2'][0]) . '</a>' : '') . '</div>';
     $h = "<section class=\"phero\">\n  <div class=\"wrap\">\n    " . crumbs_html($o['crumb'] ?? []) . "\n    <h1 class=\"disp\">{$o['h1']}</h1>\n    <div class=\"phero-meta\"><p>{$o['lead']}</p>{$act}</div>\n  </div>\n</section>";
     if (!empty($o['img'])) $h .= "\n<section class=\"pimg\"><div class=\"wrap\"><div><img src=\"" . e($o['img']) . '" alt="' . e($o['imgAlt'] ?? '') . '" fetchpriority="high"></div></div></section>';
     return $h;
@@ -149,25 +145,11 @@ function sc_nums(array $o = []): string
     return '<section class="nums">
   <div class="wrap nums-grid">
     <div class="n rv"><b><span data-c="60">0</span><sup>d</sup></b><span class="mono">Days from design to handover</span></div>
-    <div class="n rv"><b><span data-c="2">0</span><sup>M+</sup></b><span class="mono">Sq. ft. of office space designed</span></div>
     <div class="n rv"><b><span data-c="10">0</span><sup>+</sup></b><span class="mono">Cities we work in</span></div>
     <div class="n rv"><b><span data-c="150">0</span><sup>+</sup></b><span class="mono">Offices designed &amp; built</span></div>
     <div class="n rv"><b><span data-c="100">0</span><sup>%</sup></b><span class="mono">Clients who come back for their next office</span></div>
   </div>
 </section>';
-}
-
-function sc_process(array $o): string
-{
-    $steps = [
-        ['Site visit &amp; requirements', 'Our team visits your site to understand your needs, ideas and preferences first-hand.', 'IMG_20200919_173518-scaled.jpg'],
-        ['Design &amp; planning', 'Share your ideas with us, or let our designers suggest layouts, materials and 3D views made for your team.', 'pooja-singh-CJVG-BAz4-k-unsplash-scaled.jpg'],
-        ['Budget-friendly quote', 'A detailed quote based on your needs, always keeping your budget in mind.', 'ADI8376-scaled.jpg'],
-        ['Build &amp; handover', 'We build your office with care and quality checks at every stage, then hand over a space you will be proud of.', 'IMG_1675-scaled.jpg'],
-    ];
-    $c = '';
-    foreach ($steps as $i => [$h, $p, $im]) $c .= '      <article class="pcard"><span class="k">0' . ($i + 1) . "</span><div><h3>{$h}</h3><p>{$p}</p><span class=\"mono\">Step " . ($i + 1) . " of 4</span></div><div class=\"ph\"><img src=\"/images/{$im}\" alt=\"\" loading=\"lazy\"></div></article>\n";
-    return "<section class=\"proc\">\n  <div class=\"wrap\">\n    <div class=\"proc-head\"><h2 class=\"disp\">Four steps, <em>60 days.</em></h2><span class=\"mono\" style=\"color:var(--mut)\">{$o['label']}</span></div>\n    <div>\n{$c}    </div>\n  </div>\n</section>";
 }
 
 function sc_map(array $o): string
@@ -250,22 +232,29 @@ function sc_team(array $o): string
 function sc_testimonials(array $o): string
 {
     $list = testimonials_list();
-    if (!$list) return '';
+    $label = $o['label'] ?? '( Client stories )';
+    $title = $o['h2'] ?? 'What our clients <em>say.</em>';
+    $head = '<div class="sec-head"><div><span class="mono lbl">' . $label . '</span><h2 class="disp">' . $title . '</h2></div><a class="btn ghost" href="/portfolio/">See their offices</a></div>';
+    if (!$list) {
+        return "<section class=\"sec alt testi\" id=\"testimonials\">\n  <div class=\"wrap\">\n    {$head}\n    <p class=\"testi-empty\">Client testimonials will appear here once they are published.</p>\n  </div>\n</section>";
+    }
     $q = '';
     foreach ($list as $t) {
         $who = implode(', ', array_filter([$t['role'], $t['company']], fn($x) => $x !== ''));
         $ph = $t['photo'] !== '' ? '<img src="' . e($t['photo']) . '" alt="" loading="lazy">' : '<span class="ini" aria-hidden="true">' . e(initials($t['name'])) . '</span>';
         $q .= '      <figure class="tq rv"><span class="tq-mark" aria-hidden="true">“</span><blockquote>' . paras((string)$t['quote']) . '</blockquote><figcaption>' . $ph . '<div><b>' . e($t['name']) . '</b>' . ($who !== '' ? '<span>' . e($who) . '</span>' : '') . "</div></figcaption></figure>\n";
     }
-    return "<section class=\"sec alt testi\" id=\"testimonials\">\n  <div class=\"wrap\">\n    <div class=\"sec-head\"><div><span class=\"mono lbl\">" . ($o['label'] ?? '( Client stories )') . '</span><h2 class="disp">' . ($o['h2'] ?? 'What our clients <em>say.</em>') . "</h2></div><a class=\"btn ghost\" href=\"/portfolio/\">See their offices</a></div>\n    <div class=\"testi-grid\">\n{$q}    </div>\n  </div>\n</section>";
+    return "<section class=\"sec alt testi\" id=\"testimonials\">\n  <div class=\"wrap\">\n    {$head}\n    <div class=\"testi-grid\">\n{$q}    </div>\n  </div>\n</section>";
 }
 
 /** Replace <!--sc:name {json}--> markers in stored HTML with live sections. */
 function render_shortcodes(string $html): string
 {
     return preg_replace_callback('/<!--sc:([a-z]+)\s*(\{.*?\})\s*-->/s', function ($m) {
-        $fn = 'sc_' . $m[1];
+        $legacyProcess = $m[1] === 'process';
+        $fn = $legacyProcess ? 'sc_testimonials' : 'sc_' . $m[1];
         $o = json_decode($m[2], true) ?: [];
+        if ($legacyProcess) $o['label'] = '( Client stories )';
         return function_exists($fn) ? $fn($o) : '';
     }, $html);
 }

@@ -53,7 +53,7 @@ $mail = setting('email', 'hello@morphoraspaces.com');
         <label class="full">Message<textarea name="msg" placeholder="Tell us about your project, timeline or budget" maxlength="4000"></textarea></label>
         <!-- spam trap: real visitors never see or fill this -->
         <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"><label>Website<input name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
-        <div class="send"><button type="submit">Send enquiry →</button><span class="note" id="cnote">We reply within one working day.</span></div>
+        <div class="send"><button type="submit">Get a Quote →</button><span class="note" id="cnote">We reply within one working day.</span></div>
       </form>
     </div>
     <div class="ft">

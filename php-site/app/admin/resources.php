@@ -73,7 +73,7 @@ function resources(): array
             'title' => 'Testimonials', 'one' => 'testimonial', 'table' => 'testimonials', 'order' => 'sort_order, id', 'search' => ['name', 'company', 'quote'],
             'list' => ['name' => 'Client', 'company' => 'Company', 'status' => 'Status', 'sort_order' => 'Order'],
             'url' => fn($r) => '/about/',
-            'intro' => 'Client quotes shown in the “Client stories” section of the About page. Only use real quotes, with the client’s permission.',
+            'intro' => 'Client quotes shown below the office floor plan on the homepage. Only use real quotes, with the client’s permission.',
             'fields' => [
                 'name' => ['Client name', 'text', 'required'],
                 'role' => ['Designation', 'text', 'help' => 'For example “Head of Admin”.'],

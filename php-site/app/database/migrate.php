@@ -4,8 +4,9 @@
  * once per version: settings.db_version records the last version applied. Fresh installs set it directly.
  *
  *   2 — About page: team and testimonials tables, vision & mission settings, new About page sections.
+ *   3 — Move client testimonials from About to the homepage.
  */
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 function migrate(): void
 {
@@ -16,7 +17,11 @@ function migrate(): void
         $seed = seed_data();
         about_seed($seed);
         $about = row('SELECT id, body FROM pages WHERE slug = "about"');
-        if ($about) q('UPDATE pages SET body = ? WHERE id = ?', [about_body_v2((string)$about['body']), $about['id']]);
+        if ($about) {
+            $body = about_body_v2((string)$about['body']);
+            $body = about_body_v3($body);
+            q('UPDATE pages SET body = ? WHERE id = ?', [$body, $about['id']]);
+        }
         q('INSERT INTO settings (k, v) VALUES ("db_version", ?) ON DUPLICATE KEY UPDATE v = VALUES(v)', [(string)DB_VERSION]);
         cache_purge_all();
     } catch (Throwable $e) {
@@ -61,12 +66,19 @@ function about_body_v2(string $body): string
     $body = strtr($body, ['( 02 — Our values )' => '( 04 — Our values )', '( 03 — What we do )' => '( 06 — What we do )']);
     $top = "<!--sc:founder {\"label\":\"( 02 — Founder’s message )\"}-->\n\n<!--sc:vision {\"label\":\"( 03 — Vision &amp; mission )\"}-->\n\n";
     $team = "<!--sc:team {\"label\":\"( 05 — Our team )\"}-->\n\n";
-    $quotes = "\n\n<!--sc:testimonials {\"label\":\"( 07 — Client stories )\"}-->\n";
 
     $at = strpos($body, '<section class="why');
     $body = $at !== false ? substr_replace($body, $top, $at, 0) : $body . "\n\n" . $top;
     $at = strpos($body, '<!--sc:nums');
     if ($at !== false && ($end = strpos($body, '-->', $at)) !== false) $body = substr_replace($body, "\n\n" . rtrim($team), $end + 3, 0);
     else $body .= "\n\n" . $team;
-    return rtrim($body) . $quotes;
+    return rtrim($body);
+}
+
+/** Remove the old testimonial section from stored About page content. */
+function about_body_v3(string $body): string
+{
+    $clean = preg_replace('/<!--sc:testimonials\s+\{.*?\}\s*-->\s*/s', '', $body);
+    if ($clean === null) throw new RuntimeException('Could not remove the legacy About testimonials section.');
+    return $clean;
 }

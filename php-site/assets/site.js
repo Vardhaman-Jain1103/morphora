@@ -196,7 +196,7 @@
       el.addEventListener('mousemove', e => { const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; el.style.transform = `perspective(900px) rotateY(${x * 7}deg) rotateX(${-y * 7}deg)`; });
       el.addEventListener('mouseleave', () => { el.style.transform = ''; });
     });
-    $$('.btn,.hbtn,.phero .circle-btn').forEach(b => {
+    $$('.btn,.hbtn').forEach(b => {
       b.addEventListener('mousemove', e => { const r = b.getBoundingClientRect(); b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .2}px,${(e.clientY - r.top - r.height / 2) * .3}px)`; });
       b.addEventListener('mouseleave', () => { b.style.transform = ''; });
     });

@@ -2,7 +2,7 @@
 /** @var string $active */
 $nav = [
     ['about', 'About', 'About us', 'Our story, team and way of working.', 'Our story and team', '/media/2025/10/slidebean-TpGIpUF67po-unsplash-scaled.jpg'],
-    ['design-and-build', 'Design &amp; Build', 'Design &amp; Build', 'Complete office interiors, from layout to handover.', 'Complete office interiors', '/images/ADI8340-scaled.jpg'],
+    // ['design-and-build', 'Design &amp; Build', 'Design &amp; Build', 'Complete office interiors, from layout to handover.', 'Complete office interiors', '/images/ADI8340-scaled.jpg'],
     ['portfolio', 'Portfolio', 'Portfolio', '150+ offices we have designed and built.', 'Offices we have delivered', '/media/2025/10/ADI8265-1024x692.jpg'],
     ['resources', 'Resources', 'Resources', 'Guides and articles on office design.', 'Guides and articles', '/media/2025/10/MicrosoftTeams-image-51-1024x731.jpg'],
     ['contact', 'Contact Us', 'Contact us', 'Visit our Thane office or call our team.', 'Talk to our team', '/media/2025/10/asia-culturecenter-5h9ex_RrmhY-unsplash-scaled.jpg'],

@@ -1,33 +1,41 @@
-<?php /* Home page. Projects, the India map, latest articles and the FAQ are live sections; the rest is edited here. */ ?>
+<?php /* Home page. Projects, testimonials, the India map, latest articles and the FAQ are live sections; the rest is edited here. */ ?>
 <!-- HERO: headline with a photo on its right; the photo grows to full screen on scroll -->
 <section class="hx" id="expand">
   <div class="stick">
     <div class="hx-text wrap" id="hxText">
       <div class="hx-top">
-        <h1 class="disp">
-          <span class="ln"><span>Better offices,</span></span>
-          <span class="ln"><span>built <em>on time.</em></span></span>
-        </h1>
+        <div class="hx-copy">
+          <h1 class="disp">
+            <span class="ln"><span>Better offices,</span></span>
+            <span class="ln"><span>built <em>on time.</em></span></span>
+          </h1>
+          <p>We design and build offices for growing companies — from the first layout to the final handover, in just 60 days.</p>
+          <ul class="hx-proof" aria-label="Delivery highlights">
+            <li><strong>60</strong><span>days to handover</span></li>
+            <li><strong>150+</strong><span>offices delivered</span></li>
+          </ul>
+        </div>
         <div class="hx-slot" id="xSlot" aria-hidden="true"></div>
       </div>
-      <div class="hero-meta">
-      <span class="mono">( Office interiors · Mumbai )</span>
-      <p>We design and build offices for growing companies — from the first layout to the final handover, in just 60 days.</p>
-      <a class="circle-btn" href="#contact" data-cur="TALK">
-        <svg viewBox="0 0 134 134"><defs><path id="cp" d="M67,67 m-56,0 a56,56 0 1,1 112,0 a56,56 0 1,1 -112,0"/></defs><text fill="currentColor" font-size="10" font-weight="500" letter-spacing="3.6" font-family="Inter"><textPath href="#cp">START A PROJECT · 60 DAYS · START A PROJECT · </textPath></text></svg>
-        <span>Talk to us ↗</span>
-      </a>
     </div>
+    <div class="hx-process wrap" aria-label="Design and build process">
+      <i class="hx-process-track" aria-hidden="true"></i>
+      <i class="hx-process-dot" aria-hidden="true"></i>
+      <span>Plan</span><span>Design</span><span>Build</span><span>Handover</span>
     </div>
     <div class="frame" id="xFrame"><img id="xImg" src="/images/morphora-office-8000-sqft-hero.jpg" alt="Open-plan workstations in an 8,000 sq ft office by Morphora Spaces" fetchpriority="high"><div class="shade" id="xShade"></div></div>
     <div class="cap wrap mono" id="xCap"><span>8,000 sq ft office</span><span>Designed &amp; built by Morphora</span></div>
+    <div class="hx-bottom wrap">
+      <span class="mono hx-services">Space planning <b aria-hidden="true">·</b> Design &amp; build <b aria-hidden="true">·</b> Turnkey delivery</span>
+      <span class="mono hx-scroll">Scroll to explore <b aria-hidden="true">↓</b></span>
+    </div>
   </div>
 </section>
 
 <!-- MANIFESTO -->
 <section class="manifesto">
   <div class="wrap">
-    <span class="mono">( 01 — Our vision )</span>
+    <span class="mono">( Our vision )</span>
     <p id="mf">We listen. We deliver. With <em>presence and purpose.</em></p>
     <div class="vis-sub">
       <p>We don’t just design interiors — we challenge conventions, blending creativity with strategy to build spaces that go far beyond looks.</p>
@@ -47,7 +55,7 @@
 <section class="plan" id="plan">
   <div class="wrap">
     <div class="plan-head">
-      <div><span class="mono" style="color:var(--brass)">( 02 — Office zones )</span><h2 class="disp" style="margin-top:20px">Every area, <em>well planned.</em></h2></div>
+      <div><span class="mono" style="color:var(--brass)">( Office zones )</span><h2 class="disp" style="margin-top:20px">Every area, <em>well planned.</em></h2></div>
       <p>See how we plan a typical office. Select an area to learn more.</p>
     </div>
     <div class="plan-body">
@@ -90,6 +98,8 @@
   </div>
 </section>
 
+<?= sc_testimonials(['label' => '( Client stories )', 'h2' => 'What our clients <em>say.</em>']) ?>
+
 <!-- ZONE GALLERY (opened by clicking an area) -->
 <div class="zg" id="zg" role="dialog" aria-modal="true" aria-labelledby="zgT" hidden>
   <div class="zg-top"><div><span class="mono" id="zgK">Area 01</span><h3 class="disp" id="zgT">Reception</h3></div><span class="mono zg-count" id="zgCount">01 / 06</span><button type="button" class="zg-x" id="zgClose" aria-label="Close gallery">✕</button></div>
@@ -100,7 +110,7 @@
 <!-- HORIZONTAL WORK -->
 <section class="hz" id="work">
   <div class="stick">
-    <div class="wrap hz-head"><h2 class="disp">Our <em>projects</em></h2><span class="mono">( 03 — 150+ offices delivered )</span></div>
+    <div class="wrap hz-head"><h2 class="disp">Our <em>Projects</em></h2><span class="mono">( 150+ offices delivered )</span></div>
     <div class="hz-track" id="hzTrack">
 <?= home_project_cards() ?>
       <div class="hz-end"><span class="mono" style="color:var(--mut);margin-bottom:20px">( Full portfolio )</span><a href="/portfolio/">See all <em>projects</em> ↗</a></div>
@@ -113,7 +123,6 @@
 <section class="nums">
   <div class="wrap nums-grid">
     <div class="n rv"><b><span data-c="60">0</span><sup>d</sup></b><span class="mono">Days from design to handover</span></div>
-    <div class="n rv"><b><span data-c="2">0</span><sup>M+</sup></b><span class="mono">Sq. ft. of office space designed</span></div>
     <div class="n rv"><b><span data-c="10">0</span><sup>+</sup></b><span class="mono">Cities we work in</span></div>
     <div class="n rv"><b><span data-c="150">0</span><sup>+</sup></b><span class="mono">Offices designed &amp; built</span></div>
     <div class="n rv"><b><span data-c="100">0</span><sup>%</sup></b><span class="mono">Clients who come back for their next office</span></div>
@@ -121,25 +130,12 @@
 </section>
 
 <!-- PAN-INDIA MAP -->
-<?= sc_map(['label' => '( 04 — Pan-India )']) ?>
-
-<!-- PROCESS -->
-<section class="proc">
-  <div class="wrap">
-    <div class="proc-head"><h2 class="disp">Four steps, <em>60 days.</em></h2><span class="mono" style="color:var(--mut)">( 05 — How we work )</span></div>
-    <div>
-      <article class="pcard"><span class="k">01</span><div><h3>Site visit &amp; requirements</h3><p>Our team visits your site to understand your needs, ideas and preferences first-hand.</p><span class="mono">Step 1 of 4</span></div><div class="ph"><img src="/images/IMG_20200919_173518-scaled.jpg" alt=""></div></article>
-      <article class="pcard"><span class="k">02</span><div><h3>Design &amp; planning</h3><p>Share your ideas with us, or let our designers suggest layouts, materials and 3D views made for your team.</p><span class="mono">Step 2 of 4</span></div><div class="ph"><img src="/images/pooja-singh-CJVG-BAz4-k-unsplash-scaled.jpg" alt=""></div></article>
-      <article class="pcard"><span class="k">03</span><div><h3>Budget-friendly quote</h3><p>A detailed quote based on your needs, always keeping your budget in mind.</p><span class="mono">Step 3 of 4</span></div><div class="ph"><img src="/images/ADI8376-scaled.jpg" alt=""></div></article>
-      <article class="pcard"><span class="k">04</span><div><h3>Build &amp; handover</h3><p>We build your office with care and quality checks at every stage, then hand over a space you will be proud of.</p><span class="mono">Step 4 of 4</span></div><div class="ph"><img src="/images/IMG_1675-scaled.jpg" alt=""></div></article>
-    </div>
-  </div>
-</section>
+<?= sc_map(['label' => '( Pan-India )']) ?>
 
 <!-- WHY US -->
 <section class="why">
   <div class="wrap why-grid">
-    <div><span class="mono" style="color:var(--plum)">( 06 — Why choose us )</span><h2 class="disp">Why work <em>with us.</em></h2></div>
+    <div><span class="mono" style="color:var(--plum)">( Why choose us )</span><h2 class="disp">Why work <em>with us.</em></h2></div>
     <ol>
       <li class="rv"><span class="mono">01</span><div><h3>Clear process, full transparency</h3><p>From start to finish you always know where your project stands, with live progress updates on a simple online dashboard.</p></div></li>
       <li class="rv"><span class="mono">02</span><div><h3>Design that works</h3><p>Offices that look good and are easy to work in — planned around your workflow, productivity and company culture.</p></div></li>
@@ -153,7 +149,7 @@
 <!-- BLOG -->
 <section class="blog">
   <div class="wrap">
-    <div class="blog-head"><div><span class="mono" style="color:var(--plum)">( 07 — From our blog )</span><h2 class="disp">Ideas for <em>better offices.</em></h2></div><a class="mono" href="/resources/">All articles ↗</a></div>
+    <div class="blog-head"><div><span class="mono" style="color:var(--plum)">( From our blog )</span><h2 class="disp">Ideas for <em>better offices.</em></h2></div><a class="mono" href="/resources/">All articles ↗</a></div>
     <div class="blog-grid">
 <?= post_cards(latest_posts(3)) ?>
     </div>
@@ -161,4 +157,4 @@
 </section>
 
 <!-- FAQ -->
-<?= sc_faq(['label' => '( 08 — FAQs )', 'items' => home_faq()]) ?>
+<?= sc_faq(['label' => '( FAQs )', 'items' => home_faq()]) ?>
