@@ -9,7 +9,10 @@ $ver = @filemtime(ROOT . '/assets/site.css') ?: 1;   // cache-busting for CSS/JS
 <?= seo_head($meta) ?>
 
 <meta name="theme-color" content="#151215">
-<?php if (is_file(ROOT . '/images/favicon.png')): ?><link rel="icon" href="/images/favicon.png" type="image/png"><?php endif ?>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/images/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

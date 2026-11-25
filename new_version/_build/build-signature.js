@@ -218,7 +218,7 @@ const navImg = (P, s) => s.startsWith('up:') ? P.media(s.slice(3)) : P.root + s.
 function header(P, active) {
   return `<header>
   <div class="wrap">
-    <a class="logo" href="${P.L('')}" aria-label="Morphora Spaces — home"><img src="${P.img('images/Morphora-Logo-1-e1758320614708.png')}" alt="Morphora Spaces"></a>
+    <a class="logo" href="${P.L('')}" aria-label="Morphora Spaces — home"><img src="${P.img('images/morphora-spaces-logo-header.png')}" alt="Morphora Spaces"></a>
     <nav aria-label="Main">
       <ul class="nav">
 ${NAV.map(n => `        <li><a href="${P.L(n[0])}"${active === n[0] ? ' class="on" aria-current="page"' : ''}>${n[1]}</a><span class="prev"><img src="${navImg(P, n[5])}" alt="" loading="lazy"><span><b>${n[2]}</b>${n[3]}</span></span></li>`).join('\n')}
@@ -268,6 +268,9 @@ function layout(P, o) {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="${P.root}assets/site.css">
+<link rel="icon" href="${P.root}images/favicon.ico" sizes="any">
+<link rel="icon" href="${P.root}images/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="${P.root}images/apple-touch-icon.png">
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>

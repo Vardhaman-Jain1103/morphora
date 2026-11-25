@@ -27,10 +27,10 @@ function admin_page(string $title, string $content, string $active): void
 <title><?= e($title) ?> — Admin</title>
 <link rel="stylesheet" href="/admin/admin.css?v=<?= @filemtime(ROOT . '/admin/admin.css') ?: 1 ?>">
 <meta name="csrf" content="<?= e(csrf_token()) ?>">
-</head>
+<link rel="icon" href="/images/favicon.ico" sizes="any"><link rel="icon" href="/images/favicon-32.png" type="image/png" sizes="32x32"></head>
 <body>
 <aside class="side">
-  <a class="brand" href="/admin/"><img src="/images/Morphora-Logo-1-e1758320614708.png" alt="Morphora Spaces"></a>
+  <a class="brand" href="/admin/"><img src="/images/morphora-spaces-logo-header.png" alt="Morphora Spaces"></a>
   <nav>
 <?php foreach ($nav as [$k, $u, $l, $n]): ?>
     <a href="<?= e($u) ?>"<?= $active === $k ? ' class="on"' : '' ?>><?= e($l) ?><?= $n ? '<b>' . $n . '</b>' : '' ?></a>

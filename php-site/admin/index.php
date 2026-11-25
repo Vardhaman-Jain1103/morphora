@@ -48,9 +48,9 @@ function admin_login_page(): void
     }
     ?><!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
-<title>Sign in — <?= e(setting('site_name', 'Morphora Spaces')) ?></title><link rel="stylesheet" href="/admin/admin.css"></head>
+<title>Sign in — <?= e(setting('site_name', 'Morphora Spaces')) ?></title><link rel="stylesheet" href="/admin/admin.css"><link rel="icon" href="/images/favicon.ico" sizes="any"><link rel="icon" href="/images/favicon-32.png" type="image/png" sizes="32x32"></head>
 <body class="auth"><main class="auth-box">
-  <img src="/images/Morphora-Logo-1-e1758320614708.png" alt="" class="auth-logo">
+  <img src="/images/morphora-spaces-logo.png" alt="Morphora Spaces" class="auth-logo">
   <h1>Sign in</h1>
   <?php if ($err): ?><p class="msg err"><?= e($err) ?></p><?php endif ?>
   <form method="post">

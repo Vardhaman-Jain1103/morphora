@@ -20,7 +20,7 @@ function schema_org(): array
         '@id' => org_id(),
         'name' => setting('site_name', 'Morphora Spaces'),
         'url' => abs_url('/'),
-        'logo' => abs_url('/images/Morphora-Logo-1-e1758320614708.png'),
+        'logo' => abs_url('/images/morphora-spaces-logo.png'),
         'image' => abs_url(setting('default_og_image', '/images/morphora-office-8000-sqft-hero.jpg')),
         'description' => 'Office interior design and build company in Thane, Mumbai — complete offices delivered in 60 days.',
         'telephone' => setting('phone', '+91 77191 55155'),

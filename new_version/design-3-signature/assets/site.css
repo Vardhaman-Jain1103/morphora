@@ -31,11 +31,11 @@ body.lock{overflow:hidden}
 header{position:fixed;top:0;left:0;right:0;z-index:60;color:var(--char);transition:transform .6s var(--out),background-color .4s,box-shadow .4s;animation:hdrIn 1s var(--out)}
 @keyframes hdrIn{from{transform:translateY(-100%);opacity:0}}
 header .wrap{display:flex;justify-content:space-between;align-items:center;gap:30px;height:92px;transition:height .45s var(--out)}
-header .logo img{height:42px;filter:brightness(0);transition:height .45s var(--out),filter .3s}
+header .logo img{height:44px;width:auto;display:block;transition:height .45s var(--out),filter .3s}
 header .right{display:flex;gap:18px;align-items:center}
 header.solid{background:rgba(245,242,236,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--line),0 14px 30px -22px rgba(0,0,0,.3)}
 header.solid .wrap{height:72px}
-header.solid .logo img{height:34px}
+header.solid .logo img{height:36px}
 header.open{color:var(--stone);background:transparent;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;transform:none}
 header.open .logo img{filter:brightness(0) invert(1)}
 /* desktop nav */
