@@ -2,7 +2,7 @@
 (function () {
   const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-  // Site root (…/design-3-signature/) and its local copy of the live-site uploads, resolved from this script's own URL
+  // Site root and its media/ folder, resolved from this script's own URL
   const ROOT = new URL('../', document.currentScript.src);
   const UPLOADS = new URL('media/', ROOT);
 

@@ -1,8 +1,5 @@
 
-# PHP site: generated / copied by new_version/_build/build-php.js, and server-only files
-php-site/assets/
-php-site/images/
-php-site/media/
+# PHP site: server-only files (local config, admin uploads, CVs)
 php-site/app/config.php
 php-site/uploads/*
 !php-site/uploads/.htaccess

@@ -1,7 +1,7 @@
 <?php
 /*
- * Page sections — PHP versions of the section builders in new_version/_build/build-signature.js,
- * producing the same markup so assets/site.css and site.js work unchanged.
+ * Page sections shared by the public views. They produce the markup
+ * that assets/site.css and assets/site.js expect.
  *
  * Page bodies stored in the database can include live sections as shortcodes:
  *   <!--sc:projects {"label":"( 04 — Our work )","h2":"Recent <em>projects.</em>","slugs":["codal-ahmedabad"],"three":false}-->
@@ -171,7 +171,7 @@ function sc_process(array $o): string
 
 function sc_map(array $o): string
 {
-    $f = APP . '/views/generated/map.html';
+    $f = APP . '/views/partials/india-map.html';
     if (!is_file($f)) return '';
     return strtr((string)file_get_contents($f), ['{{label}}' => $o['label'] ?? '( Pan-India )', '{{count}}' => (string)cities_count()]);
 }

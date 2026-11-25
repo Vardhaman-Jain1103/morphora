@@ -1,8 +1,8 @@
-# Shrinks large images copied into design-3-signature/media/ (run after build-signature.js).
+# Shrinks large images in php-site/media/ (run after adding new photos there).
 #   powershell -ExecutionPolicy Bypass -File new_version/_build/optimize-images.ps1
 # Any JPEG/PNG over 600 KB is resized to at most 1600px wide; JPEGs are re-saved at quality 82.
 Add-Type -AssemblyName System.Drawing
-$media = Join-Path $PSScriptRoot '..\design-3-signature\media'
+$media = Join-Path $PSScriptRoot '..\..\php-site\media'
 $maxW = 1600
 $jpegCodec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object { $_.MimeType -eq 'image/jpeg' }
 $params = New-Object System.Drawing.Imaging.EncoderParameters 1

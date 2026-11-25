@@ -85,7 +85,7 @@ function route_home(): void
 {
     $pg = page_row('');
     cache_public();
-    page_out('home', [], meta_from_page($pg, '/', ['scripts' => (string)@file_get_contents(APP . '/views/generated/home-script.html')]));
+    page_out('home', [], meta_from_page($pg, '/', ['scripts' => (string)@file_get_contents(APP . '/views/partials/home-script.html')]));
 }
 
 /** Fixed pages stored in the database: about, services, contact, legal … (and redirects / 404 for unknown paths). */

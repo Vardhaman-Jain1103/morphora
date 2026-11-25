@@ -39,7 +39,7 @@ if ($step === 'form' && is_post()) {
 
             // 2. content
             $seed = json_decode((string)file_get_contents(APP . '/database/seed.json'), true);
-            if (!$seed) throw new RuntimeException('app/database/seed.json is missing or invalid — run node new_version/_build/build-php.js and upload it.');
+            if (!$seed) throw new RuntimeException('app/database/seed.json is missing or invalid — upload app/database/seed.json from the repository.');
             $pdo = db(); $pdo->beginTransaction();
             $ins = function (string $table, array $r) {
                 $cols = array_keys($r);
