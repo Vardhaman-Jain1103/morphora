@@ -6,6 +6,7 @@
  * Anything else 301-redirects to it. Unknown paths are checked against the redirects table, then 404.
  */
 require __DIR__ . '/app/bootstrap.php';
+migrate();
 
 $uri = rawurldecode(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/');
 $qs = ($_SERVER['QUERY_STRING'] ?? '') !== '' ? '?' . $_SERVER['QUERY_STRING'] : '';
@@ -97,7 +98,9 @@ function route_page(string $slug): void
         if ($r) { q('UPDATE redirects SET hits = hits + 1 WHERE id = ?', [$r['id']]); redirect($r['to_path'], (int)$r['code'] === 302 ? 302 : 301); }
         not_found();
     }
-    cache_public();
+    if (empty($_GET['preview'])) cache_public();
+    else header('X-LiteSpeed-Cache-Control: no-cache');   // previews can include drafts: never cache them
+    $preview = can_preview();
     $names = ['about' => 'About', 'design-and-build' => 'Design & Build', 'real-estate' => 'Real Estate Advisory', 'pmc' => 'Project Management', 'contact' => 'Contact', 'privacy-policy' => 'Privacy Policy', 'terms-and-conditions' => 'Terms and Conditions'];
     $crumbs = [[$names[$slug] ?? ucwords(str_replace('-', ' ', $slug)), null]];
     $schema = [];
@@ -106,7 +109,7 @@ function route_page(string $slug): void
     }
     if ($slug === 'contact') $schema[] = ['@type' => 'ContactPage', 'url' => abs_url('/contact/'), 'about' => ['@id' => org_id()]];
     if ($slug === 'about') $schema[] = ['@type' => 'AboutPage', 'url' => abs_url('/about/'), 'about' => ['@id' => org_id()]];
-    page_out('page', ['page' => $pg], meta_from_page($pg, path_for($slug), ['crumbs' => $crumbs, 'schema' => $schema]));
+    page_out('page', ['page' => $pg], meta_from_page($pg, path_for($slug), ['crumbs' => $crumbs, 'schema' => $schema, 'robots' => $preview ? 'noindex,nofollow' : null]));
 }
 
 function route_portfolio(): void

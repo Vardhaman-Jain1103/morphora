@@ -22,6 +22,7 @@ require APP . '/lib/seo.php';
 require APP . '/lib/sections.php';
 require APP . '/lib/mail.php';
 require APP . '/lib/upload.php';
+require APP . '/database/migrate.php';
 
 function cfg(string $key, $default = null)
 {

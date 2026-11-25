@@ -8,6 +8,7 @@
  *   <!--sc:posts {"label":"( Keep reading )","limit":3}-->
  *   <!--sc:faq {"label":"( 05 — FAQs )","items":[["Question","Answer"],…]}-->
  *   <!--sc:nums {}-->   <!--sc:process {"label":"( 02 — How we work )"}-->   <!--sc:map {"label":"( Pan-India )"}-->
+ *   <!--sc:founder {}-->  <!--sc:vision {}-->  <!--sc:team {}-->  <!--sc:testimonials {}-->   (About page; optional "label" / "h2")
  */
 
 /* ------------------------------------------------------------------ data */
@@ -174,6 +175,89 @@ function sc_map(array $o): string
     $f = APP . '/views/partials/india-map.html';
     if (!is_file($f)) return '';
     return strtr((string)file_get_contents($f), ['{{label}}' => $o['label'] ?? '( Pan-India )', '{{count}}' => (string)cities_count()]);
+}
+
+/* ------------------------------------------------------------ about page */
+/** Signed-in admins viewing ?preview=1 also see draft team members and testimonials. */
+function show_drafts(): bool { return function_exists('can_preview') && can_preview(); }
+
+function team_list(): array
+{
+    try { return rows('SELECT * FROM team' . (show_drafts() ? '' : ' WHERE status = "published"') . ' ORDER BY sort_order, id'); }
+    catch (Throwable $e) { return []; }
+}
+function testimonials_list(): array
+{
+    try { return rows('SELECT * FROM testimonials' . (show_drafts() ? '' : ' WHERE status = "published"') . ' ORDER BY sort_order, id'); }
+    catch (Throwable $e) { return []; }
+}
+
+/** Plain text with blank lines → escaped <p> paragraphs. */
+function paras(string $text): string
+{
+    $out = '';
+    foreach (preg_split('/\R\s*\R/', trim($text)) as $p) if (trim($p) !== '') $out .= '<p>' . nl2br(e(trim($p)), false) . '</p>';
+    return $out;
+}
+function initials(string $name): string
+{
+    $w = preg_split('/\s+/', trim($name)) ?: [];
+    return mb_strtoupper(mb_substr($w[0] ?? '', 0, 1) . (count($w) > 1 ? mb_substr(end($w), 0, 1) : ''));
+}
+/** Settings that may contain <em> (to colour words purple) and line breaks; everything else is escaped. */
+function rich_setting(string $k, string $default): string { return strip_tags(setting($k, $default), '<em><strong><br>'); }
+
+function sc_founder(array $o): string
+{
+    $m = null;
+    foreach (team_list() as $t) if (trim((string)$t['message']) !== '') { $m = $t; break; }
+    if (!$m) return '';
+    $ph = $m['photo'] !== ''
+        ? '<img src="' . e($m['photo']) . '" alt="' . e($m['name'] . ', ' . $m['role']) . '" loading="lazy">'
+        : '<span class="ini" aria-hidden="true">' . e(initials($m['name'])) . '</span>';
+    return "<section class=\"sec alt founder\" id=\"founder\">\n  <div class=\"wrap founder-grid\">\n    <figure class=\"founder-ph rv\">{$ph}</figure>\n    <div class=\"founder-txt\">\n      <span class=\"mono lbl\">" . ($o['label'] ?? '( Founder’s message )') . "</span>\n      <h2 class=\"disp\">" . ($o['h2'] ?? 'A note from <em>our founder.</em>') . "</h2>\n      <blockquote class=\"founder-msg\">" . paras((string)$m['message']) . "</blockquote>\n      <p class=\"founder-sign\"><b>" . e($m['name']) . '</b><span class="mono">' . e($m['role']) . "</span></p>\n    </div>\n  </div>\n</section>";
+}
+
+function sc_vision(array $o): string
+{
+    $vision = rich_setting('about_vision', '');
+    $mission = rich_setting('about_mission', '');
+    if ($vision === '' && $mission === '') return '';
+    $side = $mission !== '' ? "\n    <div class=\"vm-side rv\"><span class=\"mono\">Our mission</span><p>{$mission}</p></div>" : '';
+    return "<section class=\"sec vm\" id=\"vision\">\n  <div class=\"wrap vm-grid\">\n    <div><span class=\"mono lbl\">" . ($o['label'] ?? '( Vision &amp; mission )') . '</span>' . ($vision !== '' ? "<p class=\"vm-statement disp\"><span class=\"mono\">Our vision</span>{$vision}</p>" : '') . "</div>{$side}\n  </div>\n</section>";
+}
+
+function sc_team(array $o): string
+{
+    $list = team_list();
+    if (!$list) return '';
+    $cards = '';
+    foreach ($list as $t) {
+        $ph = $t['photo'] !== '' ? '<img src="' . e($t['photo']) . '" alt="' . e($t['name'] . ', ' . $t['role']) . '" loading="lazy">' : '<span class="ini" aria-hidden="true">' . e(initials($t['name'])) . '</span>';
+        $cards .= '      <article class="tm rv"><div class="ph">' . $ph . '</div><h3>' . e($t['name']) . '</h3><span class="mono">' . e($t['role']) . '</span>'
+            . (trim((string)$t['bio']) !== '' ? '<p>' . e($t['bio']) . '</p>' : '')
+            . ($t['linkedin'] !== '' ? '<a class="tm-in" href="' . e($t['linkedin']) . '" target="_blank" rel="noopener">LinkedIn ↗</a>' : '') . "</article>\n";
+        if ($t['status'] === 'published') {
+            $person = ['@type' => 'Person', 'name' => $t['name'], 'jobTitle' => $t['role'], 'worksFor' => ['@id' => org_id()]];
+            if ($t['photo'] !== '') $person['image'] = abs_url($t['photo']);
+            if ($t['linkedin'] !== '') $person['sameAs'] = [$t['linkedin']];
+            schema_add($person);
+        }
+    }
+    return "<section class=\"sec team\" id=\"team\">\n  <div class=\"wrap\">\n    <div class=\"sec-head\"><div><span class=\"mono lbl\">" . ($o['label'] ?? '( Our team )') . '</span><h2 class="disp">' . ($o['h2'] ?? 'The people behind <em>your office.</em>') . "</h2></div></div>\n    <div class=\"team-grid\">\n{$cards}    </div>\n  </div>\n</section>";
+}
+
+function sc_testimonials(array $o): string
+{
+    $list = testimonials_list();
+    if (!$list) return '';
+    $q = '';
+    foreach ($list as $t) {
+        $who = implode(', ', array_filter([$t['role'], $t['company']], fn($x) => $x !== ''));
+        $ph = $t['photo'] !== '' ? '<img src="' . e($t['photo']) . '" alt="" loading="lazy">' : '<span class="ini" aria-hidden="true">' . e(initials($t['name'])) . '</span>';
+        $q .= '      <figure class="tq rv"><span class="tq-mark" aria-hidden="true">“</span><blockquote>' . paras((string)$t['quote']) . '</blockquote><figcaption>' . $ph . '<div><b>' . e($t['name']) . '</b>' . ($who !== '' ? '<span>' . e($who) . '</span>' : '') . "</div></figcaption></figure>\n";
+    }
+    return "<section class=\"sec alt testi\" id=\"testimonials\">\n  <div class=\"wrap\">\n    <div class=\"sec-head\"><div><span class=\"mono lbl\">" . ($o['label'] ?? '( Client stories )') . '</span><h2 class="disp">' . ($o['h2'] ?? 'What our clients <em>say.</em>') . "</h2></div><a class=\"btn ghost\" href=\"/portfolio/\">See their offices</a></div>\n    <div class=\"testi-grid\">\n{$q}    </div>\n  </div>\n</section>";
 }
 
 /** Replace <!--sc:name {json}--> markers in stored HTML with live sections. */

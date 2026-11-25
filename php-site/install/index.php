@@ -32,14 +32,11 @@ if ($step === 'form' && is_post()) {
     if (!$errors) {
         try {
             // 1. tables
-            $sql = (string)file_get_contents(APP . '/database/schema.sql');
-            $sql = preg_replace('/^\s*--.*$/m', '', $sql);
-            foreach (array_filter(array_map('trim', explode(';', $sql))) as $stmt) db()->exec($stmt);
+            schema_apply();
             $done[] = 'Database tables created.';
 
             // 2. content
-            $seed = json_decode((string)file_get_contents(APP . '/database/seed.json'), true);
-            if (!$seed) throw new RuntimeException('app/database/seed.json is missing or invalid — upload app/database/seed.json from the repository.');
+            $seed = seed_data();
             $pdo = db(); $pdo->beginTransaction();
             $ins = function (string $table, array $r) {
                 $cols = array_keys($r);
@@ -53,6 +50,8 @@ if ($step === 'form' && is_post()) {
             foreach ($seed['cities'] as $c) $ins('cities', $c);
             foreach ($seed['jobs'] as $j) $ins('jobs', $j);
             foreach ($seed['redirects'] as $r) $ins('redirects', $r);
+            about_seed($seed);
+            q('INSERT INTO settings (k, v) VALUES ("db_version", ?) ON DUPLICATE KEY UPDATE v = VALUES(v)', [(string)DB_VERSION]);
             $pdo->commit();
             $done[] = sprintf('Content loaded: %d pages, %d articles, %d projects, %d cities, %d jobs, %d redirects from the old site.',
                 count($seed['pages']), count($seed['posts']), count($seed['projects']), count($seed['cities']), count($seed['jobs']), count($seed['redirects']));

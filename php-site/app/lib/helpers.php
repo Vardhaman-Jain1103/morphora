@@ -77,7 +77,7 @@ function csrf_check(): void
     session_boot();
     $t = $_POST['_csrf'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
     if (!is_string($t) || empty($_SESSION['csrf']) || !hash_equals($_SESSION['csrf'], $t)) {
-        http_response_code(419);
+        http_response_code(403);   // not 419: Apache turns status codes it does not know into 500
         exit('Your session expired. Go back, refresh the page and try again.');
     }
 }

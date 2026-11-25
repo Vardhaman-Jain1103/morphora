@@ -7,6 +7,7 @@ require dirname(__DIR__) . '/app/bootstrap.php';
 require APP . '/admin/auth.php';
 require APP . '/admin/resources.php';
 require APP . '/admin/ui.php';
+migrate();
 
 header('X-Robots-Tag: noindex, nofollow');
 header('Cache-Control: no-store, private');
@@ -82,6 +83,7 @@ function admin_dashboard(): void
         [setting('ga4_id') !== '', 'Google Analytics (GA4) connected', 'Add your GA4 measurement ID (G-…) in Settings.', '/admin/?r=settings'],
         [($n = $c('SELECT COUNT(*) FROM posts WHERE status="published" AND seo_desc="" AND (excerpt IS NULL OR excerpt="")')) === 0, 'Every article has a description', "{$n} published articles have no summary or SEO description.", '/admin/?r=list&t=posts'],
         [($n = $c('SELECT COUNT(*) FROM cities WHERE status="published" AND top=1 AND (body IS NULL OR body="")')) === 0, 'Top cities have local content', "{$n} top cities only use the standard text. Unique local content helps them rank.", '/admin/?r=list&t=cities'],
+        [$c('SELECT COUNT(*) FROM team WHERE status="published"') > 0 && $c('SELECT COUNT(*) FROM testimonials WHERE status="published"') > 0, 'About page has team and testimonials', 'Add real team photos and client quotes, then publish them. The samples are hidden drafts.', '/admin/?r=list&t=team'],
         [setting('social_links') !== '', 'Social profiles linked', 'Add your LinkedIn / Instagram links in Settings so Google can connect them to the business.', '/admin/?r=settings'],
     ];
     ob_start(); ?>
@@ -364,6 +366,7 @@ function admin_edit(): void
             if ((int)val('SELECT COUNT(*) FROM redirects WHERE from_path = ? AND id <> ?', [$data['from_path'], $id])) $errors[] = 'A redirect for that path already exists.';
             $data['code'] = (int)$data['code'];
         }
+        if (($data['linkedin'] ?? '') !== '' && !preg_match('~^https?://~i', $data['linkedin'])) $errors[] = 'The LinkedIn profile must be a full link starting with https://';
         if (!$errors) {
             if ($rec) {
                 q("UPDATE {$R['table']} SET " . implode(', ', array_map(fn($c) => "$c = ?", array_keys($data))) . ' WHERE id = ?', [...array_values($data), $id]);
@@ -391,7 +394,7 @@ function admin_edit(): void
         if (!field_applies($f, $rec)) continue;
         $html = field_html($k, $f, $vals[$k] ?? '');
         if (($f['group'] ?? '') === 'seo') $seo .= $html;
-        elseif (in_array($f[1], ['select', 'check', 'date', 'number'], true) || in_array($k, ['slug', 'category', 'author', 'city', 'size', 'location', 'experience', 'cover', 'thumb', 'hero', 'og_image', 'foot_label', 'foot_title'], true)) $side .= $html;
+        elseif (in_array($f[1], ['select', 'check', 'date', 'number'], true) || in_array($k, ['slug', 'category', 'author', 'city', 'size', 'location', 'experience', 'cover', 'thumb', 'hero', 'og_image', 'foot_label', 'foot_title', 'photo'], true)) $side .= $html;
         else $main .= $html;
     }
     $url = $rec && !empty($R['url']) ? ($R['url'])($rec) : '';
@@ -445,6 +448,10 @@ function admin_settings(): void
             'social_links' => ['Social profile links', 'textarea', 'help' => 'One per line: LinkedIn, Instagram, Facebook, Google Business Profile… Helps Google link them to your business.'],
             'gsc_verification' => ['Google Search Console verification code', 'text', 'help' => 'Only the content="…" value from the HTML-tag method.'],
             'ga4_id' => ['Google Analytics 4 measurement ID', 'text', 'help' => 'Looks like G-XXXXXXXXXX.'],
+        ],
+        'About page' => [
+            'about_vision' => ['Our vision', 'textarea', 'help' => 'One sentence, shown large. Wrap words in <em>…</em> to colour them purple.'],
+            'about_mission' => ['Our mission', 'textarea', 'help' => 'One or two sentences shown next to the vision. Team members and testimonials have their own pages in the menu.'],
         ],
         'Content' => [
             'disclaimer' => ['Portfolio disclaimer', 'textarea'],

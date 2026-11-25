@@ -711,3 +711,41 @@ body.lock .cb{display:none}
 .note-err{background:rgba(192,57,43,.2);color:#ffd2cc}
 .cform input[type=file]{padding:10px 0;font-size:14px}
 @media (max-width:640px){.job{flex-direction:column;align-items:flex-start;padding:22px 18px}}
+/* about page: founder's message, vision & mission, team, testimonials */
+.founder-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:72px;align-items:center}
+.founder-ph,.tm .ph{position:relative;aspect-ratio:4/5;border-radius:6px;overflow:hidden;background:var(--stone-2)}
+.founder-ph img,.tm .ph img{width:100%;height:100%;object-fit:cover}
+.ini{display:grid;place-items:center;width:100%;height:100%;background:linear-gradient(135deg,#5d2a6d,#a8323d);color:#fff;font-family:var(--disp);font-size:clamp(40px,5vw,72px);font-weight:300;letter-spacing:.02em}
+.founder-txt h2{font-size:clamp(32px,4.2vw,68.8px);margin:20px 0 34px}
+.founder-msg{border-left:2px solid var(--plum);padding-left:28px;font-size:clamp(16.8px,1.3vw,19.2px);line-height:1.7;color:var(--char-2)}
+.founder-msg p+p{margin-top:1em}
+.founder-sign{display:flex;flex-direction:column;gap:6px;margin-top:30px;padding-left:30px}
+.founder-sign b{font-family:var(--disp);font-weight:400;font-size:24px;line-height:1.2}
+.founder-sign .mono{color:var(--mut);font-size:11px}
+.vm-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:72px;align-items:end}
+.vm-statement{font-size:clamp(28px,3.5vw,54px);line-height:1.1;margin-top:28px}
+.vm-statement .mono{display:block;color:var(--mut);margin-bottom:18px;font-size:11px}
+.vm-statement em{font-style:normal;color:var(--plum)}
+.vm-side{border-top:1px solid var(--line);padding-top:26px}
+.vm-side .mono{color:var(--plum);font-size:11px}
+.vm-side p{margin-top:14px;font-size:17px;line-height:1.6;color:var(--mut)}
+.vm-side p em{font-style:normal;color:var(--char)}
+.team-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:44px 24px}
+.tm h3{font-family:var(--disp);font-weight:400;font-size:22px;line-height:1.2;margin-top:18px}
+.tm>.mono{display:block;color:var(--plum);font-size:11px;margin-top:8px}
+.tm p{color:var(--mut);font-size:15px;margin-top:12px}
+.tm-in{display:inline-block;margin-top:12px;font-size:13px;border-bottom:1px solid currentColor;transition:color .3s}
+.tm-in:hover{color:var(--plum)}
+.tm .ini{font-size:clamp(36px,4vw,56px)}
+.testi-grid{columns:3 300px;column-gap:24px}
+.tq{break-inside:avoid;margin:0 0 24px;background:var(--stone);border-radius:6px;padding:30px 30px 26px}
+.tq-mark{display:block;height:30px;font-family:var(--disp);font-size:72px;line-height:.9;color:var(--plum)}
+.tq blockquote{font-size:16.5px;line-height:1.65;color:var(--char-2)}
+.tq blockquote p+p{margin-top:.8em}
+.tq figcaption{display:flex;align-items:center;gap:14px;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+.tq figcaption img,.tq figcaption .ini{width:46px;height:46px;border-radius:50%;object-fit:cover;flex:none;font-family:var(--sans);font-size:15px;font-weight:500}
+.tq figcaption b{display:block;font-weight:500}
+.tq figcaption div span{display:block;font-size:13.5px;color:var(--mut)}
+@media (max-width:1000px){.team-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:900px){.founder-grid,.vm-grid{grid-template-columns:1fr;gap:40px}.founder-ph{max-width:420px}}
+@media (max-width:600px){.founder-msg{padding-left:20px}.founder-sign{padding-left:22px}.team-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 16px}.tm h3{font-size:18px}}

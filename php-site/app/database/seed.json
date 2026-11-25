@@ -16,7 +16,9 @@
   "social_links": "",
   "ga4_id": "",
   "gsc_verification": "",
-  "disclaimer": "Some of the projects shown on this website were completed by our founder while working with other companies. They are included only to show professional experience and design capability."
+  "disclaimer": "Some of the projects shown on this website were completed by our founder while working with other companies. They are included only to show professional experience and design capability.",
+  "about_vision": "To reimagine every office as an intelligent space that <em>adapts, inspires and elevates</em> the people who work in it.",
+  "about_mission": "To design and build workplaces that look good, work well and are delivered on time: complete offices in 60 days, with one accountable team from the first sketch to handover."
  },
  "pages": [
   {
@@ -27,7 +29,7 @@
    "nav": "about",
    "foot_label": "",
    "foot_title": "",
-   "body": "<section class=\"phero\">\n  <div class=\"wrap\">\n    <nav class=\"crumb mono\" aria-label=\"Breadcrumb\"><a href=\"/\">Home</a> <span>/</span> <span aria-current=\"page\">About</span></nav>\n    <h1 class=\"disp\">We listen. We deliver. <em>With purpose.</em></h1>\n    <div class=\"phero-meta\"><p>Morphora Spaces is an office interior company based in Thane. We design and build workplaces that look good, work well and are delivered on time.</p><div class=\"btns\"><a class=\"btn\" href=\"#contact\">Get a free consultation</a><a class=\"btn ghost\" href=\"/portfolio/\">See our work</a></div></div>\n  </div>\n</section>\n<section class=\"pimg\"><div class=\"wrap\"><div><img src=\"/media/2025/10/slidebean-TpGIpUF67po-unsplash-scaled.jpg\" alt=\"\"></div></div></section>\n\n<section class=\"sec\">\n  <div class=\"wrap split\">\n    <div><span class=\"mono lbl\">( 01 — Who we are )</span><h2 class=\"disp\">Design with <em>a clear purpose.</em></h2></div>\n    <div class=\"prose\"><p>We don’t just decorate offices — we plan them around how your business really works. By mixing creative design with clear planning, we create spaces that help teams do their best work.</p>\n<p>Every project is a practical answer to what our clients need today and where they want to grow. We see an office as a living system: it should adapt, inspire and lift the people who use it.</p>\n<p>Our team of designers, architects, engineers and project experts can handle projects of any size, with a strong focus on quality, practical design and a look that lasts.</p></div>\n  </div>\n</section>\n\n<section class=\"why sec alt\">\n  <div class=\"wrap why-grid\">\n    <div><span class=\"mono\" style=\"color:var(--plum)\">( 02 — Our values )</span><h2 class=\"disp\">What we <em>stand for.</em></h2></div>\n    <ol>\n      <li class=\"rv\"><span class=\"mono\">01</span><div><h3>Empathy</h3><p>We design for people, not just looks — how a space feels and how people use it matters as much as how it looks.</p></div></li>\n      <li class=\"rv\"><span class=\"mono\">02</span><div><h3>Precision</h3><p>No detail is too small. We believe the smallest choices make the biggest impression.</p></div></li>\n      <li class=\"rv\"><span class=\"mono\">03</span><div><h3>Integrity</h3><p>What we promise, we deliver. Honesty, openness and trust guide every conversation.</p></div></li>\n      <li class=\"rv\"><span class=\"mono\">04</span><div><h3>Context matters</h3><p>We design with intention. Spaces should not only look good — they should work better for the people in them.</p></div></li>\n      <li class=\"rv\"><span class=\"mono\">05</span><div><h3>Innovation</h3><p>We use new methods to create offices that are ready for the future: flexible, sustainable and smart.</p></div></li>\n    </ol>\n  </div>\n</section>\n\n<!--sc:nums {}-->\n\n<section class=\"sec\">\n  <div class=\"wrap\">\n    <div class=\"sec-head\"><div><span class=\"mono lbl\">( 03 — What we do )</span><h2 class=\"disp\">One partner, <em>three services.</em></h2></div></div>\n    <div class=\"steps line\">\n      <div class=\"rv\"><b>01</b><h3><a href=\"/design-and-build/\">Design &amp; Build ↗</a></h3><p>Complete office interiors — layout, 3D design, civil work, furniture and handover — in 60 days.</p></div>\n      <div class=\"rv\"><b>02</b><h3><a href=\"/real-estate/\">Real Estate Advisory ↗</a></h3><p>Help finding, checking and securing the right office space before you start designing.</p></div>\n      <div class=\"rv\"><b>03</b><h3><a href=\"/pmc/\">Project Management ↗</a></h3><p>Independent PMC that keeps your project on time, on budget and true to the design.</p></div>\n      <div class=\"rv\"><b>04</b><h3><a href=\"/portfolio/\">Our work ↗</a></h3><p>See offices we have delivered for companies like Lafarge Holcim, Codal and Ishan Tech.</p></div>\n    </div>\n  </div>\n</section>"
+   "body": "<section class=\"phero\">\n  <div class=\"wrap\">\n    <nav class=\"crumb mono\" aria-label=\"Breadcrumb\"><a href=\"/\">Home</a> <span>/</span> <span aria-current=\"page\">About</span></nav>\n    <h1 class=\"disp\">We listen. We deliver. <em>With purpose.</em></h1>\n    <div class=\"phero-meta\"><p>Morphora Spaces is an office interior company based in Thane. We design and build workplaces that look good, work well and are delivered on time.</p><div class=\"btns\"><a class=\"btn\" href=\"#contact\">Get a free consultation</a><a class=\"btn ghost\" href=\"/portfolio/\">See our work</a></div></div>\n  </div>\n</section>\n<section class=\"pimg\"><div class=\"wrap\"><div><img src=\"/media/2025/10/slidebean-TpGIpUF67po-unsplash-scaled.jpg\" alt=\"\"></div></div></section>\n\n<section class=\"sec\">\n  <div class=\"wrap split\">\n    <div><span class=\"mono lbl\">( 01 — Who we are )</span><h2 class=\"disp\">Design with <em>a clear purpose.</em></h2></div>\n    <div class=\"prose\"><p>We don’t just decorate offices — we plan them around how your business really works. By mixing creative design with clear planning, we create spaces that help teams do their best work.</p>\n<p>Every project is a practical answer to what our clients need today and where they want to grow. We see an office as a living system: it should adapt, inspire and lift the people who use it.</p>\n<p>Our team of designers, architects, engineers and project experts can handle projects of any size, with a strong focus on quality, practical design and a look that lasts.</p></div>\n  </div>\n</section>\n\n<!--sc:founder {\"label\":\"( 02 — Founder’s message )\"}-->\n\n<!--sc:vision {\"label\":\"( 03 — Vision &amp; mission )\"}-->\n\n<section class=\"why sec alt\">\n  <div class=\"wrap why-grid\">\n    <div><span class=\"mono\" style=\"color:var(--plum)\">( 04 — Our values )</span><h2 class=\"disp\">What we <em>stand for.</em></h2></div>\n    <ol>\n      <li class=\"rv\"><span class=\"mono\">01</span><div><h3>Empathy</h3><p>We design for people, not just looks — how a space feels and how people use it matters as much as how it looks.</p></div></li>\n      <li class=\"rv\"><span class=\"mono\">02</span><div><h3>Precision</h3><p>No detail is too small. We believe the smallest choices make the biggest impression.</p></div></li>\n      <li class=\"rv\"><span class=\"mono\">03</span><div><h3>Integrity</h3><p>What we promise, we deliver. Honesty, openness and trust guide every conversation.</p></div></li>\n      <li class=\"rv\"><span class=\"mono\">04</span><div><h3>Context matters</h3><p>We design with intention. Spaces should not only look good — they should work better for the people in them.</p></div></li>\n      <li class=\"rv\"><span class=\"mono\">05</span><div><h3>Innovation</h3><p>We use new methods to create offices that are ready for the future: flexible, sustainable and smart.</p></div></li>\n    </ol>\n  </div>\n</section>\n\n<!--sc:nums {}-->\n\n<!--sc:team {\"label\":\"( 05 — Our team )\"}-->\n\n<section class=\"sec\">\n  <div class=\"wrap\">\n    <div class=\"sec-head\"><div><span class=\"mono lbl\">( 06 — What we do )</span><h2 class=\"disp\">One partner, <em>three services.</em></h2></div></div>\n    <div class=\"steps line\">\n      <div class=\"rv\"><b>01</b><h3><a href=\"/design-and-build/\">Design &amp; Build ↗</a></h3><p>Complete office interiors — layout, 3D design, civil work, furniture and handover — in 60 days.</p></div>\n      <div class=\"rv\"><b>02</b><h3><a href=\"/real-estate/\">Real Estate Advisory ↗</a></h3><p>Help finding, checking and securing the right office space before you start designing.</p></div>\n      <div class=\"rv\"><b>03</b><h3><a href=\"/pmc/\">Project Management ↗</a></h3><p>Independent PMC that keeps your project on time, on budget and true to the design.</p></div>\n      <div class=\"rv\"><b>04</b><h3><a href=\"/portfolio/\">Our work ↗</a></h3><p>See offices we have delivered for companies like Lafarge Holcim, Codal and Ishan Tech.</p></div>\n    </div>\n  </div>\n</section>\n\n<!--sc:testimonials {\"label\":\"( 07 — Client stories )\"}-->\n"
   },
   {
    "slug": "design-and-build",
@@ -1571,6 +1573,77 @@
    "experience": "5+ years",
    "description": "<p>Run office fit-out projects on site — timelines, vendors, quality and handover.</p><ul><li>Vendor and contractor coordination</li><li>BOQ checks and billing</li><li>Quality and snag management</li></ul>",
    "status": "published"
+  }
+ ],
+ "team": [
+  {
+   "name": "Founder name",
+   "role": "Founder & Principal Designer",
+   "photo": "",
+   "bio": "",
+   "linkedin": "",
+   "sort_order": 1,
+   "status": "draft",
+   "message": "Replace this with a short message from the founder: why Morphora Spaces was started, what every client can expect from the team, and a personal promise about how projects are run.\n\nTwo or three short paragraphs read best. Then add a photo, and set this team member to Published."
+  },
+  {
+   "name": "Team member name",
+   "role": "Design Lead",
+   "photo": "",
+   "bio": "",
+   "linkedin": "",
+   "message": "",
+   "sort_order": 2,
+   "status": "draft"
+  },
+  {
+   "name": "Team member name",
+   "role": "Project Manager",
+   "photo": "",
+   "bio": "",
+   "linkedin": "",
+   "message": "",
+   "sort_order": 3,
+   "status": "draft"
+  },
+  {
+   "name": "Team member name",
+   "role": "Site Engineer",
+   "photo": "",
+   "bio": "",
+   "linkedin": "",
+   "message": "",
+   "sort_order": 4,
+   "status": "draft"
+  }
+ ],
+ "testimonials": [
+  {
+   "name": "Client name",
+   "role": "Designation",
+   "company": "Company name",
+   "quote": "Replace this with a real quote from a client: what the project was, how it went and what changed for their team. Ask for permission to use their name and company.",
+   "photo": "",
+   "sort_order": 1,
+   "status": "draft"
+  },
+  {
+   "name": "Client name",
+   "role": "Designation",
+   "company": "Company name",
+   "quote": "Replace this with a real quote from a client: what the project was, how it went and what changed for their team. Ask for permission to use their name and company.",
+   "photo": "",
+   "sort_order": 2,
+   "status": "draft"
+  },
+  {
+   "name": "Client name",
+   "role": "Designation",
+   "company": "Company name",
+   "quote": "Replace this with a real quote from a client: what the project was, how it went and what changed for their team. Ask for permission to use their name and company.",
+   "photo": "",
+   "sort_order": 3,
+   "status": "draft"
   }
  ]
 }

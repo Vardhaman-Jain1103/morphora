@@ -138,6 +138,34 @@ CREATE TABLE IF NOT EXISTS enquiries (
   KEY status (status), KEY created (created_at), KEY ip_time (ip, created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- About page: team members (the one with a message is shown as the founder's message) and client testimonials
+CREATE TABLE IF NOT EXISTS team (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  role VARCHAR(150) NOT NULL DEFAULT '',
+  photo VARCHAR(255) NOT NULL DEFAULT '',
+  bio TEXT NULL,
+  linkedin VARCHAR(255) NOT NULL DEFAULT '',
+  message MEDIUMTEXT NULL,            -- founder's message (optional)
+  sort_order INT NOT NULL DEFAULT 10,
+  status ENUM('draft','published') NOT NULL DEFAULT 'published',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS testimonials (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  role VARCHAR(150) NOT NULL DEFAULT '',
+  company VARCHAR(150) NOT NULL DEFAULT '',
+  quote TEXT NOT NULL,
+  photo VARCHAR(255) NOT NULL DEFAULT '',
+  sort_order INT NOT NULL DEFAULT 10,
+  status ENUM('draft','published') NOT NULL DEFAULT 'published',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- 301/302 redirects (old WordPress URLs are seeded here so rankings carry over)
 CREATE TABLE IF NOT EXISTS redirects (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

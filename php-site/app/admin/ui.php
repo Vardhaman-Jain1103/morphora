@@ -14,6 +14,8 @@ function admin_page(string $title, string $content, string $active): void
         ['enquiries', '/admin/?r=enquiries', 'Enquiries', $newEnq],
         ['posts', '/admin/?r=list&t=posts', 'Articles', 0],
         ['projects', '/admin/?r=list&t=projects', 'Projects', 0],
+        ['team', '/admin/?r=list&t=team', 'Team', 0],
+        ['testimonials', '/admin/?r=list&t=testimonials', 'Testimonials', 0],
         ['cities', '/admin/?r=list&t=cities', 'Cities', 0],
         ['pages', '/admin/?r=list&t=pages', 'Pages', 0],
         ['jobs', '/admin/?r=list&t=jobs', 'Jobs', 0],
