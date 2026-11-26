@@ -1,11 +1,10 @@
-
 # PHP site: server-only files (local config, admin uploads, CVs)
-php-site/app/config.php
-php-site/uploads/*
-!php-site/uploads/.htaccess
-!php-site/uploads/.gitkeep
-php-site/app/storage/cv/*
-!php-site/app/storage/cv/.gitkeep
+app/config.php
+uploads/*
+!uploads/.htaccess
+!uploads/.gitkeep
+app/storage/cv/*
+!app/storage/cv/.gitkeep
 
-# Local source image archive; deployed assets live under php-site/media/
-php-site/OneDrive_1_11-26-2026/
+# Local source image archive; deployed assets live under media/
+OneDrive_1_11-26-2026/
