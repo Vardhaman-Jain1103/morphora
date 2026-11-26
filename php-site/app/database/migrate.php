@@ -3,9 +3,9 @@
  * Database updates for sites installed before a change. migrate() runs on every request but only does work
  * once per version: settings.db_version records the last version applied. Fresh installs set it directly.
  *
- *   2 — About page: team and testimonials tables, vision & mission settings, new About page sections.
- *   3 — Move client testimonials from About to the homepage.
- *   4 — Add editable SEO metadata to public content.
+ *   2 - About page: team and testimonials tables, vision & mission settings, new About page sections.
+ *   3 - Move client testimonials from About to the homepage.
+ *   4 - Add editable SEO metadata to public content.
  */
 const DB_VERSION = 4;
 
@@ -71,11 +71,11 @@ function schema_apply(): void
 function seed_data(): array
 {
     $seed = json_decode((string)@file_get_contents(APP . '/database/seed.json'), true);
-    if (!is_array($seed)) throw new RuntimeException('app/database/seed.json is missing or invalid — upload it from the repository.');
+    if (!is_array($seed)) throw new RuntimeException('app/database/seed.json is missing or invalid - upload it from the repository.');
     return $seed;
 }
 
-/** Draft team members, draft testimonials and the vision / mission text — only where nothing exists yet. */
+/** Draft team members, draft testimonials and the vision / mission text - only where nothing exists yet. */
 function about_seed(array $seed): void
 {
     foreach (['team', 'testimonials'] as $table) {
@@ -94,9 +94,9 @@ function about_seed(array $seed): void
 function about_body_v2(string $body): string
 {
     if (strpos($body, '<!--sc:team') !== false) return $body;
-    $body = strtr($body, ['( 02 — Our values )' => '( 04 — Our values )', '( 03 — What we do )' => '( 06 — What we do )']);
-    $top = "<!--sc:founder {\"label\":\"( 02 — Founder’s message )\"}-->\n\n<!--sc:vision {\"label\":\"( 03 — Vision &amp; mission )\"}-->\n\n";
-    $team = "<!--sc:team {\"label\":\"( 05 — Our team )\"}-->\n\n";
+    $body = strtr($body, ['( 02 - Our values )' => '( 04 - Our values )', '( 03 - What we do )' => '( 06 - What we do )']);
+    $top = "<!--sc:founder {\"label\":\"( 02 - Founder’s message )\"}-->\n\n<!--sc:vision {\"label\":\"( 03 - Vision &amp; mission )\"}-->\n\n";
+    $team = "<!--sc:team {\"label\":\"( 05 - Our team )\"}-->\n\n";
 
     $at = strpos($body, '<section class="why');
     $body = $at !== false ? substr_replace($body, $top, $at, 0) : $body . "\n\n" . $top;

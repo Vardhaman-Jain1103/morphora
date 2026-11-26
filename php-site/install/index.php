@@ -1,7 +1,7 @@
 <?php
 /*
  * One-time installer: creates the tables, loads the current site content (app/database/seed.json)
- * and creates the first admin account. It locks itself once an admin exists — delete the /install
+ * and creates the first admin account. It locks itself once an admin exists - delete the /install
  * folder from the server afterwards anyway.
  */
 require dirname(__DIR__) . '/app/bootstrap.php';
@@ -68,7 +68,7 @@ if ($step === 'form' && is_post()) {
 }
 ?><!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
-<title>Install — Morphora Spaces</title><link rel="stylesheet" href="/admin/admin.css"></head>
+<title>Install - Morphora Spaces</title><link rel="stylesheet" href="/admin/admin.css"></head>
 <body class="auth"><main class="auth-box">
 <h1>Morphora Spaces <small>Install</small></h1>
 <?php if ($step === 'config'): ?>

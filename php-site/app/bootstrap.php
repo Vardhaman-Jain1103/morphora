@@ -1,5 +1,5 @@
 <?php
-/* Morphora Spaces — loads config, database and helpers. Included by index.php, admin/ and install/. */
+/* Morphora Spaces - loads config, database and helpers. Included by index.php, admin/ and install/. */
 declare(strict_types=1);
 
 define('APP', __DIR__);

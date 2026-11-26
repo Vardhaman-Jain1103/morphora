@@ -1,8 +1,8 @@
 <?php
 /*
- * Morphora Spaces — front controller. Every request that is not a real file comes here (see .htaccess).
+ * Morphora Spaces - front controller. Every request that is not a real file comes here (see .htaccess).
  *
- * URL rules (SEO): one canonical URL per page — lowercase, trailing slash, no index.html/index.php.
+ * URL rules (SEO): one canonical URL per page - lowercase, trailing slash, no index.html/index.php.
  * Anything else 301-redirects to it. Unknown paths are checked against the redirects table, then 404.
  */
 require __DIR__ . '/app/bootstrap.php';
@@ -146,7 +146,7 @@ function route_project(string $slug): void
     if ($p['status'] === 'published') cache_public();
     $gallery = json_decode((string)$p['gallery'], true) ?: [];
     $others = array_slice(array_values(array_filter(projects_list(), fn($x) => $x['id'] !== $p['id'])), 0, 3);
-    $title = $p['seo_title'] ?: "{$p['name']}, {$p['city']} — Office Interior Project | " . setting('site_name', 'Morphora Spaces');
+    $title = $p['seo_title'] ?: "{$p['name']}, {$p['city']} - Office Interior Project | " . setting('site_name', 'Morphora Spaces');
     $desc = $p['seo_desc'] ?: "{$p['name']} office in {$p['city']}: a {$p['size']} office interior project. {$p['delivery']}.";
     $images = array_map(fn($g) => abs_url($g[1]), array_slice($gallery, 0, 10));
     $meta = [
@@ -166,7 +166,7 @@ function route_resources(): void
     $posts = rows('SELECT * FROM posts WHERE status="published" AND published_at <= CURDATE() ORDER BY published_at DESC, id DESC');
     page_out('resources', ['posts' => $posts], meta_from_page($pg, '/resources/', [
         'crumbs' => [['Resources', null]],
-        'schema' => [['@type' => 'Blog', 'name' => 'Morphora Spaces — Resources', 'url' => abs_url('/resources/'), 'publisher' => ['@id' => org_id()]]],
+        'schema' => [['@type' => 'Blog', 'name' => 'Morphora Spaces - Resources', 'url' => abs_url('/resources/'), 'publisher' => ['@id' => org_id()]]],
     ]));
 }
 
@@ -218,8 +218,8 @@ function route_city(string $slug): void
     if ($c['status'] === 'published') cache_public();
     $n = $c['name'];
     $meta = [
-        'title' => $c['seo_title'] ?: "Office Interior Designer in {$n} — Design & Build in 60 Days | " . setting('site_name', 'Morphora Spaces'),
-        'desc' => $c['seo_desc'] ?: "Looking for an office interior designer in {$n}? Morphora Spaces designs and builds complete offices in {$n} in 60 days — layout, 3D design, civil work and handover.",
+        'title' => $c['seo_title'] ?: "Office Interior Designer in {$n} - Design & Build in 60 Days | " . setting('site_name', 'Morphora Spaces'),
+        'desc' => $c['seo_desc'] ?: "Looking for an office interior designer in {$n}? Morphora Spaces designs and builds complete offices in {$n} in 60 days - layout, 3D design, civil work and handover.",
         'path' => "/office-interior-designer-in-{$slug}/", 'image' => $c['hero'] ?: '/images/ADI8415-scaled.jpg',
         'crumbs' => [['Locations', '/locations/'], [$n, null]],
         'foot_label' => "( Office interiors in {$n} )",
@@ -255,7 +255,7 @@ function route_job(string $slug): void
         ];
     }
     $meta = [
-        'title' => seo_title("{$j['title']} — Careers"), 'desc' => "{$j['title']} job at Morphora Spaces, {$j['location']}. " . str_limit(plain((string)$j['description']), 120),
+        'title' => seo_title("{$j['title']} - Careers"), 'desc' => "{$j['title']} job at Morphora Spaces, {$j['location']}. " . str_limit(plain((string)$j['description']), 120),
         'path' => "/careers/{$slug}/", 'crumbs' => [['Careers', '/careers/'], [$j['title'], null]], 'schema' => $schema,
         'robots' => $open ? null : 'noindex,follow',
         'robots_force' => !$open,
@@ -374,7 +374,7 @@ function api_apply(): void
         $job['id'] ?? null, $job['title'] ?? 'General application', $name, $email, $phone, $in('portfolio', 255), $in('message', 4000), $cv, mb_substr(basename((string)$_FILES['cv']['name']), 0, 255), $ip,
     ]);
     $id = (int)db()->lastInsertId();
-    send_mail(setting('notify_email', setting('email')), 'New job application: ' . $name . ' — ' . ($job['title'] ?? 'General'),
+    send_mail(setting('notify_email', setting('email')), 'New job application: ' . $name . ' - ' . ($job['title'] ?? 'General'),
         "New application from the careers page.\n\nName:      {$name}\nEmail:     {$email}\nPhone:     {$phone}\nRole:      " . ($job['title'] ?? 'General application') . "\nPortfolio: " . $in('portfolio', 255) . "\n\n" . $in('message', 4000) . "\n\nCV and details: " . abs_url('/admin/?r=applications&id=' . $id) . "\n", $email);
     $back('Thank you! We have received your application and will be in touch if there is a fit.', true);
 }

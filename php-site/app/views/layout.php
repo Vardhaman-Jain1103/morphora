@@ -1,7 +1,7 @@
 <?php
 /** @var string $body  @var array $meta */
 $ver = @filemtime(ROOT . '/assets/site.css') ?: 1;   // cache-busting for CSS/JS after deploys
-$sectionNumber = '/\(\s*\d{2}\s*—\s*/u';
+$sectionNumber = '/\(\s*\d{2}\s*-\s*/u';
 $body = preg_replace($sectionNumber, '( ', $body);
 $body = preg_replace('/<a\b[^>]*class=["\'][^"\']*\bcircle-btn\b[^"\']*["\'][^>]*>.*?<\/a>/is', '', $body);
 $meta['foot_label'] = preg_replace($sectionNumber, '( ', (string)($meta['foot_label'] ?? ''));

@@ -26,7 +26,7 @@ function admin_page(string $title, string $content, string $active): void
     $ver = @filemtime(ROOT . '/admin/admin.js') ?: 1;
     ?><!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
-<title><?= e($title) ?> — Admin</title>
+<title><?= e($title) ?> - Admin</title>
 <link rel="stylesheet" href="/admin/admin.css?v=<?= @filemtime(ROOT . '/admin/admin.css') ?: 1 ?>">
 <meta name="csrf" content="<?= e(csrf_token()) ?>">
 <link rel="icon" href="/images/favicon.ico" sizes="any"><link rel="icon" href="/images/favicon-32.png" type="image/png" sizes="32x32"></head>

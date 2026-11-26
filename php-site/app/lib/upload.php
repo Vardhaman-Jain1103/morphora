@@ -2,7 +2,7 @@
 /*
  * File uploads.
  *  - Images (admin): /uploads/YYYY/MM/<name>-<random>.<ext>, publicly served; PHP is disabled in /uploads.
- *  - CVs (careers):  app/storage/cv/<random>.<ext>, never public — only downloadable from the admin.
+ *  - CVs (careers):  app/storage/cv/<random>.<ext>, never public - only downloadable from the admin.
  */
 const IMAGE_TYPES = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp', 'image/gif' => 'gif', 'image/svg+xml' => 'svg'];
 const CV_TYPES = [

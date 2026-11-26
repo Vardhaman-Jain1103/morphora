@@ -1,4 +1,4 @@
-/* Morphora Spaces — admin */
+/* Morphora Spaces - admin */
 :root{--bg:#f4f1ec;--card:#fff;--ink:#151215;--mut:#6f6870;--line:#e4ded5;--plum:#8422a2;--plum-d:#6f1b89;--ok:#1f8a4c;--warn:#b7791f;--err:#c0392b;--r:10px}
 *{box-sizing:border-box}
 body{margin:0;font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);display:grid;grid-template-columns:230px 1fr;min-height:100vh}

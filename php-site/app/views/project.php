@@ -16,7 +16,7 @@
     <div class="sec-head"><div><span class="mono lbl">( Gallery )</span><h2 class="disp">Inside the <em>office.</em></h2></div><span class="mono" style="color:var(--mut)"><?= count($gallery) ?> photos · click to enlarge</span></div>
     <div class="gal">
 <?php foreach ($gallery as $i => $g): ?>
-      <a href="<?= e($g[1] ?? $g[0]) ?>"><img src="<?= e($g[0]) ?>" alt="<?= e($p['name'] . ' office interior, ' . $p['city'] . ' — photo ' . ($i + 1)) ?>" loading="lazy"></a>
+      <a href="<?= e($g[1] ?? $g[0]) ?>"><img src="<?= e($g[0]) ?>" alt="<?= e($p['name'] . ' office interior, ' . $p['city'] . ' - photo ' . ($i + 1)) ?>" loading="lazy"></a>
 <?php endforeach ?>
     </div>
     <p class="note"><?= e(setting('disclaimer')) ?></p>

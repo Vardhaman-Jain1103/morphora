@@ -1,6 +1,6 @@
 <?php
 /*
- * Morphora Spaces — admin panel (/admin/).
+ * Morphora Spaces - admin panel (/admin/).
  * Routes (?r=): login, logout, dashboard, enquiries, applications, cv, list, edit, settings, account, upload
  */
 require dirname(__DIR__) . '/app/bootstrap.php';
@@ -49,7 +49,7 @@ function admin_login_page(): void
     }
     ?><!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
-<title>Sign in — <?= e(setting('site_name', 'Morphora Spaces')) ?></title><link rel="stylesheet" href="/admin/admin.css"><link rel="icon" href="/images/favicon.ico" sizes="any"><link rel="icon" href="/images/favicon-32.png" type="image/png" sizes="32x32"></head>
+<title>Sign in - <?= e(setting('site_name', 'Morphora Spaces')) ?></title><link rel="stylesheet" href="/admin/admin.css"><link rel="icon" href="/images/favicon.ico" sizes="any"><link rel="icon" href="/images/favicon-32.png" type="image/png" sizes="32x32"></head>
 <body class="auth"><main class="auth-box">
   <img src="/images/morphora-spaces-logo.png" alt="Morphora Spaces" class="auth-logo">
   <h1>Sign in</h1>
@@ -105,7 +105,7 @@ function admin_dashboard(): void
       <li class="<?= $ok ? 'ok' : 'todo' ?>"><b><?= $ok ? '✓' : '!' ?></b><div><strong><?= e($t) ?></strong><?php if (!$ok): ?><span><?= e($help) ?> <a href="<?= e($u) ?>">Fix →</a></span><?php endif ?></div></li>
 <?php endforeach ?>
     </ul>
-    <p class="muted small">Sitemap: <a href="/sitemap.xml" target="_blank"><?= e(abs_url('/sitemap.xml')) ?></a> — updates itself whenever you publish.</p>
+    <p class="muted small">Sitemap: <a href="/sitemap.xml" target="_blank"><?= e(abs_url('/sitemap.xml')) ?></a> - updates itself whenever you publish.</p>
   </section>
 </div>
 <?php
@@ -485,7 +485,7 @@ function admin_edit(): void
     </div>
 <?php if ($seo !== ''): ?>
     <div class="card seo-card" data-seo-panel data-source="<?= e($R['seo_source'] ?? '') ?>">
-      <div class="seo-score-box"><strong data-seo-score>—</strong><span>SEO score</span></div>
+      <div class="seo-score-box"><strong data-seo-score>-</strong><span>SEO score</span></div>
       <p class="small muted" data-seo-note>Add a focus keyword to start the on-page checks.</p>
       <ul class="checks seo-checklist" data-seo-checks></ul>
       <h3>Google search preview</h3>

@@ -1,4 +1,4 @@
-/* Morphora Spaces — admin behaviour: editor toolbar, uploads, gallery, slugs, SEO preview */
+/* Morphora Spaces - admin behaviour: editor toolbar, uploads, gallery, slugs, SEO preview */
 (function () {
   const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const CSRF = ($('meta[name=csrf]') || {}).content || '';

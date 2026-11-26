@@ -1,4 +1,4 @@
-/* Morphora Spaces — shared behaviour for every Signature page */
+/* Morphora Spaces - shared behaviour for every Signature page */
 (function () {
   const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -167,7 +167,7 @@
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
   $$('.rv').forEach(el => io.observe(el));
   // .ir photos are hidden with clip-path, and Chromium's IntersectionObserver counts a fully
-  // clipped element as never visible — so check their position on scroll instead.
+  // clipped element as never visible - so check their position on scroll instead.
   $$('.gal a.ir').forEach((el, k) => { el.style.transitionDelay = (k % 3) * 120 + 'ms'; });
   let irs = $$('.ir');
   const irCheck = () => {
@@ -267,7 +267,7 @@
   });
 
   // ---- chat assistant (bottom-right on every page): asks a few questions, then hands off to WhatsApp ----
-  // Options mirror the enquiry form in partials/footer.html — keep the two lists in sync.
+  // Options mirror the enquiry form in partials/footer.html - keep the two lists in sync.
   const CB_CITIES = ['Mumbai', 'Thane', 'Pune', 'Ahmedabad', 'Bengaluru'];
   const CB_SERVICES = ['Office design & build', 'Finding office space', 'Project management', 'Not sure yet'];
   const CB_SIZES = ['Under 2,000 sq ft', '2,000 – 5,000 sq ft', '5,000 – 10,000 sq ft', '10,000 – 25,000 sq ft', 'Over 25,000 sq ft'];

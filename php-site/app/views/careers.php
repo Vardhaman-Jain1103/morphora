@@ -18,7 +18,7 @@
 
 <section class="sec apply-sec">
   <div class="wrap split">
-    <div><span class="mono lbl">( Apply )</span><h2 class="disp">Don’t see <em>your role?</em></h2><p style="margin-top:18px;color:var(--mut)">Send us your CV anyway — we keep strong applications on file.</p></div>
+    <div><span class="mono lbl">( Apply )</span><h2 class="disp">Don’t see <em>your role?</em></h2><p style="margin-top:18px;color:var(--mut)">Send us your CV anyway - we keep strong applications on file.</p></div>
     <?= view('partials/apply-form', ['job' => null, 'back' => '/careers/']) ?>
   </div>
 </section>

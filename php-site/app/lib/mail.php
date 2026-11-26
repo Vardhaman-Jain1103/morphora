@@ -1,6 +1,6 @@
 <?php
 /*
- * Notification emails via PHP mail() — works on Hostinger once the "from" address exists on your
+ * Notification emails via PHP mail() - works on Hostinger once the "from" address exists on your
  * domain (hPanel → Emails). Failures are logged, never shown to visitors: the lead is already saved.
  */
 function send_mail(string $to, string $subject, string $text, ?string $replyTo = null): bool

@@ -9,7 +9,7 @@
             <span class="ln"><span>Better offices,</span></span>
             <span class="ln"><span>built <em>on time.</em></span></span>
           </h1>
-          <p>We design and build offices for growing companies — from the first layout to the final handover, in just 60 days.</p>
+          <p>We design and build offices for growing companies - from the first layout to the final handover, in just 60 days.</p>
           <ul class="hx-proof" aria-label="Delivery highlights">
             <li><strong>60</strong><span>days to handover</span></li>
             <li><strong>150+</strong><span>offices delivered</span></li>
@@ -40,13 +40,13 @@
     <span class="mono lbl">( Our vision )</span>
     <p id="mf">We listen. We deliver. With <em>presence and purpose.</em></p>
     <div class="vis-sub">
-      <p>We don’t just design interiors — we challenge conventions, blending creativity with strategy to build spaces that go far beyond looks.</p>
+      <p>We don’t just design interiors - we challenge conventions, blending creativity with strategy to build spaces that go far beyond looks.</p>
       <a class="vis-link mono" href="/about/">More about us ↗</a>
     </div>
     <ol class="vals">
       <li class="rv">
         <div class="vals-mark"><span class="vector-icon-wrap"><svg class="vector-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M24 39S9 30.3 9 19.7a8.2 8.2 0 0 1 15-4.8 8.2 8.2 0 0 1 15 4.8C39 30.3 24 39 24 39Z"/><path d="M17 24c2.2 2.2 4.8 2.2 7 0s4.8-2.2 7 0"/></svg></span><span class="mono">01</span></div>
-        <h3>Empathy</h3><p>Designed around people — how they feel and work, not just how it looks.</p>
+        <h3>Empathy</h3><p>Designed around people - how they feel and work, not just how it looks.</p>
       </li>
       <li class="rv">
         <div class="vals-mark"><span class="vector-icon-wrap"><svg class="vector-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="16"/><circle cx="24" cy="24" r="7"/><path d="M24 3v7M24 38v7M3 24h7M38 24h7M24 20v4l3 2"/></svg></span><span class="mono">02</span></div>
@@ -54,7 +54,7 @@
       </li>
       <li class="rv">
         <div class="vals-mark"><span class="vector-icon-wrap"><svg class="vector-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="m24 5 14 5v12c0 10-5.8 16-14 21-8.2-5-14-11-14-21V10l14-5Z"/><path d="m17 23 5 5 10-11"/></svg></span><span class="mono">03</span></div>
-        <h3>Integrity</h3><p>What we promise, we deliver — with honesty in every interaction.</p>
+        <h3>Integrity</h3><p>What we promise, we deliver - with honesty in every interaction.</p>
       </li>
       <li class="rv">
         <div class="vals-mark"><span class="vector-icon-wrap"><svg class="vector-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><rect x="7" y="8" width="34" height="32" rx="2"/><path d="M7 20h16v20M23 8v12M23 20h18M32 20v20M12 14h5M28 14h8"/></svg></span><span class="mono">04</span></div>
@@ -78,7 +78,7 @@
     <div class="plan-body">
       <div>
         <svg viewBox="-96 0 1096 620" id="planSvg" role="img" aria-label="Interactive office floor plan">
-          <g class="dims"><text x="0" y="14">A — 100'</text><text x="940" y="14">N ↑</text></g>
+          <g class="dims"><text x="0" y="14">A - 100'</text><text x="940" y="14">N ↑</text></g>
           <!-- zones (order matches Z[] in partials/home-script.html) -->
           <g class="zone" data-z="0" tabindex="0" role="button" aria-label="Reception"><rect class="z" x="20" y="440" width="220" height="160"/><text x="36" y="466">RECEPTION</text>
             <path class="furn" d="M100 528h112v28H100zM212 470v86M130 505a9 9 0 1 0 .1 0M180 505a9 9 0 1 0 .1 0"/></g>

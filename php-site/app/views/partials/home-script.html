@@ -34,7 +34,7 @@ zones.forEach(g=>{const pick=()=>{zCur=+g.dataset.z;zone(zCur)};g.onmouseenter=p
 $('#zBtn').onclick=()=>zgOpen(zCur);$('#zPh').onclick=()=>zgOpen(zCur);
 // zone gallery
 const zg=$('#zg'),zgImg=$('#zgImg'),zgTh=$('#zgThumbs');let zgZ=0,zgI=0,zgLast=null;
-function zgShow(k){const a=G[zgZ];zgI=(k+a.length)%a.length;zgImg.classList.remove('on');const src=a[zgI];const im=new Image();im.onload=()=>{zgImg.src=src;zgImg.alt=Z[zgZ][0]+' — photo '+(zgI+1);zgImg.classList.add('on')};im.src=src;
+function zgShow(k){const a=G[zgZ];zgI=(k+a.length)%a.length;zgImg.classList.remove('on');const src=a[zgI];const im=new Image();im.onload=()=>{zgImg.src=src;zgImg.alt=Z[zgZ][0]+' - photo '+(zgI+1);zgImg.classList.add('on')};im.src=src;
   $('#zgCount').textContent=String(zgI+1).padStart(2,'0')+' / '+String(a.length).padStart(2,'0');zgTh.querySelectorAll('button').forEach((b,j)=>b.classList.toggle('on',j===zgI))}
 function zgOpen(z){if(!G[z].length)return;zgZ=z;zgLast=document.activeElement;$('#zgK').textContent='Area '+zNum(z);$('#zgT').textContent=Z[z][0];
   zgTh.innerHTML=G[z].map((src,j)=>`<button type="button" aria-label="Photo ${j+1}"><img src="${src}" alt="" loading="lazy"></button>`).join('');

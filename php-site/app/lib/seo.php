@@ -11,7 +11,7 @@ function schema_add(array $obj): void { $GLOBALS['SCHEMA'][] = $obj; }
 
 function org_id(): string { return abs_url('/#organization'); }
 
-/** The business itself — on every page, so Google can build the knowledge panel and local listing. */
+/** The business itself - on every page, so Google can build the knowledge panel and local listing. */
 function schema_org(): array
 {
     $sameAs = array_values(array_filter(array_map('trim', preg_split('/[\r\n,]+/', setting('social_links')))));
@@ -22,7 +22,7 @@ function schema_org(): array
         'url' => abs_url('/'),
         'logo' => abs_url('/images/morphora-spaces-logo.png'),
         'image' => abs_url(setting('default_og_image', '/images/morphora-office-8000-sqft-hero.jpg')),
-        'description' => 'Office interior design and build company in Thane, Mumbai — complete offices delivered in 60 days.',
+        'description' => 'Office interior design and build company in Thane, Mumbai - complete offices delivered in 60 days.',
         'telephone' => setting('phone', '+91 77191 55155'),
         'email' => setting('email', 'hello@morphoraspaces.com'),
         'priceRange' => '₹₹',
@@ -147,7 +147,7 @@ function seo_head(array $m): string
     return implode("\n", $h);
 }
 
-/** Title helper: "Page — Morphora Spaces" unless the title already names the brand. */
+/** Title helper: "Page - Morphora Spaces" unless the title already names the brand. */
 function seo_title(string $t): string
 {
     $brand = setting('site_name', 'Morphora Spaces');

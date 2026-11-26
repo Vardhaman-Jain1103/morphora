@@ -65,7 +65,7 @@ function advantages(): array
 {
     return [
         ['Clear process, full transparency', 'From start to finish you always know where your project stands, with live progress updates on a simple online dashboard.'],
-        ['Design that works', 'Offices that look good and are easy to work in — planned around your workflow, productivity and company culture.'],
+        ['Design that works', 'Offices that look good and are easy to work in - planned around your workflow, productivity and company culture.'],
         ['One expert team', 'Architects, interior designers and workspace planners work together, so your project fits your industry and needs.'],
         ['Local and relevant', 'We use local materials and regional design touches, so the office feels right for your people and your visitors.'],
         ['Support after handover', 'You get user guides, a maintenance kit and space-planning tips, so your team settles in quickly and confidently.'],
@@ -75,11 +75,11 @@ function advantages(): array
 function default_faq(?string $city = null): array
 {
     return [
-        ['What makes Morphora Spaces different from other office interior design companies?', 'We go beyond looks. Our team combines creative interior design with smart space planning to deliver offices that work well, match your brand and are ready for the future — all within 60 days.'],
+        ['What makes Morphora Spaces different from other office interior design companies?', 'We go beyond looks. Our team combines creative interior design with smart space planning to deliver offices that work well, match your brand and are ready for the future - all within 60 days.'],
         ['How long does it take to design and build a modern office with Morphora?', 'We deliver complete office projects in 60 days. Design, buying materials and construction are all planned together, so there is very little downtime for your business.'],
         $city ? ["Do you work in {$city}?", "Yes. We work with clients in {$city} and across India. Our team manages projects on-site or remotely, depending on the location and size."]
               : ['Do you offer office interior design services outside Mumbai or Thane?', 'Yes. We work with clients across Mumbai, Thane, Navi Mumbai and other major cities in India. Our team manages projects on-site or remotely, depending on the location and size.'],
-        ['What is included in your Design &amp; Build service for office interiors?', 'Everything from the first idea, 3D views and layout planning to electrical and civil work, furniture buying and final execution — one team handles it all for you.'],
+        ['What is included in your Design &amp; Build service for office interiors?', 'Everything from the first idea, 3D views and layout planning to electrical and civil work, furniture buying and final execution - one team handles it all for you.'],
         ['Can you help us find the right office space before designing it?', 'Yes. Our Real Estate Advisory team helps you find, check and finalise the right office location, so the space suits your business before we start designing.'],
         ['What kind of businesses do you work with for office interiors?', 'Corporate offices, startups, co-working spaces and professional firms. Every project is planned around the company’s goals, work culture and industry needs.'],
     ];

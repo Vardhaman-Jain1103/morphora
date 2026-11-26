@@ -1,4 +1,4 @@
-# Morphora Spaces — Apache / LiteSpeed (Hostinger) configuration
+# Morphora Spaces - Apache / LiteSpeed (Hostinger) configuration
 Options -Indexes
 DirectoryIndex index.php
 AddDefaultCharset UTF-8

@@ -39,7 +39,7 @@ function resources(): array
             'seo_details' => true, 'seo_source' => 'body',
             'fields' => [
                 'title' => ['Title', 'text', 'required', 'max' => 110],
-                'slug' => ['URL', 'slug', 'from' => 'title', 'prefix' => '/resources/', 'help' => 'Changing this after publishing breaks old links — add a redirect if you do.'],
+                'slug' => ['URL', 'slug', 'from' => 'title', 'prefix' => '/resources/', 'help' => 'Changing this after publishing breaks old links - add a redirect if you do.'],
                 'category' => ['Category', 'text', 'required', 'datalist' => 'SELECT DISTINCT category FROM posts ORDER BY category'],
                 'status' => $status,
                 'published_at' => ['Publish date', 'date', 'required', 'help' => 'A future date schedules the article: it goes live on that day.'],
@@ -156,7 +156,7 @@ function resources(): array
             'fields' => [
                 'from_path' => ['Old URL path', 'text', 'required', 'help' => 'Path only, e.g. /old-page/'],
                 'to_path' => ['New URL', 'text', 'required', 'help' => 'Path like /resources/new-page/ or a full https:// address.'],
-                'code' => ['Type', 'select', 'options' => ['301' => 'Permanent (301) — normal choice', '302' => 'Temporary (302)']],
+                'code' => ['Type', 'select', 'options' => ['301' => 'Permanent (301) - normal choice', '302' => 'Temporary (302)']],
             ],
             'defaults' => ['code' => 301],
         ],

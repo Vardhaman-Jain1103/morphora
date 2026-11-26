@@ -1,4 +1,4 @@
--- Morphora Spaces — database schema (MySQL 5.7+ / MariaDB 10.3+, utf8mb4)
+-- Morphora Spaces - database schema (MySQL 5.7+ / MariaDB 10.3+, utf8mb4)
 -- Loaded by /install. Safe to read; do not run on a live database (it creates tables only if missing).
 
 CREATE TABLE IF NOT EXISTS users (
