@@ -88,6 +88,52 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const canHover = matchMedia('(hover: hover)').matches;
 
+  // ---- FAQ answers: smoothly expand and collapse while keeping native details semantics ----
+  $$('.faq details').forEach(details => {
+    const summary = details.querySelector('summary'), answer = details.querySelector('.faq-answer');
+    if (!summary || !answer) return;
+    let closing = false, closeTimer;
+    details.classList.add('faq-animated');
+    const finishClose = () => {
+      if (!closing) return;
+      closing = false;
+      details.open = false;
+      answer.style.maxHeight = '';
+      answer.style.opacity = '';
+    };
+    answer.addEventListener('transitionend', e => {
+      if (e.target !== answer || e.propertyName !== 'max-height') return;
+      if (closing) {
+        clearTimeout(closeTimer);
+        finishClose();
+      } else if (details.open) {
+        answer.style.maxHeight = 'none';
+      }
+    });
+    summary.addEventListener('click', e => {
+      e.preventDefault();
+      clearTimeout(closeTimer);
+      if (details.open && !closing) {
+        answer.style.maxHeight = answer.getBoundingClientRect().height + 'px';
+        answer.offsetHeight;
+        closing = true;
+        answer.style.maxHeight = '0px';
+        answer.style.opacity = '0';
+        if (reduce) finishClose();
+        else closeTimer = setTimeout(finishClose, 400);
+        return;
+      }
+      closing = false;
+      details.open = true;
+      answer.style.maxHeight = answer.getBoundingClientRect().height + 'px';
+      answer.offsetHeight;
+      requestAnimationFrame(() => {
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+        answer.style.opacity = '1';
+      });
+    });
+  });
+
   // ---- hero headings: split into words that rise in one after another ----
   function splitWords(el) {
     let i = 0;

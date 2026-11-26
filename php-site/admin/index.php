@@ -276,6 +276,59 @@ function res_or_404(): array
     return [$t, $all[$t]];
 }
 
+function seo_report(array $record, string $type): array
+{
+    $keyword = trim((string)($record['focus_keyword'] ?? ''));
+    $title = trim((string)($record['seo_title'] ?? '')) ?: (string)($record['title'] ?? $record['name'] ?? ucwords(str_replace('-', ' ', (string)($record['slug'] ?? ''))));
+    $source = (string)($record['body'] ?? $record['summary'] ?? $record['description'] ?? '');
+    $text = plain($source);
+    $description = trim((string)($record['seo_desc'] ?? '')) ?: trim((string)($record['excerpt'] ?? '')) ?: str_limit($text, 160);
+    $normalize = static fn(string $value): string => trim((string)preg_replace('/[^\pL\pN]+/u', ' ', mb_strtolower($value)));
+    $contains = static function (string $haystack, string $needle) use ($normalize): bool {
+        $phrase = $normalize($needle);
+        return $phrase !== '' && strpos(' ' . $normalize($haystack) . ' ', ' ' . $phrase . ' ') !== false;
+    };
+    $words = preg_split('/\s+/u', trim($text), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+    $firstWords = implode(' ', array_slice($words, 0, max(1, (int)ceil(count($words) * 0.1))));
+    preg_match_all('/<h[1-6]\b[^>]*>(.*?)<\/h[1-6]>/is', $source, $headingMatches);
+    $headings = plain(implode(' ', $headingMatches[1] ?? []));
+    preg_match_all('/<img\b[^>]*>/i', $source, $imageMatches);
+    $imagesHaveAlt = !array_filter($imageMatches[0] ?? [], fn($image) => !preg_match('/\balt\s*=\s*(["\'])\s*\S.*?\1/i', $image));
+    preg_match_all('/<a\b[^>]*href\s*=\s*(["\'])(.*?)\1/i', $source, $matches);
+    $internal = $external = 0;
+    $host = strtolower((string)parse_url(abs_url('/'), PHP_URL_HOST));
+    foreach ($matches[2] ?? [] as $href) {
+        $href = html_entity_decode(trim($href), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $scheme = strtolower((string)parse_url($href, PHP_URL_SCHEME));
+        if (in_array($scheme, ['mailto', 'tel', 'javascript'], true)) continue;
+        $linkHost = strtolower((string)parse_url($href, PHP_URL_HOST));
+        if ($linkHost === '' || $linkHost === $host) $internal++;
+        else $external++;
+    }
+    $checks = [
+        $keyword !== '',
+        $contains($title, $keyword),
+        $contains($description, $keyword),
+        $contains((string)($record['slug'] ?? ''), $keyword),
+        $contains($firstWords, $keyword),
+        $contains($headings, $keyword),
+        count($words) >= 300,
+        mb_strlen($title) >= 30 && mb_strlen($title) <= 60,
+        mb_strlen($description) >= 120 && mb_strlen($description) <= 160,
+        $imagesHaveAlt,
+        $internal > 0,
+    ];
+    $score = $keyword !== '' ? (int)round(count(array_filter($checks)) / count($checks) * 100) : null;
+    $schema = (string)($record['schema_type'] ?? 'auto');
+    if ($schema === '' || $schema === 'auto') {
+        $schema = ['posts' => 'BlogPosting', 'projects' => 'CreativeWork', 'cities' => 'Service', 'jobs' => 'JobPosting'][$type] ?? 'WebPage';
+        if ($type === 'pages') {
+            $schema = ['about' => 'AboutPage', 'contact' => 'ContactPage', 'design-and-build' => 'Service', 'real-estate' => 'Service', 'pmc' => 'Service', 'resources' => 'Blog'][(string)($record['slug'] ?? '')] ?? 'WebPage';
+        }
+    }
+    return ['keyword' => $keyword, 'score' => $score, 'schema' => $schema, 'internal' => $internal, 'external' => $external];
+}
+
 function admin_list(): void
 {
     [$t, $R] = res_or_404();
@@ -288,6 +341,16 @@ function admin_list(): void
         $where = ' WHERE (' . implode(' OR ', array_map(fn($c) => "$c LIKE ?", $R['search'])) . ')';
         $args = array_fill(0, count($R['search']), '%' . $s . '%');
     }
+    $seoFilter = (string)($_GET['seo_filter'] ?? '');
+    if (!empty($R['seo_details'])) {
+        $seoConditions = [
+            'missing_keyword' => "focus_keyword = ''",
+            'missing_title' => "seo_title = ''",
+            'missing_description' => "seo_desc = ''",
+            'noindex' => 'noindex = 1',
+        ];
+        if (isset($seoConditions[$seoFilter])) $where .= ($where === '' ? ' WHERE ' : ' AND ') . $seoConditions[$seoFilter];
+    }
     [$list, $pager] = paginate("SELECT * FROM {$R['table']}{$where} ORDER BY {$R['order']}", "SELECT COUNT(*) FROM {$R['table']}{$where}", $args, 50);
     ob_start(); ?>
 <?php if (!empty($R['intro'])): ?><p class="muted"><?= e($R['intro']) ?></p><?php endif ?>
@@ -295,11 +358,12 @@ function admin_list(): void
   <input type="hidden" name="r" value="list"><input type="hidden" name="t" value="<?= e($t) ?>">
   <input type="search" name="q" value="<?= e($s) ?>" placeholder="Search <?= e(strtolower($R['title'])) ?>">
   <button class="btn ghost" type="submit">Search</button>
+  <?php if (!empty($R['seo_details'])): ?><select name="seo_filter"><option value="">All SEO statuses</option><option value="missing_keyword"<?= $seoFilter === 'missing_keyword' ? ' selected' : '' ?>>Focus keyword missing</option><option value="missing_title"<?= $seoFilter === 'missing_title' ? ' selected' : '' ?>>SEO title missing</option><option value="missing_description"<?= $seoFilter === 'missing_description' ? ' selected' : '' ?>>SEO description missing</option><option value="noindex"<?= $seoFilter === 'noindex' ? ' selected' : '' ?>>Noindex items</option></select><?php endif ?>
   <?php if (empty($R['nocreate'])): ?><a class="btn" href="/admin/?r=edit&amp;t=<?= e($t) ?>">+ New <?= e($R['one']) ?></a><?php endif ?>
 </form>
 <section class="card">
 <?php if (!$list): ?><p class="empty">Nothing here yet.</p><?php else: ?>
-<table class="tbl"><thead><tr><?php foreach ($R['list'] as $l): ?><th><?= e($l) ?></th><?php endforeach ?><th></th></tr></thead><tbody>
+<table class="tbl"><thead><tr><?php foreach ($R['list'] as $l): ?><th><?= e($l) ?></th><?php endforeach ?><?php if (!empty($R['seo_details'])): ?><th>SEO Details</th><?php endif ?><th></th></tr></thead><tbody>
 <?php foreach ($list as $row): ?>
 <tr>
 <?php $first = true; foreach ($R['list'] as $k => $l): $v = $row[$k]; ?>
@@ -313,6 +377,9 @@ function admin_list(): void
     else echo e(str_limit((string)$v, 70));
   ?></td>
 <?php endforeach ?>
+<?php if (!empty($R['seo_details'])): $seo = seo_report($row, $t); ?>
+  <td class="seo-details"><span class="seo-list-score<?= $seo['score'] === null ? ' na' : ($seo['score'] >= 70 ? ' good' : ' low') ?>"><?= $seo['score'] === null ? 'N/A' : $seo['score'] . '/100' ?></span><small>Keyword: <?= e($seo['keyword'] ?: 'Not set') ?></small><small>Schema: <?= e($seo['schema']) ?></small><small>Links: <?= (int)$seo['internal'] ?> internal · <?= (int)$seo['external'] ?> external</small></td>
+<?php endif ?>
   <td class="acts"><?php if (!empty($R['url'])): ?><a href="<?= e(($R['url'])($row)) ?><?= ($row['status'] ?? 'published') !== 'published' ? '?preview=1' : '' ?>" target="_blank">View ↗</a><?php endif ?></td>
 </tr>
 <?php endforeach ?>
@@ -367,6 +434,14 @@ function admin_edit(): void
             $data['code'] = (int)$data['code'];
         }
         if (($data['linkedin'] ?? '') !== '' && !preg_match('~^https?://~i', $data['linkedin'])) $errors[] = 'The LinkedIn profile must be a full link starting with https://';
+        if (($data['canonical_url'] ?? '') !== '') {
+            $canonical = (string)$data['canonical_url'];
+            $isPath = preg_match('~^/(?!/)[^\s]*$~', $canonical);
+            $isUrl = filter_var($canonical, FILTER_VALIDATE_URL) && preg_match('~^https?://~i', $canonical);
+            if (!$isPath && !$isUrl) $errors[] = 'Canonical URL must be a full http(s) URL or a site path beginning with /.';
+            if (mb_strlen($canonical) > 500) $errors[] = 'Canonical URL must be 500 characters or fewer.';
+        }
+        if (mb_strlen((string)($data['focus_keyword'] ?? '')) > 190) $errors[] = 'Focus keyword must be 190 characters or fewer.';
         if (!$errors) {
             if ($rec) {
                 q("UPDATE {$R['table']} SET " . implode(', ', array_map(fn($c) => "$c = ?", array_keys($data))) . ' WHERE id = ?', [...array_values($data), $id]);
@@ -409,9 +484,14 @@ function admin_edit(): void
       <div class="row-btns"><button class="btn" type="submit">Save</button><?php if ($rec && empty($R['nodelete'])): ?><button class="btn danger" type="submit" name="delete" value="1" formnovalidate data-confirm="Delete this <?= e($R['one']) ?> permanently? Its page will stop working.">Delete</button><?php endif ?></div>
     </div>
 <?php if ($seo !== ''): ?>
-    <div class="card seo-card">
-      <h3>Search engine preview</h3>
+    <div class="card seo-card" data-seo-panel data-source="<?= e($R['seo_source'] ?? '') ?>">
+      <div class="seo-score-box"><strong data-seo-score>—</strong><span>SEO score</span></div>
+      <p class="small muted" data-seo-note>Add a focus keyword to start the on-page checks.</p>
+      <ul class="checks seo-checklist" data-seo-checks></ul>
+      <h3>Google search preview</h3>
       <div class="serp" data-url="<?= e(abs_url($url ?: '/')) ?>"><span class="serp-url"></span><span class="serp-t"></span><span class="serp-d"></span></div>
+      <h3>Social sharing preview</h3>
+      <div class="social-preview"><img data-social-image alt="" hidden><div><b data-social-title></b><p data-social-desc></p></div></div>
       <?= $seo ?>
     </div>
 <?php endif ?>
@@ -431,6 +511,7 @@ function field_applies(array $f, ?array $rec): bool
 /* ============================================================== settings */
 function admin_settings(): void
 {
+    $zonePhotoHelp = 'One starter photo from OneDrive is included. Add, reorder, or remove photos; only this gallery appears on the homepage.';
     $fields = [
         'Business' => [
             'site_name' => ['Business name', 'text'],
@@ -453,22 +534,57 @@ function admin_settings(): void
             'about_vision' => ['Our vision', 'textarea', 'help' => 'One sentence, shown large. Wrap words in <em>…</em> to colour them purple.'],
             'about_mission' => ['Our mission', 'textarea', 'help' => 'One or two sentences shown next to the vision. Team members and testimonials have their own pages in the menu.'],
         ],
+        'Homepage' => [
+            'home_client_logos' => ['Client logos', 'gallery', 'help' => 'Upload transparent PNG logos, then drag to reorder or remove them. They scroll below the homepage articles.'],
+        ],
+        'Office areas' => [
+            'home_zone_reception' => ['Reception photos', 'gallery', 'help' => $zonePhotoHelp],
+            'home_zone_waiting_lounge' => ['Waiting area / lounge photos', 'gallery', 'help' => $zonePhotoHelp],
+            'home_zone_workstations' => ['Workstations photos', 'gallery', 'help' => $zonePhotoHelp],
+            'home_zone_manager_cabins' => ['Manager cabins photos', 'gallery', 'help' => $zonePhotoHelp],
+            'home_zone_meeting_rooms' => ['Meeting rooms photos', 'gallery', 'help' => $zonePhotoHelp],
+            'home_zone_conference_boardroom' => ['Conference / boardroom photos', 'gallery', 'help' => $zonePhotoHelp],
+            'home_zone_cafeteria_pantry' => ['Cafeteria / pantry photos', 'gallery', 'help' => $zonePhotoHelp],
+            'home_zone_breakout' => ['Breakout area photos', 'gallery', 'help' => $zonePhotoHelp],
+            'home_zone_recreation' => ['Recreation / game area photos', 'gallery', 'help' => $zonePhotoHelp],
+            'home_zone_training_multipurpose' => ['Training / multipurpose photos', 'gallery', 'help' => $zonePhotoHelp],
+            'home_zone_display_experience' => ['Display / experience area photos', 'gallery', 'help' => $zonePhotoHelp],
+            'home_zone_washrooms' => ['Washrooms photos', 'gallery', 'help' => $zonePhotoHelp],
+        ],
         'Content' => [
             'disclaimer' => ['Portfolio disclaimer', 'textarea'],
         ],
     ];
     if (is_post()) {
         foreach ($fields as $group) foreach ($group as $k => $f) {
-            q('INSERT INTO settings (k, v) VALUES (?, ?) ON DUPLICATE KEY UPDATE v = VALUES(v)', [$k, trim((string)($_POST[$k] ?? ''))]);
+            $value = trim((string)($_POST[$k] ?? ''));
+            if (($f[1] ?? '') === 'gallery') {
+                $gallery = json_decode($value, true);
+                $validImagePath = fn($path) => is_string($path) &&
+                    (preg_match('~^/(?:uploads|images|media)/[A-Za-z0-9._/-]+$~', $path) ||
+                    preg_match('~^/OneDrive_1_11-26-2026/(?:[A-Za-z0-9._-]|%20|/)+$~', $path)) &&
+                    strpos($path, '..') === false;
+                $gallery = is_array($gallery) ? array_values(array_filter($gallery, fn($item) =>
+                    is_array($item) && isset($item[0], $item[1]) &&
+                    $validImagePath($item[0]) && $validImagePath($item[1])
+                )) : [];
+                $value = json_encode($gallery, JSON_UNESCAPED_SLASHES);
+            }
+            q('INSERT INTO settings (k, v) VALUES (?, ?) ON DUPLICATE KEY UPDATE v = VALUES(v)', [$k, $value]);
         }
         cache_purge_all(); flash('Settings saved.'); redirect('/admin/?r=settings');
     }
     ob_start(); ?>
 <form method="post" class="settings">
   <?= csrf_field() ?>
+<?php $zonePhotoDefaults = home_zone_photo_defaults(); ?>
 <?php foreach ($fields as $g => $group): ?>
   <section class="card"><h2><?= e($g) ?></h2><div class="grid2">
-<?php foreach ($group as $k => $f) echo field_html($k, $f, setting($k)); ?>
+<?php foreach ($group as $k => $f):
+    $value = setting($k);
+    if (($f[1] ?? '') === 'gallery' && $value === '') $value = json_encode($zonePhotoDefaults[$k] ?? [], JSON_UNESCAPED_SLASHES);
+    echo field_html($k, $f, $value);
+endforeach; ?>
   </div></section>
 <?php endforeach ?>
   <button class="btn" type="submit">Save settings</button>

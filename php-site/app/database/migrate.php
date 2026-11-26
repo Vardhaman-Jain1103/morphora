@@ -5,8 +5,9 @@
  *
  *   2 — About page: team and testimonials tables, vision & mission settings, new About page sections.
  *   3 — Move client testimonials from About to the homepage.
+ *   4 — Add editable SEO metadata to public content.
  */
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 
 function migrate(): void
 {
@@ -14,6 +15,7 @@ function migrate(): void
     try {
         if (!val("SHOW TABLES LIKE 'settings'")) return;           // not installed yet: /install/ does everything
         schema_apply();
+        seo_columns();
         $seed = seed_data();
         about_seed($seed);
         $about = row('SELECT id, body FROM pages WHERE slug = "about"');
@@ -27,6 +29,35 @@ function migrate(): void
     } catch (Throwable $e) {
         error_log('Morphora migration failed: ' . $e->getMessage());
         if (cfg('debug')) throw $e;
+    }
+}
+
+/** Add Rank Math-style fields to existing content tables without affecting existing metadata. */
+function seo_columns(): void
+{
+    $shared = [
+        'focus_keyword' => "VARCHAR(190) NOT NULL DEFAULT ''",
+        'canonical_url' => "VARCHAR(500) NOT NULL DEFAULT ''",
+        'og_title' => "VARCHAR(255) NOT NULL DEFAULT ''",
+        'og_desc' => "VARCHAR(400) NOT NULL DEFAULT ''",
+        'og_image' => "VARCHAR(255) NOT NULL DEFAULT ''",
+        'schema_type' => "VARCHAR(32) NOT NULL DEFAULT 'auto'",
+        'noindex' => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'nofollow' => 'TINYINT(1) NOT NULL DEFAULT 0',
+    ];
+    foreach (['pages', 'posts', 'projects', 'cities', 'jobs'] as $table) {
+        $columns = $shared;
+        if ($table === 'jobs') {
+            $columns['seo_title'] = "VARCHAR(255) NOT NULL DEFAULT ''";
+            $columns['seo_desc'] = "VARCHAR(400) NOT NULL DEFAULT ''";
+        }
+        foreach ($columns as $column => $definition) {
+            $exists = (int)val(
+                'SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?',
+                [$table, $column]
+            );
+            if (!$exists) db()->exec("ALTER TABLE `{$table}` ADD COLUMN `{$column}` {$definition}");
+        }
     }
 }
 

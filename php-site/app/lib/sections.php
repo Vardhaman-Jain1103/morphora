@@ -126,7 +126,7 @@ function sc_posts(array $o, ?array $list = null): string
 {
     $list ??= latest_posts((int)($o['limit'] ?? 3));
     if (!$list) return '';
-    return "<section class=\"blog\">\n  <div class=\"wrap\">\n    <div class=\"blog-head\"><div><span class=\"mono\" style=\"color:var(--plum)\">{$o['label']}</span><h2 class=\"disp\">Ideas for <em>better offices.</em></h2></div><a class=\"mono\" href=\"/resources/\">All articles ↗</a></div>\n    <div class=\"blog-grid\">\n" . post_cards($list) . "\n    </div>\n  </div>\n</section>";
+    return "<section class=\"blog\">\n  <div class=\"wrap\">\n    <div class=\"blog-head\"><div><span class=\"mono lbl\" style=\"color:var(--plum)\">{$o['label']}</span><h2 class=\"disp\">Ideas for <em>better offices.</em></h2></div><a class=\"mono\" href=\"/resources/\">All articles ↗</a></div>\n    <div class=\"blog-grid\">\n" . post_cards($list) . "\n    </div>\n  </div>\n</section>";
 }
 
 function sc_faq(array $o): string
@@ -134,10 +134,10 @@ function sc_faq(array $o): string
     $items = $o['items'] ?? default_faq();
     if (!$items) return '';
     $d = '';
-    foreach ($items as [$q, $a]) $d .= "      <details><summary>{$q}</summary><p>{$a}</p></details>\n";
+    foreach ($items as [$q, $a]) $d .= "      <details><summary>{$q}</summary><div class=\"faq-answer\"><p>{$a}</p></div></details>\n";
     // FAQ rich results
     schema_add(['@type' => 'FAQPage', 'mainEntity' => array_map(fn($i) => ['@type' => 'Question', 'name' => plain($i[0]), 'acceptedAnswer' => ['@type' => 'Answer', 'text' => plain($i[1])]], $items)]);
-    return "<section class=\"faq\">\n  <div class=\"wrap faq-grid\">\n    <div><span class=\"mono\" style=\"color:var(--plum)\">{$o['label']}</span><h2 class=\"disp\">Common <em>questions.</em></h2><p>Still have a question? <a href=\"#contact\">Talk to our team</a> and we will help you out.</p></div>\n    <div>\n{$d}    </div>\n  </div>\n</section>";
+    return "<section class=\"faq\">\n  <div class=\"wrap faq-grid\">\n    <div><span class=\"mono lbl\" style=\"color:var(--plum)\">{$o['label']}</span><h2 class=\"disp\">Common <em>questions.</em></h2><p>Still have a question? <a href=\"#contact\">Talk to our team</a> and we will help you out.</p></div>\n    <div>\n{$d}    </div>\n  </div>\n</section>";
 }
 
 function sc_nums(array $o = []): string
@@ -205,8 +205,8 @@ function sc_vision(array $o): string
     $vision = rich_setting('about_vision', '');
     $mission = rich_setting('about_mission', '');
     if ($vision === '' && $mission === '') return '';
-    $side = $mission !== '' ? "\n    <div class=\"vm-side rv\"><span class=\"mono\">Our mission</span><p>{$mission}</p></div>" : '';
-    return "<section class=\"sec vm\" id=\"vision\">\n  <div class=\"wrap vm-grid\">\n    <div><span class=\"mono lbl\">" . ($o['label'] ?? '( Vision &amp; mission )') . '</span>' . ($vision !== '' ? "<p class=\"vm-statement disp\"><span class=\"mono\">Our vision</span>{$vision}</p>" : '') . "</div>{$side}\n  </div>\n</section>";
+    $side = $mission !== '' ? "\n    <div class=\"vm-side rv\"><span class=\"mono lbl\">Our mission</span><p>{$mission}</p></div>" : '';
+    return "<section class=\"sec vm\" id=\"vision\">\n  <div class=\"wrap vm-grid\">\n    <div><span class=\"mono lbl\">" . ($o['label'] ?? '( Vision &amp; mission )') . '</span>' . ($vision !== '' ? "<p class=\"vm-statement disp\"><span class=\"mono lbl\">Our vision</span>{$vision}</p>" : '') . "</div>{$side}\n  </div>\n</section>";
 }
 
 function sc_team(array $o): string

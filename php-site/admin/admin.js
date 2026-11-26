@@ -110,16 +110,81 @@
     el.addEventListener('input', upd); upd();
   });
 
-  // ---- Google result preview ----
-  const serp = $('.serp');
-  if (serp) {
-    const t = $('#f_seo_title'), d = $('#f_seo_desc'), slug = $('input[name=slug]'), title = $('#f_title') || $('#f_name'), ex = $('#f_excerpt');
-    const base = serp.dataset.url.replace(/[^/]*\/?$/, '');
-    const upd = () => {
-      $('.serp-t', serp).textContent = (t && t.value) || (title && title.value ? title.value + ' | Morphora Spaces' : 'Morphora Spaces');
-      $('.serp-d', serp).textContent = (d && d.value) || (ex && ex.value) || 'Add an SEO description so Google shows the right summary for this page.';
-      $('.serp-url', serp).textContent = serp.dataset.url.replace(/^https?:\/\//, '').replace(/\/$/, '').replace(/\//g, ' › ');
+  // ---- SEO previews and focus-keyword analysis ----
+  const seoPanel = $('[data-seo-panel]');
+  if (seoPanel) {
+    const serp = $('.serp', seoPanel), titleField = $('#f_seo_title'), descField = $('#f_seo_desc');
+    const focus = $('#f_focus_keyword'), canonical = $('#f_canonical_url'), ogTitle = $('#f_og_title'), ogDesc = $('#f_og_desc'), ogImage = $('#f_og_image');
+    const title = $('#f_title') || $('#f_name') || $('#f_slug'), excerpt = $('#f_excerpt');
+    const source = seoPanel.dataset.source ? $('#f_' + seoPanel.dataset.source) : null;
+    const score = $('[data-seo-score]', seoPanel), note = $('[data-seo-note]', seoPanel), checklist = $('[data-seo-checks]', seoPanel);
+    const socialTitle = $('[data-social-title]', seoPanel), socialDesc = $('[data-social-desc]', seoPanel), socialImage = $('[data-social-image]', seoPanel);
+    const clean = html => {
+      const box = document.createElement('textarea');
+      box.innerHTML = String(html || '').replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]*>/g, ' ');
+      return box.value.replace(/\s+/g, ' ').trim();
     };
-    [t, d, slug, title, ex].forEach(el => el && el.addEventListener('input', upd)); upd();
+    const normalize = value => String(value || '').toLowerCase().replace(/&amp;/g, '&').replace(/[^a-z0-9]+/g, ' ').trim();
+    const contains = (text, phrase) => {
+      const haystack = normalize(text), needle = normalize(phrase);
+      return !!needle && (` ${haystack} `).includes(` ${needle} `);
+    };
+    const update = () => {
+      const baseTitle = title && title.value.trim() ? title.value.trim() : 'Morphora Spaces';
+      const analysisTitle = titleField && titleField.value.trim() ? titleField.value.trim() : baseTitle;
+      const heading = titleField && titleField.value.trim() ? titleField.value.trim() : baseTitle + ' | Morphora Spaces';
+      const rawBody = source ? source.value : '';
+      const text = clean(rawBody), words = text.split(/\s+/).filter(Boolean);
+      const description = descField && descField.value.trim() ? descField.value.trim() : (excerpt && excerpt.value.trim() ? excerpt.value.trim() : text.slice(0, 160));
+      const keyword = focus ? focus.value.trim() : '';
+      const slugValue = $('#f_slug') ? $('#f_slug').value : '';
+      const firstPart = words.slice(0, Math.max(1, Math.ceil(words.length * .1))).join(' ');
+      const headings = [...rawBody.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)].map(match => clean(match[1])).join(' ');
+      const imageTags = [...rawBody.matchAll(/<img\b[^>]*>/gi)].map(match => match[0]);
+      const hasMissingAlt = imageTags.some(tag => !/\balt\s*=\s*["'][^"']+["']/i.test(tag));
+      const links = [...rawBody.matchAll(/<a\b[^>]*href\s*=\s*(["'])(.*?)\1/gi)].map(match => match[2]);
+      const hasInternalLink = links.some(href => {
+        try { return new URL(href, location.origin).host === location.host; } catch (e) { return false; }
+      });
+      const checks = [
+        [!!keyword, 'Set a focus keyword'],
+        [contains(analysisTitle, keyword), 'Use the keyword in the SEO title'],
+        [contains(description, keyword), 'Use the keyword in the description'],
+        [contains(slugValue, keyword), 'Use the keyword in the URL'],
+        [contains(firstPart, keyword), 'Mention the keyword near the start'],
+        [contains(headings, keyword), 'Use the keyword in a heading'],
+        [words.length >= 300, 'Write at least 300 words'],
+        [analysisTitle.length >= 30 && analysisTitle.length <= 60, 'Keep the SEO title between 30–60 characters'],
+        [description.length >= 120 && description.length <= 160, 'Keep the description between 120–160 characters'],
+        [!hasMissingAlt, 'Add descriptive alt text to images'],
+        [hasInternalLink, 'Add at least one internal link'],
+      ];
+      const passed = checks.filter(check => check[0]).length;
+      const points = Math.round(passed / checks.length * 100);
+      if (score) {
+        score.textContent = keyword ? points + '/100' : 'N/A';
+        score.className = keyword ? (points >= 80 ? 'good' : points >= 50 ? 'mid' : 'low') : '';
+      }
+      if (note) note.textContent = keyword ? `${passed} of ${checks.length} on-page checks passed. This is a guidance score, not a Google ranking.` : 'Add a focus keyword to calculate the on-page guidance score.';
+      if (checklist) checklist.innerHTML = checks.map(([ok, label]) => `<li class="${ok ? 'ok' : 'todo'}"><b>${ok ? '✓' : '!'}</b><span>${label}</span></li>`).join('');
+      if (serp) {
+        $('.serp-t', serp).textContent = heading;
+        $('.serp-d', serp).textContent = description || 'Add an SEO description so Google can show a useful summary.';
+        const pageUrl = canonical && canonical.value.trim() ? canonical.value.trim() : serp.dataset.url;
+        $('.serp-url', serp).textContent = pageUrl.replace(/^https?:\/\//, '').replace(/\/$/, '').replace(/\//g, ' › ');
+      }
+      if (socialTitle) socialTitle.textContent = ogTitle && ogTitle.value.trim() ? ogTitle.value.trim() : heading;
+      if (socialDesc) socialDesc.textContent = ogDesc && ogDesc.value.trim() ? ogDesc.value.trim() : description;
+      if (socialImage) {
+        const image = ogImage && ogImage.value.trim();
+        if (image) socialImage.src = image;
+        else socialImage.removeAttribute('src');
+        socialImage.hidden = !image;
+      }
+    };
+    [titleField, descField, focus, canonical, ogTitle, ogDesc, ogImage, title, excerpt, source].forEach(el => {
+      if (el) { el.addEventListener('input', update); el.addEventListener('change', update); }
+    });
+    update();
   }
 })();

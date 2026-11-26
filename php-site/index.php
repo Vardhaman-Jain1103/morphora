@@ -61,16 +61,16 @@ function page_row(string $slug): ?array { return row('SELECT * FROM pages WHERE 
 /** Meta for template pages, from the pages table (SEO text editable in admin → Pages). */
 function meta_from_page(?array $pg, string $path, array $extra = []): array
 {
-    return array_merge([
-        'title' => $pg['seo_title'] ?? setting('site_name', 'Morphora Spaces'),
-        'desc' => $pg['seo_desc'] ?? '',
+    $meta = array_merge([
+        'title' => trim((string)($pg['seo_title'] ?? '')) ?: setting('site_name', 'Morphora Spaces'),
+        'desc' => trim((string)($pg['seo_desc'] ?? '')),
         'path' => $path,
         'image' => $pg['og_image'] ?? '',
-        'robots' => !empty($pg['noindex']) ? 'noindex,follow' : null,
         'nav' => $pg['nav'] ?? '',
         'foot_label' => $pg['foot_label'] ?? '',
         'foot_title' => $pg['foot_title'] ?? '',
     ], array_filter($extra, fn($v) => $v !== null));
+    return seo_apply_record($pg ?? [], $meta);
 }
 
 function not_found(): void
@@ -86,7 +86,27 @@ function route_home(): void
 {
     $pg = page_row('');
     cache_public();
-    page_out('home', [], meta_from_page($pg, '/', ['scripts' => (string)@file_get_contents(APP . '/views/partials/home-script.html')]));
+    $defaults = home_zone_photo_defaults();
+    $zoneKeys = array_keys($defaults);
+    $saved = rows('SELECT k, v FROM settings WHERE k IN (' . implode(',', array_fill(0, count($zoneKeys), '?')) . ')', $zoneKeys);
+    $saved = array_column($saved, 'v', 'k');
+    $zonePhotos = [];
+    foreach ($zoneKeys as $key) {
+        if (!array_key_exists($key, $saved)) {
+            $zonePhotos[] = $defaults[$key];
+            continue;
+        }
+        $gallery = json_decode((string)$saved[$key], true);
+        $zonePhotos[] = is_array($gallery) ? $gallery : [];
+    }
+    $clientLogos = json_decode(setting('home_client_logos', '[]'), true);
+    $clientLogos = is_array($clientLogos) ? array_values(array_filter($clientLogos, static fn($item) =>
+        is_array($item) && isset($item[0]) && is_string($item[0]) &&
+        preg_match('~^/uploads/[A-Za-z0-9._/-]+$~', $item[0]) && strpos($item[0], '..') === false
+    )) : [];
+    $photos = json_encode($zonePhotos, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+    $script = '<script>window.HOME_ZONE_PHOTOS=' . $photos . ';</script>' . (string)@file_get_contents(APP . '/views/partials/home-script.html');
+    page_out('home', ['clientLogos' => $clientLogos], meta_from_page($pg, '/', ['scripts' => $script]));
 }
 
 /** Fixed pages stored in the database: about, services, contact, legal … (and redirects / 404 for unknown paths). */
@@ -109,7 +129,7 @@ function route_page(string $slug): void
     }
     if ($slug === 'contact') $schema[] = ['@type' => 'ContactPage', 'url' => abs_url('/contact/'), 'about' => ['@id' => org_id()]];
     if ($slug === 'about') $schema[] = ['@type' => 'AboutPage', 'url' => abs_url('/about/'), 'about' => ['@id' => org_id()]];
-    page_out('page', ['page' => $pg], meta_from_page($pg, path_for($slug), ['crumbs' => $crumbs, 'schema' => $schema, 'robots' => $preview ? 'noindex,nofollow' : null]));
+    page_out('page', ['page' => $pg], meta_from_page($pg, path_for($slug), ['crumbs' => $crumbs, 'schema' => $schema, 'robots' => $preview ? 'noindex,nofollow' : null, 'robots_force' => $preview]));
 }
 
 function route_portfolio(): void
@@ -129,12 +149,14 @@ function route_project(string $slug): void
     $title = $p['seo_title'] ?: "{$p['name']}, {$p['city']} — Office Interior Project | " . setting('site_name', 'Morphora Spaces');
     $desc = $p['seo_desc'] ?: "{$p['name']} office in {$p['city']}: a {$p['size']} office interior project. {$p['delivery']}.";
     $images = array_map(fn($g) => abs_url($g[1]), array_slice($gallery, 0, 10));
-    page_out('project', ['p' => $p, 'gallery' => $gallery, 'others' => $others], [
+    $meta = [
         'title' => $title, 'desc' => $desc, 'path' => "/portfolio/{$slug}/", 'image' => $p['cover'], 'nav' => 'portfolio',
         'crumbs' => [['Portfolio', '/portfolio/'], [$p['name'], null]],
         'schema' => [['@type' => 'CreativeWork', 'name' => "{$p['name']} office, {$p['city']}", 'about' => 'Office interior design and build', 'creator' => ['@id' => org_id()], 'locationCreated' => ['@type' => 'Place', 'name' => $p['city']], 'image' => array_merge([abs_url($p['cover'])], $images), 'url' => abs_url("/portfolio/{$slug}/")]],
         'robots' => $p['status'] !== 'published' ? 'noindex,nofollow' : null,
-    ]);
+        'robots_force' => $p['status'] !== 'published',
+    ];
+    page_out('project', ['p' => $p, 'gallery' => $gallery, 'others' => $others], seo_apply_record($p, $meta));
 }
 
 function route_resources(): void
@@ -160,7 +182,7 @@ function route_article(string $slug): void
     if ($live) cache_public();
     $related = latest_posts(3, (int)$p['id'], $p['category']);
     $img = $p['cover'] ?: post_thumb($p);
-    page_out('article', ['p' => $p, 'related' => $related], [
+    $meta = [
         'title' => $p['seo_title'] ?: seo_title($p['title']), 'desc' => $p['seo_desc'] ?: ($p['excerpt'] ?: str_limit(plain((string)$p['body']), 160)),
         'path' => "/resources/{$slug}/", 'image' => $img, 'type' => 'article', 'nav' => 'resources',
         'published' => $p['published_at'], 'modified' => $p['updated_at'],
@@ -172,7 +194,9 @@ function route_article(string $slug): void
             'mainEntityOfPage' => abs_url("/resources/{$slug}/"), 'articleSection' => $p['category'], 'wordCount' => str_word_count(plain((string)$p['body'])), 'inLanguage' => 'en-IN',
         ]],
         'robots' => $live ? null : 'noindex,nofollow',
-    ]);
+        'robots_force' => !$live,
+    ];
+    page_out('article', ['p' => $p, 'related' => $related], seo_apply_record($p, $meta));
 }
 
 function route_locations(): void
@@ -193,7 +217,7 @@ function route_city(string $slug): void
     }
     if ($c['status'] === 'published') cache_public();
     $n = $c['name'];
-    page_out('city', ['c' => $c], [
+    $meta = [
         'title' => $c['seo_title'] ?: "Office Interior Designer in {$n} — Design & Build in 60 Days | " . setting('site_name', 'Morphora Spaces'),
         'desc' => $c['seo_desc'] ?: "Looking for an office interior designer in {$n}? Morphora Spaces designs and builds complete offices in {$n} in 60 days — layout, 3D design, civil work and handover.",
         'path' => "/office-interior-designer-in-{$slug}/", 'image' => $c['hero'] ?: '/images/ADI8415-scaled.jpg',
@@ -201,7 +225,9 @@ function route_city(string $slug): void
         'foot_label' => "( Office interiors in {$n} )",
         'schema' => [['@type' => 'Service', 'name' => "Office interior design in {$n}", 'serviceType' => 'Office interior design and build', 'provider' => ['@id' => org_id()], 'areaServed' => ['@type' => 'City', 'name' => $n], 'url' => abs_url("/office-interior-designer-in-{$slug}/")]],
         'robots' => $c['status'] !== 'published' ? 'noindex,nofollow' : null,
-    ]);
+        'robots_force' => $c['status'] !== 'published',
+    ];
+    page_out('city', ['c' => $c], seo_apply_record($c, $meta));
 }
 
 function route_careers(): void
@@ -228,14 +254,29 @@ function route_job(string $slug): void
             'directApply' => true,
         ];
     }
-    page_out('job', ['j' => $j, 'open' => $open], [
+    $meta = [
         'title' => seo_title("{$j['title']} — Careers"), 'desc' => "{$j['title']} job at Morphora Spaces, {$j['location']}. " . str_limit(plain((string)$j['description']), 120),
         'path' => "/careers/{$slug}/", 'crumbs' => [['Careers', '/careers/'], [$j['title'], null]], 'schema' => $schema,
         'robots' => $open ? null : 'noindex,follow',
-    ]);
+        'robots_force' => !$open,
+    ];
+    page_out('job', ['j' => $j, 'open' => $open], seo_apply_record($j, $meta));
 }
 
 /* ============================================================ sitemap / robots */
+
+function sitemap_path_for(array $record, string $fallback): ?string
+{
+    $canonical = trim((string)($record['canonical_url'] ?? ''));
+    if ($canonical === '') return $fallback;
+    if (preg_match('~^https?://~i', $canonical)) {
+        $canonicalHost = strtolower((string)parse_url($canonical, PHP_URL_HOST));
+        $siteHost = strtolower((string)parse_url(abs_url('/'), PHP_URL_HOST));
+        if ($canonicalHost === '' || $canonicalHost !== $siteHost) return null;
+    }
+    $path = parse_url($canonical, PHP_URL_PATH) ?: '/';
+    return strpos($path, '/') === 0 && strpos($path, '//') !== 0 ? $path : null;
+}
 
 function route_sitemap(): void
 {
@@ -243,19 +284,30 @@ function route_sitemap(): void
     header('X-LiteSpeed-Cache-Control: public,max-age=3600');
     $u = [];
     $add = function (string $path, ?string $mod = null, string $freq = 'monthly', string $prio = '0.6', ?string $img = null) use (&$u) { $u[] = [$path, $mod, $freq, $prio, $img]; };
-    $pages = array_column(rows('SELECT slug, updated_at, template, noindex FROM pages'), null, 'slug');
+    $pages = array_column(rows('SELECT slug, updated_at, template, noindex, canonical_url FROM pages'), null, 'slug');
     $pmod = fn($s) => isset($pages[$s]) ? $pages[$s]['updated_at'] : null;
-    $add('/', $pmod(''), 'weekly', '1.0');
-    foreach ($pages as $s => $pg) if ($pg['template'] === 'page' && !$pg['noindex'] && $s !== '') $add(path_for($s), $pg['updated_at'], in_array($s, ['privacy-policy', 'terms-and-conditions'], true) ? 'yearly' : 'monthly', in_array($s, ['design-and-build', 'real-estate', 'pmc'], true) ? '0.9' : '0.7');
-    $latestPost = val('SELECT MAX(updated_at) FROM posts WHERE status="published"');
-    $add('/portfolio/', val('SELECT MAX(updated_at) FROM projects'), 'monthly', '0.8');
-    foreach (projects_list() as $p) $add("/portfolio/{$p['slug']}/", $p['updated_at'], 'yearly', '0.6', $p['cover']);
-    $add('/resources/', $latestPost, 'weekly', '0.8');
-    foreach (rows('SELECT slug, updated_at, cover, thumb FROM posts WHERE status="published" AND published_at <= CURDATE() ORDER BY published_at DESC') as $p) $add("/resources/{$p['slug']}/", $p['updated_at'], 'monthly', '0.7', $p['cover'] ?: $p['thumb']);
-    $add('/locations/', val('SELECT MAX(updated_at) FROM cities'), 'monthly', '0.7');
-    foreach (rows('SELECT slug, updated_at, top FROM cities WHERE status="published" ORDER BY name') as $c) $add("/office-interior-designer-in-{$c['slug']}/", $c['updated_at'], 'monthly', $c['top'] ? '0.8' : '0.5');
-    $add('/careers/', val('SELECT MAX(updated_at) FROM jobs'), 'weekly', '0.5');
-    foreach (rows('SELECT slug, updated_at FROM jobs WHERE status="published" AND (valid_through IS NULL OR valid_through >= CURDATE())') as $j) $add("/careers/{$j['slug']}/", $j['updated_at'], 'weekly', '0.4');
+    if (empty($pages['']['noindex']) && isset($pages[''])) {
+        if ($path = sitemap_path_for($pages[''], '/')) $add($path, $pmod(''), 'weekly', '1.0');
+    }
+    foreach ($pages as $s => $pg) {
+        if ($pg['template'] !== 'page' || $pg['noindex'] || $s === '') continue;
+        if ($path = sitemap_path_for($pg, path_for($s))) $add($path, $pg['updated_at'], in_array($s, ['privacy-policy', 'terms-and-conditions'], true) ? 'yearly' : 'monthly', in_array($s, ['design-and-build', 'real-estate', 'pmc'], true) ? '0.9' : '0.7');
+    }
+    $latestPost = val('SELECT MAX(updated_at) FROM posts WHERE status="published" AND noindex=0');
+    if (empty($pages['portfolio']['noindex']) && isset($pages['portfolio']) && ($path = sitemap_path_for($pages['portfolio'], '/portfolio/'))) $add($path, val('SELECT MAX(updated_at) FROM projects WHERE noindex=0'), 'monthly', '0.8');
+    foreach (projects_list() as $p) if (empty($p['noindex']) && ($path = sitemap_path_for($p, "/portfolio/{$p['slug']}/"))) $add($path, $p['updated_at'], 'yearly', '0.6', $p['cover']);
+    foreach (rows('SELECT slug, updated_at, cover, thumb, canonical_url FROM posts WHERE status="published" AND noindex=0 AND published_at <= CURDATE() ORDER BY published_at DESC') as $p) {
+        if ($path = sitemap_path_for($p, "/resources/{$p['slug']}/")) $add($path, $p['updated_at'], 'monthly', '0.7', $p['cover'] ?: $p['thumb']);
+    }
+    if (empty($pages['resources']['noindex']) && isset($pages['resources']) && ($path = sitemap_path_for($pages['resources'], '/resources/'))) $add($path, $latestPost, 'weekly', '0.8');
+    if (empty($pages['locations']['noindex']) && isset($pages['locations']) && ($path = sitemap_path_for($pages['locations'], '/locations/'))) $add($path, val('SELECT MAX(updated_at) FROM cities WHERE noindex=0'), 'monthly', '0.7');
+    foreach (rows('SELECT slug, updated_at, top, canonical_url FROM cities WHERE status="published" AND noindex=0 ORDER BY name') as $c) {
+        if ($path = sitemap_path_for($c, "/office-interior-designer-in-{$c['slug']}/")) $add($path, $c['updated_at'], 'monthly', $c['top'] ? '0.8' : '0.5');
+    }
+    if (empty($pages['careers']['noindex']) && isset($pages['careers']) && ($path = sitemap_path_for($pages['careers'], '/careers/'))) $add($path, val('SELECT MAX(updated_at) FROM jobs WHERE noindex=0'), 'weekly', '0.5');
+    foreach (rows('SELECT slug, updated_at, canonical_url FROM jobs WHERE status="published" AND noindex=0 AND (valid_through IS NULL OR valid_through >= CURDATE())') as $j) {
+        if ($path = sitemap_path_for($j, "/careers/{$j['slug']}/")) $add($path, $j['updated_at'], 'weekly', '0.4');
+    }
 
     echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' . "\n";
     foreach ($u as [$path, $mod, $freq, $prio, $img]) {

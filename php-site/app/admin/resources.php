@@ -11,6 +11,23 @@ function resources(): array
     $seo = [
         'seo_title' => ['SEO title', 'text', 'group' => 'seo', 'max' => 60, 'help' => 'Shown in Google and the browser tab. Leave empty to use the default.'],
         'seo_desc' => ['SEO description', 'textarea', 'group' => 'seo', 'max' => 160, 'help' => 'The grey text under the title in Google. Aim for 120–160 characters.'],
+        'focus_keyword' => ['Focus keyword', 'text', 'group' => 'seo', 'max' => 190, 'help' => 'The primary phrase this page should target. Used for the on-page SEO checks.'],
+        'canonical_url' => ['Canonical URL', 'text', 'group' => 'seo', 'max' => 500, 'help' => 'Optional. Use a full https:// URL or a site path beginning with /.'],
+        'og_title' => ['Social title', 'text', 'group' => 'seo', 'max' => 70, 'help' => 'Optional title for social sharing. Defaults to the SEO title.'],
+        'og_desc' => ['Social description', 'textarea', 'group' => 'seo', 'max' => 200, 'help' => 'Optional description for social sharing. Defaults to the SEO description.'],
+        'og_image' => ['Social image', 'image', 'group' => 'seo', 'help' => 'Optional image used in social cards.'],
+        'noindex' => ['Noindex (hide from search results)', 'check', 'group' => 'seo'],
+        'nofollow' => ['Nofollow (do not follow links)', 'check', 'group' => 'seo'],
+    ];
+    $seoFields = fn(array $options) => $seo + [
+        'schema_type' => ['Schema type', 'select', 'options' => $options, 'group' => 'seo'],
+    ];
+    $schemaOptions = [
+        'posts' => ['auto' => 'Automatic (BlogPosting)', 'BlogPosting' => 'Blog posting', 'Article' => 'Article', 'NewsArticle' => 'News article'],
+        'projects' => ['auto' => 'Automatic (CreativeWork)', 'CreativeWork' => 'Creative work'],
+        'cities' => ['auto' => 'Automatic (Service)', 'Service' => 'Service', 'WebPage' => 'Web page'],
+        'pages' => ['auto' => 'Automatic', 'WebPage' => 'Web page', 'AboutPage' => 'About page', 'ContactPage' => 'Contact page', 'Service' => 'Service'],
+        'jobs' => ['auto' => 'Automatic (JobPosting)', 'JobPosting' => 'Job posting'],
     ];
     $status = ['Status', 'select', 'options' => ['published' => 'Published', 'draft' => 'Draft (hidden)']];
 
@@ -19,6 +36,7 @@ function resources(): array
             'title' => 'Articles', 'one' => 'article', 'table' => 'posts', 'order' => 'published_at DESC, id DESC', 'search' => ['title', 'category', 'slug'],
             'list' => ['title' => 'Title', 'category' => 'Category', 'status' => 'Status', 'published_at' => 'Date'],
             'url' => fn($r) => '/resources/' . $r['slug'] . '/',
+            'seo_details' => true, 'seo_source' => 'body',
             'fields' => [
                 'title' => ['Title', 'text', 'required', 'max' => 110],
                 'slug' => ['URL', 'slug', 'from' => 'title', 'prefix' => '/resources/', 'help' => 'Changing this after publishing breaks old links — add a redirect if you do.'],
@@ -30,13 +48,14 @@ function resources(): array
                 'cover' => ['Header image', 'image', 'help' => 'Wide image at the top of the article and for social sharing (1600 × 900 works well).'],
                 'thumb' => ['Card image', 'image', 'help' => 'Optional smaller image for article cards. The header image is used if empty.'],
                 'body' => ['Article', 'html', 'required'],
-            ] + $seo,
+            ] + $seoFields($schemaOptions['posts']),
             'defaults' => ['status' => 'draft', 'published_at' => date('Y-m-d'), 'author' => 'Morphora Spaces', 'category' => 'Office Design'],
         ],
         'projects' => [
             'title' => 'Projects', 'one' => 'project', 'table' => 'projects', 'order' => 'sort_order, id', 'search' => ['name', 'city'],
             'list' => ['name' => 'Project', 'city' => 'City', 'size' => 'Size', 'status' => 'Status', 'featured' => 'On home'],
             'url' => fn($r) => '/portfolio/' . $r['slug'] . '/',
+            'seo_details' => true, 'seo_source' => 'summary',
             'fields' => [
                 'name' => ['Client / project name', 'text', 'required'],
                 'slug' => ['URL', 'slug', 'from' => 'name', 'prefix' => '/portfolio/'],
@@ -49,7 +68,7 @@ function resources(): array
                 'cover' => ['Main photo', 'image', 'required'],
                 'summary' => ['About the project', 'html', 'help' => 'Optional write-up shown under the project facts.'],
                 'gallery' => ['Gallery', 'gallery', 'help' => 'Upload photos; drag to reorder. Visitors can click to enlarge.'],
-            ] + $seo,
+            ] + $seoFields($schemaOptions['projects']),
             'defaults' => ['status' => 'published', 'featured' => 1, 'sort_order' => 10],
         ],
         'team' => [
@@ -89,6 +108,7 @@ function resources(): array
             'title' => 'Cities', 'one' => 'city', 'table' => 'cities', 'order' => 'top DESC, name', 'search' => ['name', 'slug'],
             'list' => ['name' => 'City', 'status' => 'Status', 'top' => 'Top city', 'updated_at' => 'Updated'],
             'url' => fn($r) => '/office-interior-designer-in-' . $r['slug'] . '/',
+            'seo_details' => true, 'seo_source' => 'body',
             'fields' => [
                 'name' => ['City name', 'text', 'required'],
                 'slug' => ['URL', 'slug', 'from' => 'name', 'prefix' => '/office-interior-designer-in-'],
@@ -97,26 +117,26 @@ function resources(): array
                 'lead' => ['Intro line', 'textarea', 'help' => 'Optional. Replaces the standard “Looking for an office interior designer in …” intro.'],
                 'hero' => ['Header photo', 'image', 'help' => 'Optional. A photo from a project in or near this city.'],
                 'body' => ['Local content', 'html', 'help' => 'Optional but good for Google: projects, areas and business districts you serve in this city. Shown as an extra section.'],
-            ] + $seo,
+            ] + $seoFields($schemaOptions['cities']),
             'defaults' => ['status' => 'published'],
         ],
         'pages' => [
             'title' => 'Pages', 'one' => 'page', 'table' => 'pages', 'order' => 'template = "page", slug', 'search' => ['slug', 'seo_title'], 'nocreate' => true, 'nodelete' => true,
             'list' => ['slug' => 'Page', 'template' => 'Type', 'seo_title' => 'SEO title', 'updated_at' => 'Updated'],
             'url' => fn($r) => path_for($r['slug']),
+            'seo_details' => true, 'seo_source' => 'body',
             'fields' => [
                 'slug' => ['URL', 'slug', 'readonly', 'prefix' => '/'],
                 'body' => ['Page content', 'html', 'help' => 'Live sections appear as <!--sc:…--> lines: keep them as they are, or move them to reorder sections.', 'only' => ['template' => 'page']],
                 'foot_label' => ['Contact section label', 'text', 'help' => 'Small label above the contact section at the bottom of this page.'],
                 'foot_title' => ['Contact section heading', 'text', 'help' => 'HTML allowed, e.g. Tell us about <em>your office.</em>'],
-                'og_image' => ['Social sharing image', 'image', 'group' => 'seo'],
-                'noindex' => ['Hide from Google (noindex)', 'check', 'group' => 'seo'],
-            ] + $seo,
+            ] + $seoFields($schemaOptions['pages']),
         ],
         'jobs' => [
             'title' => 'Jobs', 'one' => 'job', 'table' => 'jobs', 'order' => 'status = "published" DESC, created_at DESC', 'search' => ['title', 'location'],
             'list' => ['title' => 'Role', 'location' => 'Location', 'status' => 'Status', 'created_at' => 'Posted'],
             'url' => fn($r) => '/careers/' . $r['slug'] . '/',
+            'seo_details' => true, 'seo_source' => 'description',
             'fields' => [
                 'title' => ['Job title', 'text', 'required'],
                 'slug' => ['URL', 'slug', 'from' => 'title', 'prefix' => '/careers/'],
@@ -126,7 +146,7 @@ function resources(): array
                 'experience' => ['Experience', 'text', 'help' => 'For example “2–5 years”.'],
                 'valid_through' => ['Apply by', 'date', 'help' => 'Optional. The job closes automatically after this date.'],
                 'description' => ['Job description', 'html', 'required'],
-            ],
+            ] + $seoFields($schemaOptions['jobs']),
             'defaults' => ['status' => 'draft', 'type' => 'Full-time', 'location' => 'Thane, Maharashtra'],
         ],
         'redirects' => [

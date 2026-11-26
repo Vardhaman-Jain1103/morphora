@@ -13,6 +13,32 @@ function abs_url(string $path = '/'): string
 /** Clean site path for a page slug ('' → '/', 'about' → '/about/'). */
 function path_for(string $slug): string { return $slug === '' ? '/' : '/' . trim($slug, '/') . '/'; }
 
+/** Initial photos for the fixed homepage office areas, also shown in the admin galleries. */
+function home_zone_photo_defaults(): array
+{
+    $files = [
+        'home_zone_reception' => 'LARGE%20RECEPTION/10da22dafbc4c3349a244dd19ee8b12b.webp',
+        'home_zone_waiting_lounge' => 'WAITING/18d5e9d410496b98aaa77b51c1caf0ed.jpg',
+        'home_zone_workstations' => 'WS%20WITH%20OPEN%20CEILING/0d1bea90c79db7c495f1953bd9b76c6b.jpg',
+        'home_zone_manager_cabins' => 'MD%20CABIN/08b3a3c0aaa3f0b1bd9073828bf382b6.jpg',
+        'home_zone_meeting_rooms' => 'MEETING%20ROOM/04df6eca551d153058a4ead927509a02.webp',
+        'home_zone_conference_boardroom' => 'CONFERENCE%20ROOM/01e600806ec43ab410011a4af3449e16.jpg',
+        'home_zone_cafeteria_pantry' => 'CAFETERIA/09d7978407bbadb5e040db4da82e62d2.webp',
+        'home_zone_breakout' => 'LOUNGE%20AREA/2b0d5439cd56704d7f62d46119893d75.webp',
+        'home_zone_recreation' => 'RELAXING%20OR%20GAME%20AREA/10f6c5d4c3a3f4cdebdbd14031a1ffda.jpg',
+        'home_zone_training_multipurpose' => 'STEP%20SEATING/1af6157e2ca80d4880e585382d93cca4.jpg',
+        'home_zone_display_experience' => 'DISPLAY/012667109aae54301599f3187b2420a6.webp',
+        'home_zone_washrooms' => 'WASHROOMS/18d0f9fea652eaf6f82b0de635735494.jpg',
+    ];
+    $base = '/OneDrive_1_11-26-2026/';
+    $photos = [];
+    foreach ($files as $key => $file) {
+        $url = $base . $file;
+        $photos[$key] = [[$url, $url]];
+    }
+    return $photos;
+}
+
 function redirect(string $to, int $code = 302): void
 {
     header('Location: ' . $to, true, $code);

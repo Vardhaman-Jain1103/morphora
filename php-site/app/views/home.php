@@ -13,6 +13,8 @@
           <ul class="hx-proof" aria-label="Delivery highlights">
             <li><strong>60</strong><span>days to handover</span></li>
             <li><strong>150+</strong><span>offices delivered</span></li>
+            <li><strong>vastu+</strong><span>compliant design</span></li>
+            <li><strong>100%</strong><span>snag free office</span></li>
           </ul>
         </div>
         <div class="hx-slot" id="xSlot" aria-hidden="true"></div>
@@ -35,18 +37,33 @@
 <!-- MANIFESTO -->
 <section class="manifesto">
   <div class="wrap">
-    <span class="mono">( Our vision )</span>
+    <span class="mono lbl">( Our vision )</span>
     <p id="mf">We listen. We deliver. With <em>presence and purpose.</em></p>
     <div class="vis-sub">
       <p>We don’t just design interiors — we challenge conventions, blending creativity with strategy to build spaces that go far beyond looks.</p>
       <a class="vis-link mono" href="/about/">More about us ↗</a>
     </div>
     <ol class="vals">
-      <li><span class="mono">01</span><h3>Empathy</h3><p>Designed around people — how they feel and work, not just how it looks.</p></li>
-      <li><span class="mono">02</span><h3>Precision</h3><p>Details are never small. The smallest choices make the biggest impression.</p></li>
-      <li><span class="mono">03</span><h3>Integrity</h3><p>What we promise, we deliver — with honesty in every interaction.</p></li>
-      <li><span class="mono">04</span><h3>Context</h3><p>Design with intention: spaces that work better, not just look good.</p></li>
-      <li><span class="mono">05</span><h3>Innovation</h3><p>New methods for spaces that are future-ready, adaptable and sustainable.</p></li>
+      <li class="rv">
+        <div class="vals-mark"><span class="vector-icon-wrap"><svg class="vector-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M24 39S9 30.3 9 19.7a8.2 8.2 0 0 1 15-4.8 8.2 8.2 0 0 1 15 4.8C39 30.3 24 39 24 39Z"/><path d="M17 24c2.2 2.2 4.8 2.2 7 0s4.8-2.2 7 0"/></svg></span><span class="mono">01</span></div>
+        <h3>Empathy</h3><p>Designed around people — how they feel and work, not just how it looks.</p>
+      </li>
+      <li class="rv">
+        <div class="vals-mark"><span class="vector-icon-wrap"><svg class="vector-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="16"/><circle cx="24" cy="24" r="7"/><path d="M24 3v7M24 38v7M3 24h7M38 24h7M24 20v4l3 2"/></svg></span><span class="mono">02</span></div>
+        <h3>Precision</h3><p>Details are never small. The smallest choices make the biggest impression.</p>
+      </li>
+      <li class="rv">
+        <div class="vals-mark"><span class="vector-icon-wrap"><svg class="vector-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="m24 5 14 5v12c0 10-5.8 16-14 21-8.2-5-14-11-14-21V10l14-5Z"/><path d="m17 23 5 5 10-11"/></svg></span><span class="mono">03</span></div>
+        <h3>Integrity</h3><p>What we promise, we deliver — with honesty in every interaction.</p>
+      </li>
+      <li class="rv">
+        <div class="vals-mark"><span class="vector-icon-wrap"><svg class="vector-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><rect x="7" y="8" width="34" height="32" rx="2"/><path d="M7 20h16v20M23 8v12M23 20h18M32 20v20M12 14h5M28 14h8"/></svg></span><span class="mono">04</span></div>
+        <h3>Context</h3><p>Design with intention: spaces that work better, not just look good.</p>
+      </li>
+      <li class="rv">
+        <div class="vals-mark"><span class="vector-icon-wrap"><svg class="vector-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M17 29c-3-2.2-5-5.6-5-9.5a12 12 0 1 1 24 0c0 3.9-2 7.3-5 9.5-1.5 1.1-2 2.7-2 4.5H19c0-1.8-.5-3.4-2-4.5Z"/><path d="M19 38h10M21 42h6M24 2v3M5 20h4M39 20h4M10 7l3 3M38 7l-3 3"/></svg></span><span class="mono">05</span></div>
+        <h3>Innovation</h3><p>New methods for spaces that are future-ready, adaptable and sustainable.</p>
+      </li>
     </ol>
   </div>
 </section>
@@ -55,7 +72,7 @@
 <section class="plan" id="plan">
   <div class="wrap">
     <div class="plan-head">
-      <div><span class="mono" style="color:var(--brass)">( Office zones )</span><h2 class="disp" style="margin-top:20px">Every area, <em>well planned.</em></h2></div>
+      <div><span class="mono lbl" style="color:var(--brass)">( Office zones )</span><h2 class="disp">Every area, <em>well planned.</em></h2></div>
       <p>The twelve areas we plan in every office. Select one to learn more.</p>
     </div>
     <div class="plan-body">
@@ -110,7 +127,7 @@
 
 <!-- ZONE GALLERY (opened by clicking an area) -->
 <div class="zg" id="zg" role="dialog" aria-modal="true" aria-labelledby="zgT" hidden>
-  <div class="zg-top"><div><span class="mono" id="zgK">Area 01</span><h3 class="disp" id="zgT">Reception</h3></div><span class="mono zg-tag" id="zgTag" hidden>Design idea · for inspiration</span><span class="mono zg-count" id="zgCount"></span><button type="button" class="zg-x" id="zgClose" aria-label="Close gallery">✕</button></div>
+  <div class="zg-top"><div><span class="mono" id="zgK">Area 01</span><h3 class="disp" id="zgT">Reception</h3></div><span class="mono zg-count" id="zgCount"></span><button type="button" class="zg-x" id="zgClose" aria-label="Close gallery">✕</button></div>
   <div class="zg-stage"><button type="button" class="zg-nav prev" id="zgPrev" aria-label="Previous photo">←</button><img id="zgImg" alt=""><button type="button" class="zg-nav next" id="zgNext" aria-label="Next photo">→</button></div>
   <div class="zg-thumbs" id="zgThumbs"></div>
 </div>
@@ -141,15 +158,15 @@
 <?= sc_map(['label' => '( Pan-India )']) ?>
 
 <!-- WHY US -->
-<section class="why">
-  <div class="wrap why-grid">
-    <div><span class="mono" style="color:var(--plum)">( Why choose us )</span><h2 class="disp">Why work <em>with us.</em></h2></div>
-    <ol>
-      <li class="rv"><span class="mono">01</span><div><h3>Clear process, full transparency</h3><p>From start to finish you always know where your project stands, with live progress updates on a simple online dashboard.</p></div></li>
-      <li class="rv"><span class="mono">02</span><div><h3>Design that works</h3><p>Offices that look good and are easy to work in — planned around your workflow, productivity and company culture.</p></div></li>
-      <li class="rv"><span class="mono">03</span><div><h3>One expert team</h3><p>Architects, interior designers and workspace planners work together, so your project fits your industry and needs.</p></div></li>
-      <li class="rv"><span class="mono">04</span><div><h3>Local and relevant</h3><p>We use local materials and regional design touches, so the office feels right for your people and your visitors.</p></div></li>
-      <li class="rv"><span class="mono">05</span><div><h3>Support after handover</h3><p>You get user guides, a maintenance kit and space-planning tips, so your team settles in quickly and confidently.</p></div></li>
+<section class="why home-why">
+  <div class="wrap">
+    <div class="home-why-head"><div><span class="mono lbl home-why-label">( Why choose us )</span><h2 class="disp">Why work <em>with us.</em></h2></div></div>
+    <ol class="home-why-grid">
+      <li class="rv"><div class="home-why-mark"><span class="vector-icon-wrap"><svg class="vector-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M8 13h12l6 10h14"/><circle cx="8" cy="13" r="3"/><circle cx="20" cy="13" r="3"/><circle cx="40" cy="23" r="3"/><path d="m35 18 5 5-5 5M8 16v18h12M20 31l6-8"/></svg></span><span class="mono">01</span></div><div><h3>Clear process, full transparency</h3><p>Know where your project stands, from start to finish, with live progress updates.</p></div></li>
+      <li class="rv"><div class="home-why-mark"><span class="vector-icon-wrap"><svg class="vector-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M6 22h36M11 22v18M37 22v18M17 22V10h14v12M17 15h14M24 10V6h7M15 40h18"/></svg></span><span class="mono">02</span></div><div><h3>Design that works</h3><p>Offices planned around your workflow, productivity, and company culture.</p></div></li>
+      <li class="rv"><div class="home-why-mark"><span class="vector-icon-wrap"><svg class="vector-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="14" r="6"/><circle cx="10" cy="19" r="4"/><circle cx="38" cy="19" r="4"/><path d="M12 39v-4a12 12 0 0 1 24 0v4M3 38v-3a7 7 0 0 1 10-6M45 38v-3a7 7 0 0 0-10-6"/></svg></span><span class="mono">03</span></div><div><h3>One expert team</h3><p>Architects, designers, and workspace planners work together as one team.</p></div></li>
+      <li class="rv"><div class="home-why-mark"><span class="vector-icon-wrap"><svg class="vector-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M7 10 19 6l10 4 12-4v26l-12 4-10-4-12 4V10Z"/><path d="M19 6v26M29 10v26"/><path d="M24 25s-5-3.1-5-6.2a3 3 0 0 1 5-2 3 3 0 0 1 5 2C29 21.9 24 25 24 25Z"/></svg></span><span class="mono">04</span></div><div><h3>Local and relevant</h3><p>Local materials and regional touches make your office feel right for your people.</p></div></li>
+      <li class="rv"><div class="home-why-mark"><span class="vector-icon-wrap"><svg class="vector-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="m5 21 19-15 19 15M10 18v23h28V18M19 41V28h10v13"/><path d="m20 20 3 3 6-7"/></svg></span><span class="mono">05</span></div><div><h3>Support after handover</h3><p>Guides, a maintenance kit, and planning tips help your team settle in.</p></div></li>
     </ol>
   </div>
 </section>
@@ -157,12 +174,34 @@
 <!-- BLOG -->
 <section class="blog">
   <div class="wrap">
-    <div class="blog-head"><div><span class="mono" style="color:var(--plum)">( From our blog )</span><h2 class="disp">Ideas for <em>better offices.</em></h2></div><a class="mono" href="/resources/">All articles ↗</a></div>
+    <div class="blog-head"><div><span class="mono lbl" style="color:var(--plum)">( From our blog )</span><h2 class="disp">Ideas for <em>better offices.</em></h2></div><a class="mono" href="/resources/">All articles ↗</a></div>
     <div class="blog-grid">
 <?= post_cards(latest_posts(3)) ?>
     </div>
   </div>
 </section>
+
+<?php if (!empty($clientLogos)): ?>
+<section class="client-logos" aria-label="Client logos">
+  <div class="client-logos-viewport">
+    <div class="client-logo-track">
+<?php foreach ([$clientLogos, $clientLogos] as $groupIndex => $logoGroup): ?>
+      <div class="client-logo-group"<?= $groupIndex > 0 ? ' aria-hidden="true"' : '' ?>>
+<?php foreach ($logoGroup as $logo):
+    $logoPath = (string)$logo[0];
+    $logoName = pathinfo(basename($logoPath), PATHINFO_FILENAME);
+    $logoName = preg_replace('/-[a-f0-9]{6}$/i', '', $logoName);
+    $logoName = trim(ucwords(str_replace(['-', '_'], ' ', $logoName)));
+    $logoAlt = $logoName !== '' && strtolower($logoName) !== 'logo' ? $logoName . ' logo' : 'Client logo';
+?>
+        <div class="client-logo"><img src="<?= e($logoPath) ?>" alt="<?= e($logoAlt) ?>" loading="lazy"></div>
+<?php endforeach ?>
+      </div>
+<?php endforeach ?>
+    </div>
+  </div>
+</section>
+<?php endif ?>
 
 <!-- FAQ -->
 <?= sc_faq(['label' => '( FAQs )', 'items' => home_faq()]) ?>

@@ -56,13 +56,40 @@ function schema_breadcrumbs(array $crumbs): ?array
     return ['@type' => 'BreadcrumbList', 'itemListElement' => $items];
 }
 
+/** Apply editable content-level SEO metadata to the route's existing defaults. */
+function seo_apply_record(array $record, array $meta): array
+{
+    $title = trim((string)($record['seo_title'] ?? ''));
+    $desc = trim((string)($record['seo_desc'] ?? ''));
+    if ($title !== '') $meta['title'] = $title;
+    if ($desc !== '') $meta['desc'] = $desc;
+    if (!empty($record['og_image'])) $meta['image'] = $record['og_image'];
+    $meta['canonical_url'] = trim((string)($record['canonical_url'] ?? ''));
+    $meta['og_title'] = trim((string)($record['og_title'] ?? '')) ?: (string)($meta['title'] ?? '');
+    $meta['og_desc'] = trim((string)($record['og_desc'] ?? '')) ?: (string)($meta['desc'] ?? '');
+    $meta['schema_type'] = trim((string)($record['schema_type'] ?? 'auto')) ?: 'auto';
+
+    if (empty($meta['robots_force'])) {
+        if (!empty($record['noindex']) || !empty($record['nofollow'])) {
+            $meta['robots'] = (!empty($record['noindex']) ? 'noindex' : 'index') . ',' . (!empty($record['nofollow']) ? 'nofollow' : 'follow');
+        } elseif (isset($meta['robots']) && $meta['robots'] === null) {
+            unset($meta['robots']);
+        }
+    }
+    unset($meta['robots_force']);
+    return $meta;
+}
+
 /** Everything that goes in <head> for SEO. */
 function seo_head(array $m): string
 {
     $title = trim($m['title'] ?? setting('site_name', 'Morphora Spaces'));
     $desc = str_limit(plain($m['desc'] ?? ''), 300);
-    $canon = isset($m['path']) ? abs_url($m['path']) : null;
+    $canonical = trim((string)($m['canonical_url'] ?? ''));
+    $canon = $canonical !== '' ? (preg_match('~^https?://~i', $canonical) ? $canonical : abs_url($canonical)) : (isset($m['path']) ? abs_url($m['path']) : null);
     $img = abs_url(($m['image'] ?? '') ?: setting('default_og_image', '/images/morphora-office-8000-sqft-hero.jpg'));
+    $ogTitle = trim((string)($m['og_title'] ?? '')) ?: $title;
+    $ogDesc = trim((string)($m['og_desc'] ?? '')) ?: $desc;
     $type = $m['type'] ?? 'website';
     $robots = $m['robots'] ?? 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
 
@@ -74,13 +101,13 @@ function seo_head(array $m): string
     $h[] = '<meta property="og:locale" content="en_IN">';
     $h[] = '<meta property="og:site_name" content="' . e(setting('site_name', 'Morphora Spaces')) . '">';
     $h[] = '<meta property="og:type" content="' . e($type) . '">';
-    $h[] = '<meta property="og:title" content="' . e($title) . '">';
-    if ($desc !== '') $h[] = '<meta property="og:description" content="' . e($desc) . '">';
+    $h[] = '<meta property="og:title" content="' . e($ogTitle) . '">';
+    if ($ogDesc !== '') $h[] = '<meta property="og:description" content="' . e($ogDesc) . '">';
     if ($canon) $h[] = '<meta property="og:url" content="' . e($canon) . '">';
     $h[] = '<meta property="og:image" content="' . e($img) . '">';
     $h[] = '<meta name="twitter:card" content="summary_large_image">';
-    $h[] = '<meta name="twitter:title" content="' . e($title) . '">';
-    if ($desc !== '') $h[] = '<meta name="twitter:description" content="' . e($desc) . '">';
+    $h[] = '<meta name="twitter:title" content="' . e($ogTitle) . '">';
+    if ($ogDesc !== '') $h[] = '<meta name="twitter:description" content="' . e($ogDesc) . '">';
     $h[] = '<meta name="twitter:image" content="' . e($img) . '">';
     if ($type === 'article') {
         if (!empty($m['published'])) $h[] = '<meta property="article:published_time" content="' . e(date('c', strtotime($m['published']))) . '">';
@@ -89,9 +116,28 @@ function seo_head(array $m): string
     if ($v = setting('gsc_verification')) $h[] = '<meta name="google-site-verification" content="' . e($v) . '">';
 
     // JSON-LD graph: organisation + website on every page, then breadcrumbs and page-specific types
+    $pageSchemas = $m['schema'] ?? [];
+    $schemaType = (string)($m['schema_type'] ?? 'auto');
+    if ($schemaType !== '' && $schemaType !== 'auto') {
+        if ($pageSchemas) {
+            $pageSchemas[0]['@type'] = $schemaType;
+        } elseif (strpos($robots, 'noindex') === false) {
+            $pageSchemas[] = [
+                '@type' => $schemaType, '@id' => ($canon ?: abs_url('/')) . '#webpage',
+                'url' => $canon ?: abs_url('/'), 'name' => $title, 'description' => $desc,
+                'isPartOf' => ['@id' => abs_url('/#website')], 'inLanguage' => 'en-IN',
+            ];
+        }
+    } elseif (!$pageSchemas && strpos($robots, 'noindex') === false) {
+        $pageSchemas[] = [
+            '@type' => 'WebPage', '@id' => ($canon ?: abs_url('/')) . '#webpage',
+            'url' => $canon ?: abs_url('/'), 'name' => $title, 'description' => $desc,
+            'isPartOf' => ['@id' => abs_url('/#website')], 'inLanguage' => 'en-IN',
+        ];
+    }
     $graph = [schema_org(), schema_website()];
     if ($bc = schema_breadcrumbs($m['crumbs'] ?? [])) $graph[] = $bc;
-    foreach (array_merge($m['schema'] ?? [], $GLOBALS['SCHEMA'] ?? []) as $s) $graph[] = $s;
+    foreach (array_merge($pageSchemas, $GLOBALS['SCHEMA'] ?? []) as $s) $graph[] = $s;
     $h[] = '<script type="application/ld+json">' . json_encode(['@context' => 'https://schema.org', '@graph' => $graph], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) . '</script>';
 
     if ($ga = setting('ga4_id')) {
