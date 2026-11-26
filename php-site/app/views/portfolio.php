@@ -3,7 +3,7 @@
 
 <section class="sec" style="padding-top:20px">
   <div class="wrap">
-    <div class="work-grid">
+    <div class="work-grid three">
 <?php foreach ($projects as $p): ?>
       <?= wcard($p) ?>
 

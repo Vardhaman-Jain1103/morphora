@@ -16,6 +16,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .mono{font-family:var(--mono);font-size:12px;font-weight:400;letter-spacing:.18em;text-transform:uppercase}
 .disp{font-family:var(--disp);font-weight:300;letter-spacing:-.01em;line-height:1.05}
 .disp em{font-style:normal;color:var(--plum)}
+h1,h2,h3,h4,h5,h6,.faq summary{text-transform:capitalize}
 /* cursor */
 .cur{position:fixed;top:0;left:0;z-index:150;pointer-events:none;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--plum);transition:width .35s var(--out),height .35s var(--out),margin .35s var(--out)}
 /* hover label: a small pill beside the pointer, so it never covers what is underneath */
@@ -235,8 +236,8 @@ header.open .menu-t b i:last-child{width:100%;transform:translateY(-3.25px) rota
 .hz-card h3{font-family:var(--disp);font-weight:300;font-size:27.2px;letter-spacing:-.01em}
 .hz-card .mono{color:var(--mut);text-align:right}
 .hz-end{flex:0 0 auto;width:min(420px,80vw);display:flex;flex-direction:column;justify-content:center;padding-right:60px}
-.hz-end a{font-family:var(--disp);font-weight:300;font-size:44.8px;line-height:1;letter-spacing:-.01em}
-.hz-end a em{color:var(--plum)}
+.hz-end a{font-family:var(--disp);font-weight:300;font-size:44.8px;line-height:1;letter-spacing:-.01em;text-transform:capitalize}
+.hz-end a span{color:var(--plum)}
 .hz-prog{height:1px;background:var(--line);margin-top:32px;position:relative}
 .hz-prog i{position:absolute;inset:0 auto 0 0;background:var(--char);width:0}
 
@@ -345,7 +346,7 @@ header.open .menu-t b i:last-child{width:100%;transform:translateY(-3.25px) rota
 .cform .note{font-size:13px;color:rgba(236,231,223,.45);max-width:260px}
 .ft{position:relative;isolation:isolate;display:grid;grid-template-columns:repeat(4,1fr);gap:30px;padding:60px 0 40px;font-size:13.8px;color:rgba(236,231,223,.6)}
 .ft .mono{display:block;margin-bottom:18px}
-.ft a{display:block;margin-bottom:8px;transition:color .3s}
+.ft a{display:block;margin-bottom:8px;text-transform:capitalize;transition:color .3s}
 .ft a:hover{color:var(--stone)}
 .ft-mark{position:absolute;inset:0;z-index:-1;overflow:hidden}
 .ft-mark span{position:absolute;left:50%;bottom:-.08em;transform:translateX(-50%);white-space:nowrap;font-family:Georgia,serif;font-size:clamp(36px,11vw,200px);font-weight:600;line-height:.8;letter-spacing:-.065em;background:linear-gradient(180deg,rgba(236,231,223,.075),rgba(132,34,162,.035));-webkit-background-clip:text;background-clip:text;color:transparent}
