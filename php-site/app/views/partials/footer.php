@@ -57,6 +57,7 @@ $mail = setting('email', 'hello@morphoraspaces.com');
       </form>
     </div>
     <div class="ft">
+      <div class="ft-mark" aria-hidden="true"><span>Morphora Spaces</span></div>
       <div><span class="mono">Company</span><a href="/about/">About us</a><a href="/portfolio/">Portfolio</a><a href="/resources/">Resources</a><a href="/careers/">Careers</a><a href="/contact/">Contact us</a></div>
       <div><span class="mono">Services</span><a href="/design-and-build/">Design &amp; Build</a><a href="/real-estate/">Real Estate Advisory</a><a href="/pmc/">Project Management</a></div>
       <div><span class="mono">Locations</span><a href="/office-interior-designer-in-mumbai/">Mumbai</a><a href="/office-interior-designer-in-thane/">Thane</a><a href="/office-interior-designer-in-pune/">Pune</a><a href="/office-interior-designer-in-bengaluru/">Bengaluru</a></div>

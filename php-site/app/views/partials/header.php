@@ -11,7 +11,7 @@ $tel = setting('phone_e164', '+917719155155');
 ?>
 <header>
   <div class="wrap">
-    <a class="logo" href="/" aria-label="<?= e(setting('site_name', 'Morphora Spaces')) ?> — home"><img src="/images/morphora-spaces-logo-header.png" alt="<?= e(setting('site_name', 'Morphora Spaces')) ?>" width="122" height="44"></a>
+    <a class="logo" href="/" aria-label="<?= e(setting('site_name', 'Morphora Spaces')) ?> — home"><img src="/images/morphora-spaces-logo-header.png" alt="<?= e(setting('site_name', 'Morphora Spaces')) ?>" width="155" height="56"></a>
     <nav aria-label="Main">
       <ul class="nav">
 <?php foreach ($nav as $n): ?>
