@@ -48,12 +48,12 @@ try {
 
 /* ================================================================ helpers */
 
-/** Logged-in admins may preview drafts (?preview=1). Never cached. */
-function can_preview(): bool
+/** Signed-in users whose role can edit that item may preview drafts (?preview=1). Never cached. */
+function can_preview(string $type, ?array $item = null): bool
 {
     if (empty($_GET['preview']) || empty($_COOKIE['ms_sess'])) return false;
-    session_boot();
-    return !empty($_SESSION['uid']);
+    require_once APP . '/admin/auth.php';
+    return can_preview_item($type, $item);
 }
 
 function page_row(string $slug): ?array { return row('SELECT * FROM pages WHERE slug = ?', [$slug]); }
@@ -120,7 +120,7 @@ function route_page(string $slug): void
     }
     if (empty($_GET['preview'])) cache_public();
     else header('X-LiteSpeed-Cache-Control: no-cache');   // previews can include drafts: never cache them
-    $preview = can_preview();
+    $preview = can_preview('pages', $pg);
     $names = ['about' => 'About', 'design-and-build' => 'Design & Build', 'real-estate' => 'Real Estate Advisory', 'pmc' => 'Project Management', 'contact' => 'Contact', 'privacy-policy' => 'Privacy Policy', 'terms-and-conditions' => 'Terms and Conditions'];
     $crumbs = [[$names[$slug] ?? ucwords(str_replace('-', ' ', $slug)), null]];
     $schema = [];
@@ -142,7 +142,7 @@ function route_portfolio(): void
 function route_project(string $slug): void
 {
     $p = row('SELECT * FROM projects WHERE slug = ?', [$slug]);
-    if (!$p || ($p['status'] !== 'published' && !can_preview())) not_found();
+    if (!$p || ($p['status'] !== 'published' && !can_preview('projects', $p))) not_found();
     if ($p['status'] === 'published') cache_public();
     $gallery = json_decode((string)$p['gallery'], true) ?: [];
     $others = array_slice(array_values(array_filter(projects_list(), fn($x) => $x['id'] !== $p['id'])), 0, 3);
@@ -174,7 +174,7 @@ function route_article(string $slug): void
 {
     $p = row('SELECT * FROM posts WHERE slug = ?', [$slug]);
     $live = $p && $p['status'] === 'published' && $p['published_at'] <= date('Y-m-d');
-    if (!$p || (!$live && !can_preview())) {
+    if (!$p || (!$live && !can_preview('posts', $p))) {
         $r = row('SELECT * FROM redirects WHERE from_path = ?', ['/resources/' . $slug . '/']);
         if ($r) { q('UPDATE redirects SET hits = hits + 1 WHERE id = ?', [$r['id']]); redirect($r['to_path'], 301); }
         not_found();
@@ -210,7 +210,7 @@ function route_locations(): void
 function route_city(string $slug): void
 {
     $c = row('SELECT * FROM cities WHERE slug = ?', [$slug]);
-    if (!$c || ($c['status'] !== 'published' && !can_preview())) {
+    if (!$c || ($c['status'] !== 'published' && !can_preview('cities', $c))) {
         $r = row('SELECT * FROM redirects WHERE from_path = ?', ['/office-interior-designer-in-' . $slug . '/']);
         if ($r) { q('UPDATE redirects SET hits = hits + 1 WHERE id = ?', [$r['id']]); redirect($r['to_path'], 301); }
         not_found();
@@ -241,7 +241,7 @@ function route_careers(): void
 function route_job(string $slug): void
 {
     $j = row('SELECT * FROM jobs WHERE slug = ?', [$slug]);
-    if (!$j || ($j['status'] === 'draft' && !can_preview())) not_found();
+    if (!$j || ($j['status'] === 'draft' && !can_preview('jobs', $j))) not_found();
     $open = $j['status'] === 'published' && (!$j['valid_through'] || $j['valid_through'] >= date('Y-m-d'));
     $schema = [];
     if ($open) {

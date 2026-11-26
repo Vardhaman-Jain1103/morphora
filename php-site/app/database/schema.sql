@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
   name VARCHAR(100) NOT NULL,
   email VARCHAR(190) NOT NULL UNIQUE,
   pass_hash VARCHAR(255) NOT NULL,
+  role VARCHAR(32) NOT NULL DEFAULT 'subscriber',   -- see ROLES in app/admin/auth.php
   last_login DATETIME NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -59,9 +60,11 @@ CREATE TABLE IF NOT EXISTS posts (
   schema_type VARCHAR(32) NOT NULL DEFAULT 'auto',
   noindex TINYINT(1) NOT NULL DEFAULT 0,
   nofollow TINYINT(1) NOT NULL DEFAULT 0,
+  created_by INT UNSIGNED NULL,      -- user who wrote it (authors / contributors only see their own)
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  KEY status_date (status, published_at)
+  KEY status_date (status, published_at),
+  KEY created_by (created_by)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS projects (

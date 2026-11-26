@@ -160,17 +160,17 @@ function sc_map(array $o): string
 }
 
 /* ------------------------------------------------------------ about page */
-/** Signed-in admins viewing ?preview=1 also see draft team members and testimonials. */
-function show_drafts(): bool { return function_exists('can_preview') && can_preview(); }
+/** Signed-in users whose role manages that list, viewing ?preview=1, also see its drafts. */
+function show_drafts(string $type): bool { return function_exists('can_preview') && can_preview($type); }
 
 function team_list(): array
 {
-    try { return rows('SELECT * FROM team' . (show_drafts() ? '' : ' WHERE status = "published"') . ' ORDER BY sort_order, id'); }
+    try { return rows('SELECT * FROM team' . (show_drafts('team') ? '' : ' WHERE status = "published"') . ' ORDER BY sort_order, id'); }
     catch (Throwable $e) { return []; }
 }
 function testimonials_list(): array
 {
-    try { return rows('SELECT * FROM testimonials' . (show_drafts() ? '' : ' WHERE status = "published"') . ' ORDER BY sort_order, id'); }
+    try { return rows('SELECT * FROM testimonials' . (show_drafts('testimonials') ? '' : ' WHERE status = "published"') . ' ORDER BY sort_order, id'); }
     catch (Throwable $e) { return []; }
 }
 

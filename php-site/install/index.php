@@ -57,7 +57,7 @@ if ($step === 'form' && is_post()) {
                 count($seed['pages']), count($seed['posts']), count($seed['projects']), count($seed['cities']), count($seed['jobs']), count($seed['redirects']));
 
             // 3. admin
-            q('INSERT INTO users (name, email, pass_hash) VALUES (?, ?, ?)', [$name, strtolower($email), password_hash($pass, PASSWORD_DEFAULT)]);
+            q('INSERT INTO users (name, email, pass_hash, role) VALUES (?, ?, ?, "administrator")', [$name, strtolower($email), password_hash($pass, PASSWORD_DEFAULT)]);
             $done[] = 'Admin account created for ' . $email . '.';
             $step = 'done';
         } catch (Throwable $e) {

@@ -7,22 +7,7 @@ const APP_STATUS = ['new' => 'New', 'shortlisted' => 'Shortlisted', 'interview' 
 function admin_page(string $title, string $content, string $active): void
 {
     $me = admin_user();
-    $newEnq = (int)val('SELECT COUNT(*) FROM enquiries WHERE status = "new"');
-    $newApp = (int)val('SELECT COUNT(*) FROM applications WHERE status = "new"');
-    $nav = [
-        ['dashboard', '/admin/', 'Dashboard', 0],
-        ['enquiries', '/admin/?r=enquiries', 'Enquiries', $newEnq],
-        ['posts', '/admin/?r=list&t=posts', 'Articles', 0],
-        ['projects', '/admin/?r=list&t=projects', 'Projects', 0],
-        ['team', '/admin/?r=list&t=team', 'Team', 0],
-        ['testimonials', '/admin/?r=list&t=testimonials', 'Testimonials', 0],
-        ['cities', '/admin/?r=list&t=cities', 'Cities', 0],
-        ['pages', '/admin/?r=list&t=pages', 'Pages', 0],
-        ['jobs', '/admin/?r=list&t=jobs', 'Jobs', 0],
-        ['applications', '/admin/?r=applications', 'Applications', $newApp],
-        ['redirects', '/admin/?r=list&t=redirects', 'Redirects', 0],
-        ['settings', '/admin/?r=settings', 'Settings', 0],
-    ];
+    $nav = array_filter(admin_nav(), fn($n) => can_open($n[3]));
     $ver = @filemtime(ROOT . '/admin/admin.js') ?: 1;
     ?><!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
@@ -34,13 +19,14 @@ function admin_page(string $title, string $content, string $active): void
 <aside class="side">
   <a class="brand" href="/admin/"><img src="/images/morphora-spaces-logo-header.png" alt="Morphora Spaces"></a>
   <nav>
-<?php foreach ($nav as [$k, $u, $l, $n]): ?>
+<?php foreach ($nav as [$k, $u, $l, $cap]):
+    $n = $k === 'enquiries' ? (int)val('SELECT COUNT(*) FROM enquiries WHERE status = "new"') : ($k === 'applications' ? (int)val('SELECT COUNT(*) FROM applications WHERE status = "new"') : 0); ?>
     <a href="<?= e($u) ?>"<?= $active === $k ? ' class="on"' : '' ?>><?= e($l) ?><?= $n ? '<b>' . $n . '</b>' : '' ?></a>
 <?php endforeach ?>
   </nav>
   <div class="side-foot">
     <a href="/" target="_blank">View website ↗</a>
-    <a href="/admin/?r=account"<?= $active === 'account' ? ' class="on"' : '' ?>><?= e($me['name'] ?? 'Account') ?></a>
+    <a href="/admin/?r=account"<?= $active === 'account' ? ' class="on"' : '' ?>><?= e($me['name'] ?? 'Account') ?><small class="role-tag"><?= e(role_label($me['role'] ?? '')) ?></small></a>
     <form method="post" action="/admin/?r=logout"><?= csrf_field() ?><button type="submit" class="link">Sign out</button></form>
   </div>
 </aside>
@@ -55,6 +41,39 @@ function admin_page(string $title, string $content, string $active): void
 </body></html><?php
     exit;
 }
+
+/** Admin menu: [key, url, label, permission needed ('' = everyone signed in)]. */
+function admin_nav(): array
+{
+    return [
+        ['dashboard', '/admin/', 'Dashboard', ''],
+        ['enquiries', '/admin/?r=enquiries', 'Enquiries', 'enquiries'],
+        ['posts', '/admin/?r=list&t=posts', 'Articles', 'manage:posts'],
+        ['projects', '/admin/?r=list&t=projects', 'Projects', 'manage:projects'],
+        ['team', '/admin/?r=list&t=team', 'Team', 'manage:team'],
+        ['testimonials', '/admin/?r=list&t=testimonials', 'Testimonials', 'manage:testimonials'],
+        ['cities', '/admin/?r=list&t=cities', 'Cities', 'manage:cities'],
+        ['pages', '/admin/?r=list&t=pages', 'Pages', 'manage:pages'],
+        ['jobs', '/admin/?r=list&t=jobs', 'Jobs', 'manage:jobs'],
+        ['applications', '/admin/?r=applications', 'Applications', 'applications'],
+        ['redirects', '/admin/?r=list&t=redirects', 'Redirects', 'manage:redirects'],
+        ['settings', '/admin/?r=settings', 'Settings', 'settings'],
+        ['users', '/admin/?r=users', 'Users', 'users'],
+    ];
+}
+
+function can_open(string $cap): bool { return $cap === '' || can($cap); }
+
+/** Stop with a 403 "no access" page (or JSON for background requests). */
+function admin_forbidden(string $why = 'Your role does not have access to this page.'): void
+{
+    http_response_code(403);
+    if (($_GET['r'] ?? '') === 'upload') json_out(['ok' => false, 'error' => $why], 403);
+    $me = admin_user();
+    admin_page('No access', '<section class="card"><p class="msg err">' . e($why) . '</p><p>You are signed in as <b>' . e($me['email'] ?? '') . '</b> with the <b>' . e(role_label($me['role'] ?? '')) . '</b> role. Ask an administrator if you need access.</p><p><a class="btn ghost" href="/admin/">Back to dashboard</a></p></section>', '');
+}
+
+function require_cap(string $cap): void { if (!can($cap)) admin_forbidden(); }
 
 function status_pill(string $s, array $labels): string { return '<span class="pill ' . e($s) . '">' . e($labels[$s] ?? ucfirst($s)) . '</span>'; }
 

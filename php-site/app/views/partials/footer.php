@@ -9,7 +9,7 @@ $mail = setting('email', 'hello@morphoraspaces.com');
     <div class="cta-grid">
       <div class="cta-side">
       <div class="cta-intro">
-        <span class="mono"><?= e($label ?: '( Contact us )') ?></span>
+        <!-- <span class="mono"><?= e($label ?: '( Contact us )') ?></span> -->
         <h2 class="disp"><?= $title ?: 'Let’s plan <em>your office.</em>' ?></h2>
         <p class="cta-lead">Tell us a little about your space. Our team will call you back within one working day with next steps and a rough estimate.</p>
       </div>

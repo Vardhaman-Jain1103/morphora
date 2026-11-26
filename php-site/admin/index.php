@@ -1,7 +1,8 @@
 <?php
 /*
  * Morphora Spaces - admin panel (/admin/).
- * Routes (?r=): login, logout, dashboard, enquiries, applications, cv, list, edit, settings, account, upload
+ * Routes (?r=): login, logout, dashboard, enquiries, applications, cv, list, edit, settings, users, account, upload
+ * Access is role based: every route checks can() (permissions per role live in app/admin/auth.php).
  */
 require dirname(__DIR__) . '/app/bootstrap.php';
 require APP . '/admin/auth.php';
@@ -22,6 +23,10 @@ if ($r === 'logout') { if (is_post()) { csrf_check(); admin_logout(); } redirect
 $me = require_admin();
 if (is_post()) csrf_check();
 
+// Permission each route needs. list / edit check the content type inside res_or_404().
+$routeCap = ['enquiries' => 'enquiries', 'applications' => 'applications', 'cv' => 'applications', 'settings' => 'settings', 'users' => 'users', 'upload' => 'upload'];
+if (isset($routeCap[$r])) require_cap($routeCap[$r]);
+
 switch ($r) {
     case 'enquiries': admin_enquiries(); break;
     case 'applications': admin_applications(); break;
@@ -29,9 +34,10 @@ switch ($r) {
     case 'list': admin_list(); break;
     case 'edit': admin_edit(); break;
     case 'settings': admin_settings(); break;
+    case 'users': admin_users($me); break;
     case 'account': admin_account($me); break;
     case 'upload': admin_upload(); break;
-    default: admin_dashboard();
+    default: admin_dashboard($me);
 }
 
 /* ================================================================ login */
@@ -66,38 +72,64 @@ function admin_login_page(): void
 }
 
 /* ============================================================ dashboard */
-function admin_dashboard(): void
+function admin_dashboard(array $me): void
 {
-    $c = fn($sql) => (int)val($sql);
-    $stats = [
-        ['New enquiries', $c('SELECT COUNT(*) FROM enquiries WHERE status="new"'), '/admin/?r=enquiries&status=new', 'hot'],
-        ['Enquiries this month', $c('SELECT COUNT(*) FROM enquiries WHERE status<>"spam" AND created_at >= DATE_FORMAT(CURDATE(), "%Y-%m-01")'), '/admin/?r=enquiries', ''],
-        ['New applications', $c('SELECT COUNT(*) FROM applications WHERE status="new"'), '/admin/?r=applications', ''],
-        ['Published articles', $c('SELECT COUNT(*) FROM posts WHERE status="published"'), '/admin/?r=list&t=posts', ''],
-    ];
-    $recent = rows('SELECT * FROM enquiries WHERE status<>"spam" ORDER BY id DESC LIMIT 8');
-    $bySource = rows('SELECT source, COUNT(*) n FROM enquiries WHERE status<>"spam" AND created_at > NOW() - INTERVAL 30 DAY GROUP BY source');
-    // SEO checklist
-    $checks = [
-        [setting('gsc_verification') !== '', 'Google Search Console connected', 'Add the verification code in Settings, then submit ' . abs_url('/sitemap.xml') . ' in Search Console.', '/admin/?r=settings'],
-        [setting('ga4_id') !== '', 'Google Analytics (GA4) connected', 'Add your GA4 measurement ID (G-…) in Settings.', '/admin/?r=settings'],
-        [($n = $c('SELECT COUNT(*) FROM posts WHERE status="published" AND seo_desc="" AND (excerpt IS NULL OR excerpt="")')) === 0, 'Every article has a description', "{$n} published articles have no summary or SEO description.", '/admin/?r=list&t=posts'],
-        [($n = $c('SELECT COUNT(*) FROM cities WHERE status="published" AND top=1 AND (body IS NULL OR body="")')) === 0, 'Top cities have local content', "{$n} top cities only use the standard text. Unique local content helps them rank.", '/admin/?r=list&t=cities'],
-        [$c('SELECT COUNT(*) FROM team WHERE status="published"') > 0 && $c('SELECT COUNT(*) FROM testimonials WHERE status="published"') > 0, 'About page has team and testimonials', 'Add real team photos and client quotes, then publish them. The samples are hidden drafts.', '/admin/?r=list&t=team'],
-        [setting('social_links') !== '', 'Social profiles linked', 'Add your LinkedIn / Instagram links in Settings so Google can connect them to the business.', '/admin/?r=settings'],
-    ];
+    $c = fn($sql, $args = []) => (int)val($sql, $args);
+    $own = can('posts:others') ? '' : ' AND created_by = ' . (int)$me['id'];   // authors / contributors: own articles only
+    $stats = [];
+    if (can('enquiries')) {
+        $stats[] = ['New enquiries', $c('SELECT COUNT(*) FROM enquiries WHERE status="new"'), '/admin/?r=enquiries&status=new', 'hot'];
+        $stats[] = ['Enquiries this month', $c('SELECT COUNT(*) FROM enquiries WHERE status<>"spam" AND created_at >= DATE_FORMAT(CURDATE(), "%Y-%m-01")'), '/admin/?r=enquiries', ''];
+    }
+    if (can('applications')) $stats[] = ['New applications', $c('SELECT COUNT(*) FROM applications WHERE status="new"'), '/admin/?r=applications', 'hot'];
+    if (can('manage:jobs')) $stats[] = ['Open jobs', $c('SELECT COUNT(*) FROM jobs WHERE status="published"'), '/admin/?r=list&t=jobs', ''];
+    if (can('manage:posts')) {
+        $stats[] = [$own ? 'My published articles' : 'Published articles', $c('SELECT COUNT(*) FROM posts WHERE status="published"' . $own), '/admin/?r=list&t=posts', ''];
+        $stats[] = [$own ? 'My drafts' : 'Draft articles', $c('SELECT COUNT(*) FROM posts WHERE status="draft"' . $own), '/admin/?r=list&t=posts', ''];
+    }
+    if (can('manage:projects')) $stats[] = ['Projects', $c('SELECT COUNT(*) FROM projects WHERE status="published"'), '/admin/?r=list&t=projects', ''];
+
+    // SEO checklist: each item only for people who can fix it
+    $checks = [];
+    if (can('settings')) {
+        $checks[] = [setting('gsc_verification') !== '', 'Google Search Console connected', 'Add the verification code in Settings, then submit ' . abs_url('/sitemap.xml') . ' in Search Console.', '/admin/?r=settings'];
+        $checks[] = [setting('ga4_id') !== '', 'Google Analytics (GA4) connected', 'Add your GA4 measurement ID (G-…) in Settings.', '/admin/?r=settings'];
+    }
+    if (can('posts:others')) $checks[] = [($n = $c('SELECT COUNT(*) FROM posts WHERE status="published" AND seo_desc="" AND (excerpt IS NULL OR excerpt="")')) === 0, 'Every article has a description', "{$n} published articles have no summary or SEO description.", '/admin/?r=list&t=posts'];
+    if (can('manage:cities')) $checks[] = [($n = $c('SELECT COUNT(*) FROM cities WHERE status="published" AND top=1 AND (body IS NULL OR body="")')) === 0, 'Top cities have local content', "{$n} top cities only use the standard text. Unique local content helps them rank.", '/admin/?r=list&t=cities'];
+    if (can('manage:team')) $checks[] = [$c('SELECT COUNT(*) FROM team WHERE status="published"') > 0 && $c('SELECT COUNT(*) FROM testimonials WHERE status="published"') > 0, 'About page has team and testimonials', 'Add real team photos and client quotes, then publish them. The samples are hidden drafts.', '/admin/?r=list&t=team'];
+    if (can('settings')) $checks[] = [setting('social_links') !== '', 'Social profiles linked', 'Add your LinkedIn / Instagram links in Settings so Google can connect them to the business.', '/admin/?r=settings'];
+
+    $sections = array_values(array_filter(admin_nav(), fn($n) => $n[0] !== 'dashboard' && $n[3] !== '' && can($n[3])));
     ob_start(); ?>
+<section class="card welcome">
+  <h2>Welcome, <?= e($me['name']) ?></h2>
+  <p>You are signed in as <b><?= e($me['email']) ?></b> with the <span class="pill role"><?= e(role_label($me['role'])) ?></span> role. <?= e(ROLE_HELP[$me['role']] ?? '') ?></p>
+<?php if ($sections): ?>
+  <p class="small">You can open: <?= implode(' · ', array_map(fn($n) => '<a href="' . e($n[1]) . '">' . e($n[2]) . '</a>', $sections)) ?></p>
+<?php else: ?>
+  <p class="small muted">Your role does not include any admin sections. You can <a href="/admin/?r=account">change your password</a>.</p>
+<?php endif ?>
+</section>
+<?php if ($stats): ?>
 <div class="stats">
 <?php foreach ($stats as [$l, $n, $u, $cls]): ?>
   <a class="stat <?= $cls && $n ? $cls : '' ?>" href="<?= e($u) ?>"><b><?= $n ?></b><span><?= e($l) ?></span></a>
 <?php endforeach ?>
 </div>
+<?php endif ?>
+<?php if (can('enquiries') || $checks): ?>
 <div class="cols">
+<?php if (can('enquiries')):
+    $recent = rows('SELECT * FROM enquiries WHERE status<>"spam" ORDER BY id DESC LIMIT 8');
+    $bySource = rows('SELECT source, COUNT(*) n FROM enquiries WHERE status<>"spam" AND created_at > NOW() - INTERVAL 30 DAY GROUP BY source'); ?>
   <section class="card">
     <div class="card-h"><h2>Latest enquiries</h2><a href="/admin/?r=enquiries">All enquiries →</a></div>
     <?= enquiry_table($recent) ?>
     <?php if ($bySource): ?><p class="muted small">Last 30 days: <?= e(implode(' · ', array_map(fn($s) => ($s['source'] === 'chat' ? 'chat assistant' : 'contact form') . ' ' . $s['n'], $bySource))) ?></p><?php endif ?>
   </section>
+<?php endif ?>
+<?php if ($checks): ?>
   <section class="card">
     <div class="card-h"><h2>SEO checklist</h2></div>
     <ul class="checks">
@@ -107,7 +139,9 @@ function admin_dashboard(): void
     </ul>
     <p class="muted small">Sitemap: <a href="/sitemap.xml" target="_blank"><?= e(abs_url('/sitemap.xml')) ?></a> - updates itself whenever you publish.</p>
   </section>
+<?php endif ?>
 </div>
+<?php endif ?>
 <?php
     admin_page('Dashboard', ob_get_clean(), 'dashboard');
 }
@@ -127,7 +161,7 @@ function admin_enquiries(): void
 {
     $id = (int)($_GET['id'] ?? 0);
     if (is_post()) {
-        if (isset($_POST['delete'])) { q('DELETE FROM enquiries WHERE id = ?', [$id]); flash('Enquiry deleted.'); redirect('/admin/?r=enquiries'); }
+        if (isset($_POST['delete'])) { require_cap('enquiries:manage'); q('DELETE FROM enquiries WHERE id = ?', [$id]); flash('Enquiry deleted.'); redirect('/admin/?r=enquiries'); }
         $st = array_key_exists($_POST['status'] ?? '', ENQ_STATUS) ? $_POST['status'] : 'new';
         q('UPDATE enquiries SET status = ?, notes = ? WHERE id = ?', [$st, mb_substr((string)($_POST['notes'] ?? ''), 0, 5000), $id]);
         flash('Saved.'); redirect('/admin/?r=enquiries&id=' . $id);
@@ -155,7 +189,7 @@ function admin_enquiries(): void
       <?= csrf_field() ?>
       <label>Status<select name="status"><?php foreach (ENQ_STATUS as $k => $l): ?><option value="<?= $k ?>"<?= $q['status'] === $k ? ' selected' : '' ?>><?= $l ?></option><?php endforeach ?></select></label>
       <label>Notes<textarea name="notes" rows="8" placeholder="Call notes, follow-up date, quote sent…"><?= e($q['notes']) ?></textarea></label>
-      <div class="row-btns"><button class="btn" type="submit">Save</button><button class="btn danger" name="delete" value="1" type="submit" data-confirm="Delete this enquiry permanently?">Delete</button></div>
+      <div class="row-btns"><button class="btn" type="submit">Save</button><?php if (can('enquiries:manage')): ?><button class="btn danger" name="delete" value="1" type="submit" data-confirm="Delete this enquiry permanently?">Delete</button><?php endif ?></div>
     </form>
   </section>
 </div>
@@ -171,6 +205,7 @@ function admin_enquiries(): void
     if (($s = trim((string)($_GET['q'] ?? ''))) !== '') { $where[] = '(name LIKE ? OR phone LIKE ? OR email LIKE ? OR company LIKE ? OR city LIKE ?)'; array_push($args, ...array_fill(0, 5, '%' . $s . '%')); }
     $w = ' WHERE ' . implode(' AND ', $where);
     if (!empty($_GET['export'])) {
+        require_cap('enquiries:manage');
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="enquiries-' . date('Y-m-d') . '.csv"');
         $out = fopen('php://output', 'w'); fwrite($out, "\xEF\xBB\xBF");
@@ -187,7 +222,7 @@ function admin_enquiries(): void
   <select name="status"><option value="">All (except spam)</option><?php foreach (ENQ_STATUS as $k => $l): ?><option value="<?= $k ?>"<?= $status === $k ? ' selected' : '' ?>><?= $l ?></option><?php endforeach ?></select>
   <select name="source"><option value="">Form + chat</option><option value="form"<?= ($_GET['source'] ?? '') === 'form' ? ' selected' : '' ?>>Contact form</option><option value="chat"<?= ($_GET['source'] ?? '') === 'chat' ? ' selected' : '' ?>>Chat assistant</option></select>
   <button class="btn ghost" type="submit">Filter</button>
-  <a class="btn ghost" href="/admin/?<?= e($qs) ?>&amp;export=1">Export CSV</a>
+  <?php if (can('enquiries:manage')): ?><a class="btn ghost" href="/admin/?<?= e($qs) ?>&amp;export=1">Export CSV</a><?php endif ?>
 </form>
 <section class="card"><?= enquiry_table($list) ?><?= $pager ?></section>
 <?php
@@ -273,7 +308,14 @@ function res_or_404(): array
     $t = (string)($_GET['t'] ?? '');
     $all = resources();
     if (!isset($all[$t])) { http_response_code(404); exit('Unknown section.'); }
-    return [$t, $all[$t]];
+    require_cap('manage:' . $t);
+    $R = $all[$t];
+    if ($t === 'posts' && !can('posts:publish')) {
+        // contributors: drafts only
+        $R['fields']['status']['options'] = ['draft' => 'Draft (an editor publishes it)'];
+        $R['fields']['status']['help'] = 'Your role can save drafts. An editor or administrator reviews and publishes them.';
+    }
+    return [$t, $R];
 }
 
 function seo_report(array $record, string $type): array
@@ -333,13 +375,19 @@ function admin_list(): void
 {
     [$t, $R] = res_or_404();
     if (is_post() && isset($_POST['delete']) && empty($R['nodelete'])) {
-        q("DELETE FROM {$R['table']} WHERE id = ?", [(int)$_POST['delete']]);
+        $del = row("SELECT * FROM {$R['table']} WHERE id = ?", [(int)$_POST['delete']]);
+        if ($del && $t === 'posts' && !can_edit_post($del)) admin_forbidden('You can only delete your own articles' . (can('posts:publish') ? '.' : ' while they are drafts.'));
+        if ($del) q("DELETE FROM {$R['table']} WHERE id = ?", [(int)$del['id']]);
         cache_purge_all(); flash(ucfirst($R['one']) . ' deleted.'); redirect('/admin/?r=list&t=' . $t);
     }
     $where = ''; $args = [];
     if (($s = trim((string)($_GET['q'] ?? ''))) !== '') {
         $where = ' WHERE (' . implode(' OR ', array_map(fn($c) => "$c LIKE ?", $R['search'])) . ')';
         $args = array_fill(0, count($R['search']), '%' . $s . '%');
+    }
+    if ($t === 'posts' && !can('posts:others')) {   // authors / contributors: own articles only
+        $where .= ($where === '' ? ' WHERE ' : ' AND ') . 'created_by = ?';
+        $args[] = (int)admin_user()['id'];
     }
     $seoFilter = (string)($_GET['seo_filter'] ?? '');
     if (!empty($R['seo_details'])) {
@@ -397,6 +445,11 @@ function admin_edit(): void
     $rec = $id ? row("SELECT * FROM {$R['table']} WHERE id = ?", [$id]) : null;
     if ($id && !$rec) redirect('/admin/?r=list&t=' . $t);
     if (!$id && !empty($R['nocreate'])) redirect('/admin/?r=list&t=' . $t);
+    if ($rec && $t === 'posts' && !can_edit_post($rec)) {
+        admin_forbidden((int)($rec['created_by'] ?? 0) === (int)admin_user()['id']
+            ? 'This article is published. Your role cannot change published articles - ask an editor.'
+            : 'You can only open articles you wrote.');
+    }
     $errors = [];
 
     if (is_post()) {
@@ -453,6 +506,7 @@ function admin_edit(): void
                     flash('The URL changed, so a redirect from the old address was added automatically.', 'info');
                 }
             } else {
+                if ($t === 'posts') $data['created_by'] = (int)admin_user()['id'];
                 q("INSERT INTO {$R['table']} (" . implode(',', array_keys($data)) . ') VALUES (' . implode(',', array_fill(0, count($data), '?')) . ')', array_values($data));
                 $id = (int)db()->lastInsertId();
             }
@@ -594,57 +648,132 @@ endforeach; ?>
 }
 
 /* =============================================================== account */
+/** Every signed-in user: see their role, change their own password. */
 function admin_account(array $me): void
 {
     if (is_post()) {
-        $act = $_POST['act'] ?? '';
-        if ($act === 'password') {
-            $u = row('SELECT pass_hash FROM users WHERE id = ?', [$me['id']]);
-            if (!password_verify((string)($_POST['current'] ?? ''), $u['pass_hash'])) flash('Your current password is not correct.', 'err');
-            elseif (strlen((string)($_POST['new'] ?? '')) < 10) flash('Use a new password of at least 10 characters.', 'err');
-            else { q('UPDATE users SET pass_hash = ? WHERE id = ?', [password_hash((string)$_POST['new'], PASSWORD_DEFAULT), $me['id']]); session_regenerate_id(true); flash('Password changed.'); }
-        } elseif ($act === 'add') {
-            $email = strtolower(trim((string)($_POST['email'] ?? '')));
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL) || trim((string)($_POST['name'] ?? '')) === '' || strlen((string)($_POST['password'] ?? '')) < 10) flash('Enter a name, a valid email and a password of 10+ characters.', 'err');
-            elseif (val('SELECT COUNT(*) FROM users WHERE email = ?', [$email])) flash('That email already has an account.', 'err');
-            else { q('INSERT INTO users (name, email, pass_hash) VALUES (?, ?, ?)', [trim($_POST['name']), $email, password_hash((string)$_POST['password'], PASSWORD_DEFAULT)]); flash('Admin added. Share the password with them securely.'); }
-        } elseif ($act === 'remove') {
-            $uid = (int)($_POST['uid'] ?? 0);
-            if ($uid === (int)$me['id']) flash('You cannot remove your own account.', 'err');
-            else { q('DELETE FROM users WHERE id = ?', [$uid]); flash('Admin removed.'); }
-        }
+        $u = row('SELECT pass_hash FROM users WHERE id = ?', [$me['id']]);
+        if (!password_verify((string)($_POST['current'] ?? ''), $u['pass_hash'])) flash('Your current password is not correct.', 'err');
+        elseif (strlen((string)($_POST['new'] ?? '')) < 10) flash('Use a new password of at least 10 characters.', 'err');
+        else { q('UPDATE users SET pass_hash = ? WHERE id = ?', [password_hash((string)$_POST['new'], PASSWORD_DEFAULT), $me['id']]); session_regenerate_id(true); flash('Password changed.'); }
         redirect('/admin/?r=account');
     }
-    $users = rows('SELECT id, name, email, last_login FROM users ORDER BY id');
     ob_start(); ?>
 <div class="cols">
   <section class="card">
+    <h2>Your account</h2>
+    <dl class="kv">
+      <dt>Name</dt><dd><?= e($me['name']) ?></dd>
+      <dt>Email</dt><dd><?= e($me['email']) ?></dd>
+      <dt>Role</dt><dd><span class="pill role"><?= e(role_label($me['role'])) ?></span><small class="help"><?= e(ROLE_HELP[$me['role']] ?? '') ?></small></dd>
+    </dl>
+    <?php if (can('users')): ?><p><a href="/admin/?r=users">Manage users and roles →</a></p><?php endif ?>
+  </section>
+  <section class="card">
     <h2>Change your password</h2>
-    <form method="post"><?= csrf_field() ?><input type="hidden" name="act" value="password">
+    <form method="post"><?= csrf_field() ?>
       <label>Current password<input type="password" name="current" required autocomplete="current-password"></label>
       <label>New password (10+ characters)<input type="password" name="new" minlength="10" required autocomplete="new-password"></label>
       <button class="btn" type="submit">Change password</button>
     </form>
   </section>
-  <section class="card">
-    <h2>Admins</h2>
-    <table class="tbl"><tbody>
-<?php foreach ($users as $u): ?>
-      <tr><td><?= e($u['name']) ?><small><?= e($u['email']) ?></small></td><td class="muted small"><?= $u['last_login'] ? 'Last sign-in ' . e(ago($u['last_login'])) : 'Never signed in' ?></td>
-      <td class="acts"><?php if ((int)$u['id'] !== (int)$me['id']): ?><form method="post"><?= csrf_field() ?><input type="hidden" name="act" value="remove"><input type="hidden" name="uid" value="<?= $u['id'] ?>"><button class="link danger" type="submit" data-confirm="Remove this admin?">Remove</button></form><?php endif ?></td></tr>
+</div>
+<?php
+    admin_page('Account', ob_get_clean(), 'account');
+}
+
+/* ================================================================= users */
+/** Administrators only (checked by the router): add / remove users, change roles, test accounts. */
+function admin_users(array $me): void
+{
+    if (is_post()) {
+        $act = $_POST['act'] ?? '';
+        $role = (string)($_POST['role'] ?? '');
+        if ($act === 'add') {
+            $email = strtolower(trim((string)($_POST['email'] ?? '')));
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL) || trim((string)($_POST['name'] ?? '')) === '' || strlen((string)($_POST['password'] ?? '')) < 10) flash('Enter a name, a valid email and a password of 10+ characters.', 'err');
+            elseif (!isset(ROLES[$role])) flash('Choose a role.', 'err');
+            elseif (val('SELECT COUNT(*) FROM users WHERE email = ?', [$email])) flash('That email already has an account.', 'err');
+            else { q('INSERT INTO users (name, email, pass_hash, role) VALUES (?, ?, ?, ?)', [trim($_POST['name']), $email, password_hash((string)$_POST['password'], PASSWORD_DEFAULT), $role]); flash('User added as ' . role_label($role) . '. Share the password with them securely.'); }
+        } elseif ($act === 'role') {
+            $uid = (int)($_POST['uid'] ?? 0);
+            if ($uid === (int)$me['id']) flash('You cannot change your own role. Ask another administrator.', 'err');
+            elseif (!isset(ROLES[$role])) flash('Choose a role.', 'err');
+            else { q('UPDATE users SET role = ? WHERE id = ?', [$role, $uid]); flash('Role changed to ' . role_label($role) . '. It applies on their next page load.'); }
+        } elseif ($act === 'remove') {
+            $uid = (int)($_POST['uid'] ?? 0);
+            if ($uid === (int)$me['id']) flash('You cannot remove your own account.', 'err');
+            else { q('DELETE FROM users WHERE id = ?', [$uid]); flash('User removed.'); }
+        } elseif ($act === 'test_create') {
+            $pass = 'Test-' . bin2hex(random_bytes(5));
+            $_SESSION['test_accounts'] = test_accounts_create($pass);
+            flash('Test accounts are ready - one per role. Password for all of them: ' . $pass . ' (shown only now; press the button again for a new one).', 'info');
+        } elseif ($act === 'test_remove') {
+            flash(test_accounts_remove() . ' test accounts removed.');
+        }
+        redirect('/admin/?r=users');
+    }
+    $users = rows('SELECT id, name, email, role, last_login FROM users ORDER BY FIELD(role, "administrator", "editor", "author", "contributor", "hr", "latepoint_agent", "subscriber"), id');
+    $testCount = (int)val('SELECT COUNT(*) FROM users WHERE email LIKE ?', ['%@' . TEST_DOMAIN]);
+    $roleSelect = function (string $current, string $attrs = ''): string {
+        $h = '<select name="role"' . $attrs . '>';
+        foreach (ROLES as $k => $l) $h .= '<option value="' . e($k) . '"' . ($k === $current ? ' selected' : '') . '>' . e($l) . '</option>';
+        return $h . '</select>';
+    };
+    $made = $_SESSION['test_accounts'] ?? null; unset($_SESSION['test_accounts']);
+    ob_start(); ?>
+<section class="card">
+  <div class="card-h"><h2>Users</h2><span class="muted small"><?= count($users) ?> accounts</span></div>
+  <table class="tbl users"><thead><tr><th>User</th><th>Role</th><th>Last sign-in</th><th></th></tr></thead><tbody>
+<?php foreach ($users as $u): $self = (int)$u['id'] === (int)$me['id']; ?>
+    <tr>
+      <td><?= e($u['name']) ?><?= str_ends_with($u['email'], '@' . TEST_DOMAIN) ? ' <span class="pill draft">Test</span>' : '' ?><small><?= e($u['email']) ?></small></td>
+      <td><?php if ($self): ?><span class="pill role"><?= e(role_label($u['role'])) ?></span> <small>(you)</small><?php else: ?>
+        <form method="post" class="inline-role"><?= csrf_field() ?><input type="hidden" name="act" value="role"><input type="hidden" name="uid" value="<?= $u['id'] ?>"><?= $roleSelect((string)$u['role'], ' onchange="this.form.submit()" aria-label="Role for ' . e($u['email']) . '"') ?><noscript><button class="btn ghost small" type="submit">Save</button></noscript></form>
+      <?php endif ?></td>
+      <td class="muted small"><?= $u['last_login'] ? e(ago($u['last_login'])) : 'Never' ?></td>
+      <td class="acts"><?php if (!$self): ?><form method="post"><?= csrf_field() ?><input type="hidden" name="act" value="remove"><input type="hidden" name="uid" value="<?= $u['id'] ?>"><button class="link danger" type="submit" data-confirm="Remove <?= e($u['email']) ?>?">Remove</button></form><?php endif ?></td>
+    </tr>
 <?php endforeach ?>
-    </tbody></table>
-    <h3 style="margin-top:24px">Add an admin</h3>
+  </tbody></table>
+</section>
+<div class="cols">
+  <section class="card">
+    <h2>Add a user</h2>
     <form method="post"><?= csrf_field() ?><input type="hidden" name="act" value="add">
       <label>Name<input name="name" required></label>
       <label>Email<input type="email" name="email" required></label>
       <label>Password (10+ characters)<input type="password" name="password" minlength="10" required autocomplete="new-password"></label>
-      <button class="btn ghost" type="submit">Add admin</button>
+      <label>Role<?= $roleSelect(DEFAULT_ROLE) ?></label>
+      <button class="btn" type="submit">Add user</button>
     </form>
   </section>
+  <section class="card">
+    <h2>What each role can do</h2>
+    <dl class="kv roles">
+<?php foreach (array_reverse(ROLES, true) as $k => $l): ?>
+      <dt><?= e($l) ?></dt><dd><?= e(ROLE_HELP[$k]) ?></dd>
+<?php endforeach ?>
+    </dl>
+  </section>
 </div>
+<section class="card">
+  <h2>Test accounts</h2>
+  <p class="muted">One sign-in per role (<code>test.&lt;role&gt;@<?= e(TEST_DOMAIN) ?></code>) so you can sign in as each role and check what it can see. They share one password, generated each time you press the button. Remove them before going live.</p>
+<?php if ($made): ?>
+  <table class="tbl"><thead><tr><th>Role</th><th>Email</th></tr></thead><tbody>
+<?php foreach ($made as $role => $email): ?>
+    <tr><td><?= e(role_label($role)) ?></td><td><code><?= e($email) ?></code></td></tr>
+<?php endforeach ?>
+  </tbody></table>
+<?php endif ?>
+  <div class="row-btns">
+    <form method="post"><?= csrf_field() ?><input type="hidden" name="act" value="test_create"><button class="btn ghost" type="submit"><?= $testCount ? 'Reset test accounts (new password)' : 'Create test accounts' ?></button></form>
+    <?php if ($testCount): ?><form method="post"><?= csrf_field() ?><input type="hidden" name="act" value="test_remove"><button class="btn danger" type="submit" data-confirm="Remove all <?= $testCount ?> test accounts?">Remove test accounts</button></form><?php endif ?>
+  </div>
+</section>
 <?php
-    admin_page('Account', ob_get_clean(), 'account');
+    admin_page('Users', ob_get_clean(), 'users');
 }
 
 /* ================================================================ upload */

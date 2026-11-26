@@ -6,8 +6,9 @@
  *   2 - About page: team and testimonials tables, vision & mission settings, new About page sections.
  *   3 - Move client testimonials from About to the homepage.
  *   4 - Add editable SEO metadata to public content.
+ *   5 - User roles (users.role) and article ownership (posts.created_by). Existing users become administrators.
  */
-const DB_VERSION = 4;
+const DB_VERSION = 5;
 
 function migrate(): void
 {
@@ -16,6 +17,7 @@ function migrate(): void
         if (!val("SHOW TABLES LIKE 'settings'")) return;           // not installed yet: /install/ does everything
         schema_apply();
         seo_columns();
+        role_columns();
         $seed = seed_data();
         about_seed($seed);
         $about = row('SELECT id, body FROM pages WHERE slug = "about"');
@@ -58,6 +60,22 @@ function seo_columns(): void
             );
             if (!$exists) db()->exec("ALTER TABLE `{$table}` ADD COLUMN `{$column}` {$definition}");
         }
+    }
+}
+
+/** Roles: everyone who could sign in before roles existed had full access, so they become administrators. */
+function role_columns(): void
+{
+    $has = fn(string $table, string $column) => (int)val(
+        'SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?',
+        [$table, $column]
+    );
+    if (!$has('users', 'role')) {
+        db()->exec("ALTER TABLE users ADD COLUMN role VARCHAR(32) NOT NULL DEFAULT 'subscriber' AFTER pass_hash");
+        db()->exec("UPDATE users SET role = 'administrator'");
+    }
+    if (!$has('posts', 'created_by')) {
+        db()->exec('ALTER TABLE posts ADD COLUMN created_by INT UNSIGNED NULL AFTER nofollow, ADD KEY created_by (created_by)');
     }
 }
 
