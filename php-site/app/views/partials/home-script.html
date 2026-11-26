@@ -7,30 +7,53 @@ const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
 // manifesto words
 const mf=$('#mf');mf.innerHTML=mf.innerHTML.replace(/(<em>.*?<\/em>)|([^\s<]+)/g,(m)=>`<span>${m}</span>`);const words=$$('#mf>span');
 
-// floor plan zones
+// floor plan zones: [name, share of floor space, description, what we plan, card photo]; order matches the SVG data-z
 const Z=[
- ['Reception','~8%','The first thing visitors see. We design a welcome area that shows who you are within seconds.',['Brand wall','Waiting lounge','Access control'],'IMG_20200919_174146-scaled.jpg'],
- ['Open workstations','~38%','Comfortable desk areas with good sound control, plenty of natural light and neatly hidden cables.',['Desks','Storage','Desk lighting','Sound control'],'IMG_20200919_173813-scaled.jpg'],
- ['Cabins','~10%','Private offices with glass walls, so managers stay connected to the rest of the team.',['Glass partitions','Custom furniture','Privacy film'],'ADI8340-scaled.jpg'],
- ['Boardroom & meeting','~14%','Meeting rooms of the right size, ready for video calls and comfortable for long meetings.',['Screens & video calls','Sound panels','Room booking'],'room-used-official-event-1-scaled.jpg'],
- ['Breakout','~12%','A relaxed space for informal chats and team time — a good reason for people to come to the office.',['Lounge seating','Games area','Indoor plants'],'IMG_1650-scaled.jpg'],
- ['Café','~8%','A pantry turned into a friendly space where the team eats, talks and connects.',['Pantry','Counter seating','Plumbing & electrical'],'IMG_1645-scaled.jpg'],
- ['Focus & pods','~10%','Quiet rooms, phone booths and pods for focused work and private calls.',['Phone booths','Quiet rooms','Soundproofing'],'IMG_1675-scaled.jpg']];
-// photos per zone (opened in the gallery on click)
-const ZG=[["01-ENTRANCE-FOYER.jpg","03-ENTRANCE-02.jpg","04-RECEPTION-WAITING-01.jpg","MicrosoftTeams-image-48-1024x731.jpg","office-interior-design-santacruz-mumbai-grovalue03-1.jpg","ADI8276-scaled.jpg"],["ADI8397-scaled.jpg","ADI8415-scaled.jpg","ADI8427-scaled.jpg","IMG_20200919_173257-scaled.jpg","IMG_20200919_173919-scaled.jpg","17-I-I-STAFF.jpg"],["11-MD-CABIN-FIDELIS.jpg","17-CABIN-I-I.jpg","ADI8340-scaled.jpg","ADI8325-scaled.jpg","09-FIDELIS-CABINS.jpg","office-interior-design-santacruz-mumbai-grovalue05-1.jpg"],["07-CONFERANCE.jpg","Conference_01.jpg","IMG_20200919_173345-scaled.jpg","ADI8358-scaled.jpg","PAB_1864-scaled.jpg","8-Pax-Meeting-Room_02.jpg"],["14-LOUNGE-2.jpg","Flexi-Area_01.jpg","IMG_1676-scaled.jpg","IMG_20200919_173443-scaled.jpg","IMG_20200919_174008-scaled.jpg","MicrosoftTeams-image-56.jpg"],["IMG_1645-scaled.jpg","IMG_20200919_173755-scaled.jpg","IMG_20200919_173813-scaled.jpg","IMG_1650-scaled.jpg","MicrosoftTeams-image-52.jpg","MicrosoftTeams-image-53.jpg"],["IMG_1675-scaled.jpg","2-Pax-Meeting-Room.jpg","MicrosoftTeams-image-57.jpg","office-interior-design-santacruz-mumbai-grovalue02-1.jpg","MicrosoftTeams-image-54.jpg","IMG_20200919_174259-scaled.jpg"]].map(a=>a.map(x=>'/media/2025/10/'+x));
-$('#zPh').innerHTML=Z.map(z=>`<img src="${U+z[4]}" alt="${z[0]}" loading="lazy">`).join('');
-const zImgs=$$('#zPh img'),zones=$$('.zone');
-function zone(i){zones.forEach(g=>g.classList.toggle('on',+g.dataset.z===i));zImgs.forEach((im,k)=>im.classList.toggle('on',k===i));const z=Z[i];
-  $('#zK').textContent=`Area ${String(i+1).padStart(2,'0')} · ${z[1]} of floor space`;$('#zT').textContent=z[0];$('#zD').textContent=z[2];$('#zL').innerHTML=z[3].map(x=>`<li>${x}</li>`).join('');$('#zBtn').firstChild.textContent=`View ${z[0].toLowerCase()} photos (${ZG[i].length}) `}
+ ['Reception','~6%','The first thing visitors see. We design a welcome area that shows who you are within seconds.',['Reception desk','Brand wall','Access control'],'/images/IMG_20200919_174146-scaled.jpg'],
+ ['Waiting area / lounge','~5%','Comfortable seating where guests and candidates wait, with good light and a calm, on-brand feel.',['Sofas & armchairs','Side tables','Soft lighting'],'/media/2025/10/14-LOUNGE-2.jpg'],
+ ['Workstations','~28%','Comfortable desk areas with good sound control, plenty of natural light and neatly hidden cables.',['Desks','Ergonomic chairs','Storage','Cable management'],'/images/IMG_20200919_173813-scaled.jpg'],
+ ['Manager cabins','~8%','Private cabins with glass walls, so managers get privacy and stay connected to their team.',['Glass partitions','Custom furniture','Privacy film'],'/images/ADI8340-scaled.jpg'],
+ ['Meeting rooms','~8%','Rooms for 2 to 8 people, ready for quick discussions, client calls and video meetings.',['Video calls','Whiteboards','Sound panels'],'/media/2025/10/8-Pax-Meeting-Room_02.jpg'],
+ ['Conference / boardroom','~10%','A large room for leadership meetings and client presentations, comfortable for long sessions.',['Large table','Screens & AV','Acoustic treatment'],'/images/room-used-official-event-1-scaled.jpg'],
+ ['Cafeteria / pantry','~9%','A pantry turned into a friendly space where the team eats, talks and connects.',['Pantry counter','Dining seating','Plumbing & electrical'],'/images/IMG_1645-scaled.jpg'],
+ ['Breakout areas','~5%','A relaxed space for informal chats and quick catch-ups away from the desk.',['Lounge seating','Writable walls','Indoor plants'],'/media/2025/10/IMG_1676-scaled.jpg'],
+ ['Recreation / game area','~4%','A place to unwind with table tennis and games, and one more reason to enjoy coming to the office.',['Table tennis','Bean bags','Durable flooring'],'/media/2025/10/IMG_1663-scaled.jpg'],
+ ['Training / multipurpose','~7%','A flexible room for training, town halls and workshops, with furniture that rearranges in minutes.',['Movable furniture','Projector & screen','Acoustics'],'/media/2025/10/ADI8420-scaled.jpg'],
+ ['Display / experience area','~5%','Where your brand story, products and achievements are shown to every visitor.',['Brand story wall','Product display','Feature lighting'],'/media/2025/10/01-ENTRANCE-FOYER.jpg'],
+ ['Washrooms','~5%','Clean, well-ventilated washrooms with durable finishes that are easy to maintain.',['Sanitaryware','Ventilation','Easy-clean finishes'],'']];
+// our project photos per zone (shown first in the gallery)
+const ZG=[
+ ['04-RECEPTION-WAITING-01.jpg','office-interior-design-santacruz-mumbai-grovalue03-1.jpg','ADI8276-scaled.jpg','ADI8283-scaled.jpg','03-ENTRANCE-02.jpg','MicrosoftTeams-image-48-1024x731.jpg'],
+ ['14-LOUNGE-2.jpg','office-interior-design-santacruz-mumbai-grovalue01-1.jpg','office-interior-design-santacruz-mumbai-grovalue02-1.jpg','MicrosoftTeams-image-56.jpg','/images/Lounge-Area-1024x731.jpg'],
+ ['ADI8397-scaled.jpg','ADI8415-scaled.jpg','ADI8427-scaled.jpg','IMG_20200919_173257-scaled.jpg','IMG_20200919_173919-scaled.jpg','IMG_20200919_174222-scaled.jpg','17-I-I-STAFF.jpg','office-interior-design-santacruz-mumbai-grovalue08-1.jpg'],
+ ['11-MD-CABIN-FIDELIS.jpg','17-CABIN-I-I.jpg','ADI8340-scaled.jpg','ADI8325-scaled.jpg','09-FIDELIS-CABINS.jpg','office-interior-design-santacruz-mumbai-grovalue05-1.jpg','office-interior-design-santacruz-mumbai-grovalue06-2.jpg'],
+ ['8-Pax-Meeting-Room_02.jpg','6-Pax-02-Meeting-Room_01.jpg','2-Pax-Meeting-Room.jpg','IMG_1667-scaled.jpg','MicrosoftTeams-image-50.jpg','ADI8376-scaled.jpg','MicrosoftTeams-image-55.jpg'],
+ ['07-CONFERANCE.jpg','Conference_01.jpg','IMG_20200919_173345-scaled.jpg','ADI8358-scaled.jpg','ADI8363-scaled.jpg','PAB_1864-scaled.jpg','MicrosoftTeams-image-58.jpg'],
+ ['IMG_1645-scaled.jpg','IMG_20200919_173755-scaled.jpg','IMG_20200919_173813-scaled.jpg','IMG_1650-scaled.jpg','Flexi-Area_01.jpg','MicrosoftTeams-image-52.jpg','MicrosoftTeams-image-53.jpg'],
+ ['IMG_1676-scaled.jpg','Flexi-Area_02.jpg','IMG_20200919_173443-scaled.jpg','IMG_20200919_174008-scaled.jpg','MicrosoftTeams-image-57.jpg','IMG_1675-scaled.jpg'],
+ ['IMG_1663-scaled.jpg','MicrosoftTeams-image-54.jpg','slidebean-14s9hyeWOjM-unsplash-scaled.jpg','slidebean-TpGIpUF67po-unsplash-scaled.jpg'],
+ ['ADI8420-scaled.jpg','IMG_20200919_174259-scaled.jpg'],
+ ['01-ENTRANCE-FOYER.jpg','ADI8321-scaled.jpg'],
+ []].map(a=>a.map(x=>x[0]==='/'?x:'/media/2025/10/'+x));
+// design ideas per zone: /media/zones/<slug>-NN.webp, shown after the project photos and labelled "Design idea"
+const ZI=[['reception',7],['waiting-lounge',10],['workstations',12],['manager-cabins',9],['meeting-rooms',10],['conference-boardroom',10],['cafeteria-pantry',9],null,['recreation',5],['training-multipurpose',9],['display-experience',5],['washrooms',10]]
+ .map(d=>d?Array.from({length:d[1]},(_,k)=>`/media/zones/${d[0]}-${String(k+1).padStart(2,'0')}.webp`):[]);
+const G=ZG.map((a,i)=>a.map(src=>({src,idea:0})).concat(ZI[i].map(src=>({src,idea:1}))));
+// card photo: our project photo, or the first design idea when we have none yet
+$('#zPh').innerHTML=Z.map((z,i)=>z[4]?`<img src="${z[4]}" alt="${z[0]}" loading="lazy">`:`<figure><img src="${ZI[i][0]}" alt="${z[0]} design idea" loading="lazy"><figcaption class="mono">Design idea</figcaption></figure>`).join('');
+const zImgs=[...$('#zPh').children],zones=$$('.zone'),zNum=i=>String(i+1).padStart(2,'0');
+function zone(i){zones.forEach(g=>g.classList.toggle('on',+g.dataset.z===i));zImgs.forEach((im,k)=>im.classList.toggle('on',k===i));const z=Z[i],n=G[i].length,own=ZG[i].length;
+  $('#zK').textContent=`Area ${zNum(i)} · ${z[1]} of floor space`;$('#zT').textContent=z[0];$('#zD').textContent=z[2];$('#zL').innerHTML=z[3].map(x=>`<li>${x}</li>`).join('');
+  $('#zBtn').hidden=!n;$('#zBtn').firstChild.textContent=own&&ZI[i].length?`View photos & design ideas (${n}) `:own?`View ${z[0].toLowerCase()} photos (${n}) `:`View design ideas (${n}) `;$('#zPh').style.cursor=n?'':'default'}
 let zCur=0;
-zones.forEach(g=>{g.onmouseenter=()=>{zCur=+g.dataset.z;zone(zCur)};g.onclick=()=>{zCur=+g.dataset.z;zone(zCur);zgOpen(zCur)}});zone(0);
+zones.forEach(g=>{const pick=()=>{zCur=+g.dataset.z;zone(zCur)};g.onmouseenter=pick;g.onfocus=pick;g.onclick=()=>{pick();zgOpen(zCur)};g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick();zgOpen(zCur)}}});zone(0);
 $('#zBtn').onclick=()=>zgOpen(zCur);$('#zPh').onclick=()=>zgOpen(zCur);
 // zone gallery
 const zg=$('#zg'),zgImg=$('#zgImg'),zgTh=$('#zgThumbs');let zgZ=0,zgI=0,zgLast=null;
-function zgShow(k){const a=ZG[zgZ];zgI=(k+a.length)%a.length;zgImg.classList.remove('on');const src=a[zgI];const im=new Image();im.onload=()=>{zgImg.src=src;zgImg.alt=Z[zgZ][0]+' — photo '+(zgI+1);zgImg.classList.add('on')};im.src=src;
+function zgShow(k){const a=G[zgZ];zgI=(k+a.length)%a.length;zgImg.classList.remove('on');const it=a[zgI],src=it.src;const im=new Image();im.onload=()=>{zgImg.src=src;zgImg.alt=Z[zgZ][0]+(it.idea?' — design idea ':' — photo ')+(zgI+1);zgImg.classList.add('on')};im.src=src;$('#zgTag').hidden=!it.idea;
   $('#zgCount').textContent=String(zgI+1).padStart(2,'0')+' / '+String(a.length).padStart(2,'0');zgTh.querySelectorAll('button').forEach((b,j)=>b.classList.toggle('on',j===zgI))}
-function zgOpen(z){zgZ=z;zgLast=document.activeElement;$('#zgK').textContent='Area '+String(z+1).padStart(2,'0');$('#zgT').textContent=Z[z][0];
-  zgTh.innerHTML=ZG[z].map((src,j)=>`<button type="button" aria-label="Photo ${j+1}"><img src="${src}" alt="" loading="lazy"></button>`).join('');
+function zgOpen(z){if(!G[z].length)return;zgZ=z;zgLast=document.activeElement;$('#zgK').textContent='Area '+zNum(z);$('#zgT').textContent=Z[z][0];
+  zgTh.innerHTML=G[z].map((it,j)=>`<button type="button"${it.idea?' class="idea"':''} aria-label="${it.idea?'Design idea':'Photo'} ${j+1}"><img src="${it.src}" alt="" loading="lazy"></button>`).join('');
   zgTh.querySelectorAll('button').forEach((b,j)=>b.onclick=()=>zgShow(j));zgShow(0);zg.hidden=false;requestAnimationFrame(()=>zg.classList.add('open'));document.documentElement.style.overflow='hidden';$('#zgClose').focus()}
 function zgClose(){zg.classList.remove('open');document.documentElement.style.overflow='';setTimeout(()=>{zg.hidden=true},350);if(zgLast)zgLast.focus()}
 $('#zgClose').onclick=zgClose;$('#zgPrev').onclick=()=>zgShow(zgI-1);$('#zgNext').onclick=()=>zgShow(zgI+1);

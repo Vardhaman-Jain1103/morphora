@@ -56,29 +56,37 @@
   <div class="wrap">
     <div class="plan-head">
       <div><span class="mono" style="color:var(--brass)">( Office zones )</span><h2 class="disp" style="margin-top:20px">Every area, <em>well planned.</em></h2></div>
-      <p>See how we plan a typical office. Select an area to learn more.</p>
+      <p>The twelve areas we plan in every office. Select one to learn more.</p>
     </div>
     <div class="plan-body">
       <div>
         <svg viewBox="-96 0 1096 620" id="planSvg" role="img" aria-label="Interactive office floor plan">
           <g class="dims"><text x="0" y="14">A — 100'</text><text x="940" y="14">N ↑</text></g>
-          <!-- zones -->
-          <g class="zone" data-z="0"><rect class="z" x="20" y="400" width="240" height="200"/><text x="36" y="426">RECEPTION</text>
-            <path class="furn" d="M60 520h140v30H60zM90 470a20 20 0 1 0 0.1 0M180 470a20 20 0 1 0 0.1 0"/></g>
-          <g class="zone" data-z="1"><rect class="z" x="260" y="30" width="440" height="330"/><text x="276" y="56">OPEN WORKSTATIONS</text>
-            <path class="furn" d="M300 90h160v40H300zM300 160h160v40H300zM300 230h160v40H300zM300 300h160v40H300zM500 90h160v40H500zM500 160h160v40H500zM500 230h160v40H500zM500 300h160v40H500zM380 90v40M380 160v40M380 230v40M380 300v40M580 90v40M580 160v40M580 230v40M580 300v40"/></g>
-          <g class="zone" data-z="2"><rect class="z" x="700" y="30" width="280" height="190"/><text x="716" y="56">CABINS</text>
-            <path class="furn" d="M793 30v190M886 30v190M720 120h50v30h-50zM813 120h50v30h-50zM906 120h50v30h-50z"/></g>
-          <g class="zone" data-z="3"><rect class="z" x="700" y="220" width="280" height="200"/><text x="716" y="246">BOARDROOM</text>
-            <path class="furn" d="M760 290h160v60H760zM770 280h10M800 280h10M830 280h10M860 280h10M890 280h10M770 360h10M800 360h10M830 360h10M860 360h10M890 360h10"/></g>
-          <g class="zone" data-z="4"><rect class="z" x="260" y="360" width="260" height="240"/><text x="276" y="386">BREAKOUT</text>
-            <path class="furn" d="M300 430h90v40h-90zM300 470h40v60h-40zM450 470a30 30 0 1 0 0.1 0M330 560h150"/></g>
-          <g class="zone" data-z="5"><rect class="z" x="520" y="360" width="180" height="240"/><text x="536" y="386">CAFÉ</text>
-            <path class="furn" d="M540 410h140v26H540zM580 490a18 18 0 1 0 0.1 0M650 490a18 18 0 1 0 0.1 0M580 560a18 18 0 1 0 0.1 0M650 560a18 18 0 1 0 0.1 0"/></g>
-          <g class="zone" data-z="6"><rect class="z" x="20" y="30" width="240" height="370"/><text x="36" y="56">FOCUS &amp; PODS</text>
-            <path class="furn" d="M50 90h80v80H50zM150 90h80v80h-80zM50 200h80v80H50zM150 200h80v80h-80zM50 310h180v60H50z"/></g>
-          <g class="zone" data-z="3"><rect class="z" x="700" y="420" width="280" height="180"/><text x="716" y="446">MEETING ROOMS</text>
-            <path class="furn" d="M840 420v180M730 490h80v40h-80zM870 490h80v40h-80z"/></g>
+          <!-- zones (order matches Z[] in partials/home-script.html) -->
+          <g class="zone" data-z="0" tabindex="0" role="button" aria-label="Reception"><rect class="z" x="20" y="440" width="220" height="160"/><text x="36" y="466">RECEPTION</text>
+            <path class="furn" d="M100 528h112v28H100zM212 470v86M130 505a9 9 0 1 0 .1 0M180 505a9 9 0 1 0 .1 0"/></g>
+          <g class="zone" data-z="1" tabindex="0" role="button" aria-label="Waiting / Lounge"><rect class="z" x="240" y="440" width="180" height="160"/><text x="256" y="466">WAITING / LOUNGE</text>
+            <path class="furn" d="M260 486h112v24H260zM260 510h24v66h-24zM340 528a18 18 0 1 0 .1 0"/></g>
+          <g class="zone" data-z="2" tabindex="0" role="button" aria-label="Workstations"><rect class="z" x="240" y="30" width="500" height="310"/><text x="256" y="56">WORKSTATIONS</text>
+            <path class="furn" d="M270 78h200v36H270zM370 78v36M510 78h200v36H510zM610 78v36M270 148h200v36H270zM370 148v36M510 148h200v36H510zM610 148v36M270 218h200v36H270zM370 218v36M510 218h200v36H510zM610 218v36M270 288h200v36H270zM370 288v36M510 288h200v36H510zM610 288v36"/></g>
+          <g class="zone" data-z="3" tabindex="0" role="button" aria-label="Manager Cabins"><rect class="z" x="740" y="30" width="240" height="170"/><text x="756" y="56">MANAGER CABINS</text>
+            <path class="furn" d="M820 70v130M900 70v130M755 118h50v28h-50zM835 118h50v28h-50zM915 118h50v28h-50z"/></g>
+          <g class="zone" data-z="4" tabindex="0" role="button" aria-label="Meeting Rooms"><rect class="z" x="740" y="200" width="240" height="180"/><text x="756" y="226">MEETING ROOMS</text>
+            <path class="furn" d="M860 236v144M770 290h60v40h-60zM890 290h60v40h-60z"/></g>
+          <g class="zone" data-z="5" tabindex="0" role="button" aria-label="Conference / Boardroom"><rect class="z" x="740" y="380" width="240" height="220"/><text x="756" y="406">CONFERENCE / BOARDROOM</text>
+            <path class="furn" d="M780 460h150v70H780zM795 448h10M830 448h10M865 448h10M900 448h10M795 542h10M830 542h10M865 542h10M900 542h10M962 465v60"/></g>
+          <g class="zone" data-z="6" tabindex="0" role="button" aria-label="Cafeteria / Pantry"><rect class="z" x="420" y="440" width="320" height="160"/><text x="436" y="466">CAFETERIA / PANTRY</text>
+            <path class="furn" d="M440 482h280v24H440zM480 532a16 16 0 1 0 .1 0M560 532a16 16 0 1 0 .1 0M640 532a16 16 0 1 0 .1 0M700 532a16 16 0 1 0 .1 0"/></g>
+          <g class="zone" data-z="7" tabindex="0" role="button" aria-label="Breakout"><rect class="z" x="240" y="340" width="260" height="100"/><text x="256" y="366">BREAKOUT</text>
+            <path class="furn" d="M262 384h100v22H262zM262 406h22v24h-22zM430 382a18 18 0 1 0 .1 0"/></g>
+          <g class="zone" data-z="8" tabindex="0" role="button" aria-label="Recreation / Games"><rect class="z" x="500" y="340" width="240" height="100"/><text x="516" y="366">RECREATION / GAMES</text>
+            <path class="furn" d="M570 380h100v46H570zM620 380v46M556 403h14M670 403h14"/></g>
+          <g class="zone" data-z="9" tabindex="0" role="button" aria-label="Training / Multipurpose"><rect class="z" x="20" y="140" width="220" height="180"/><text x="36" y="166">TRAINING / MULTIPURPOSE</text>
+            <path class="furn" d="M50 186h160v18H50zM50 222h160v18H50zM50 258h160v18H50zM80 302h100"/></g>
+          <g class="zone" data-z="10" tabindex="0" role="button" aria-label="Display / Experience"><rect class="z" x="20" y="320" width="220" height="120"/><text x="36" y="346">DISPLAY / EXPERIENCE</text>
+            <path class="furn" d="M50 368h40v40H50zM110 368h40v40h-40zM170 368h40v40h-40z"/></g>
+          <g class="zone" data-z="11" tabindex="0" role="button" aria-label="Washrooms"><rect class="z" x="20" y="30" width="220" height="110"/><text x="36" y="56">WASHROOMS</text>
+            <path class="furn" d="M40 76h180v48H40zM85 76v48M130 76v48M175 76v48"/></g>
           <rect class="walls" x="20" y="30" width="960" height="570"/>
           <path d="M20 470v60" stroke="var(--char)" stroke-width="6"/>
           <!-- main entrance: door opening into reception, with arrow from outside -->
@@ -102,7 +110,7 @@
 
 <!-- ZONE GALLERY (opened by clicking an area) -->
 <div class="zg" id="zg" role="dialog" aria-modal="true" aria-labelledby="zgT" hidden>
-  <div class="zg-top"><div><span class="mono" id="zgK">Area 01</span><h3 class="disp" id="zgT">Reception</h3></div><span class="mono zg-count" id="zgCount">01 / 06</span><button type="button" class="zg-x" id="zgClose" aria-label="Close gallery">✕</button></div>
+  <div class="zg-top"><div><span class="mono" id="zgK">Area 01</span><h3 class="disp" id="zgT">Reception</h3></div><span class="mono zg-tag" id="zgTag" hidden>Design idea · for inspiration</span><span class="mono zg-count" id="zgCount"></span><button type="button" class="zg-x" id="zgClose" aria-label="Close gallery">✕</button></div>
   <div class="zg-stage"><button type="button" class="zg-nav prev" id="zgPrev" aria-label="Previous photo">←</button><img id="zgImg" alt=""><button type="button" class="zg-nav next" id="zgNext" aria-label="Next photo">→</button></div>
   <div class="zg-thumbs" id="zgThumbs"></div>
 </div>

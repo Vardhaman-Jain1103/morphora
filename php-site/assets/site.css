@@ -179,6 +179,19 @@ header.open .menu-t b i:last-child{width:100%;transform:translateY(-3.25px) rota
 .plan-hint{margin-top:20px;color:rgba(236,231,223,.45)}
 .zone{cursor:pointer}
 .zcard .ph{cursor:zoom-in}
+/* design ideas (not our projects) are always labelled */
+.zcard .ph figure{position:absolute;inset:0;margin:0;opacity:0;transition:opacity .7s}
+.zcard .ph figure.on{opacity:1}
+.zcard .ph figure img{opacity:1;transform:none}
+.zcard .ph figcaption,.zg-tag{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;background:rgba(20,18,20,.72);color:var(--stone);border:1px solid rgba(236,231,223,.25);border-radius:99px;padding:5px 10px}
+.zcard .ph figcaption{position:absolute;left:14px;bottom:14px}
+.zg-tag{margin-left:auto;margin-right:16px;align-self:center}
+.zg-tag[hidden]{display:none}
+.zg-thumbs .idea{position:relative}
+.zg-thumbs .idea::after{content:"Idea";position:absolute;left:4px;bottom:4px;font:9px var(--mono);letter-spacing:.08em;text-transform:uppercase;background:rgba(20,18,20,.75);color:var(--stone);padding:2px 5px;border-radius:3px}
+.zcard .zbtn[hidden]{display:none}
+.plan .zone:focus{outline:none}
+.plan .zone:focus-visible rect.z{stroke:var(--brass);stroke-width:2}
 .zbtn{align-self:flex-start;margin-top:22px;display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 18px;border-radius:999px;border:1px solid rgba(236,231,223,.3);background:none;color:var(--stone);font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .3s,border-color .3s}
 .zbtn span{color:var(--plum-l);transition:transform .3s}
 .zbtn:hover{background:var(--plum);border-color:var(--plum)}

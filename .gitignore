@@ -6,3 +6,6 @@ php-site/uploads/*
 !php-site/uploads/.gitkeep
 php-site/app/storage/cv/*
 !php-site/app/storage/cv/.gitkeep
+
+# Local source image archive; deployed assets live under php-site/media/
+php-site/OneDrive_1_11-26-2026/
