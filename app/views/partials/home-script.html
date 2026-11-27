@@ -52,7 +52,7 @@ let S={x:0,y:0,w:0,h:0};function sizeHero(){const st=xt.offsetParent;S={x:xt.off
 new ResizeObserver(()=>{sizeHero();onScroll()}).observe(xt);
 function sizeHz(){if(innerWidth>1000){hz.style.height=(track.scrollWidth-innerWidth+innerHeight+100)+'px'}else hz.style.height=''}
 function onScroll(){
-  const r=ex.getBoundingClientRect(),p=clamp(-r.top/(r.height-innerHeight));
+  const r=ex.getBoundingClientRect(),p=innerWidth<=760?0:clamp(-r.top/(r.height-innerHeight));
   const e=p*p*(3-2*p),k=1-e;const L=S.x*k,T=S.y*k,R=(S.W-S.x-S.w)*k,B=(S.H-S.y-S.h)*k;xf.style.clipPath=`inset(${T}px ${R}px ${B}px ${L}px round ${16*k}px)`;xi.style.left=L+'px';xi.style.top=T+'px';xi.style.width=(S.W-L-R)+'px';xi.style.height=(S.H-T-B)+'px';xi.style.transform=`scale(${1.08-e*.08})`;xt.style.transform=`translateY(${-e*80}px)`;xt.style.opacity=1-clamp((e-.15)/.4);const c=clamp((e-.55)/.45);xs.style.opacity=c;xc.style.opacity=c;xc.style.transform=`translateY(${(1-c)*12}px)`;
   const mr=mf.getBoundingClientRect(),mp=clamp((innerHeight*.85-mr.top)/(mr.height+innerHeight*.3));const lit=Math.round(mp*words.length);words.forEach((w,i)=>w.classList.toggle('on',i<lit));
   if(innerWidth>1000){const hr=hz.getBoundingClientRect(),hpv=clamp(-hr.top/(hr.height-innerHeight));track.style.transform=`translateX(${-hpv*(track.scrollWidth-innerWidth+80)}px)`;hp.style.width=hpv*100+'%'}

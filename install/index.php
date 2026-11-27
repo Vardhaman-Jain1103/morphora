@@ -44,7 +44,10 @@ if ($step === 'form' && is_post()) {
             };
             foreach ($seed['settings'] as $k => $v) q('INSERT IGNORE INTO settings (k, v) VALUES (?, ?)', [$k, $v]);
             q('UPDATE settings SET v = ? WHERE k = "site_url"', [rtrim((string)cfg('base_url'), '/')]);
-            foreach ($seed['pages'] as $p) $ins('pages', $p);
+            foreach ($seed['pages'] as $p) {
+                if (($p['slug'] ?? '') === 'about') $p['body'] = about_values_v6((string)$p['body']);
+                $ins('pages', $p);
+            }
             foreach ($seed['posts'] as $p) $ins('posts', $p + ['status' => 'published']);
             foreach ($seed['projects'] as $p) { $p['gallery'] = json_encode($p['gallery'], JSON_UNESCAPED_SLASHES); $ins('projects', $p); }
             foreach ($seed['cities'] as $c) $ins('cities', $c);

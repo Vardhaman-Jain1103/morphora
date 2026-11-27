@@ -7,8 +7,9 @@
  *   3 - Move client testimonials from About to the homepage.
  *   4 - Add editable SEO metadata to public content.
  *   5 - User roles (users.role) and article ownership (posts.created_by). Existing users become administrators.
+ *   6 - Add vector icons and align numbers in the About page values section.
  */
-const DB_VERSION = 5;
+const DB_VERSION = 6;
 
 function migrate(): void
 {
@@ -24,6 +25,7 @@ function migrate(): void
         if ($about) {
             $body = about_body_v2((string)$about['body']);
             $body = about_body_v3($body);
+            $body = about_values_v6($body);
             q('UPDATE pages SET body = ? WHERE id = ?', [$body, $about['id']]);
         }
         q('INSERT INTO settings (k, v) VALUES ("db_version", ?) ON DUPLICATE KEY UPDATE v = VALUES(v)', [(string)DB_VERSION]);
@@ -130,4 +132,29 @@ function about_body_v3(string $body): string
     $clean = preg_replace('/<!--sc:testimonials\s+\{.*?\}\s*-->\s*/s', '', $body);
     if ($clean === null) throw new RuntimeException('Could not remove the legacy About testimonials section.');
     return $clean;
+}
+
+/** Add homepage-style value icons to the About page while preserving its existing copy. */
+function about_values_v6(string $body): string
+{
+    $icons = [
+        '01' => '<path d="M24 39S9 30.3 9 19.7a8.2 8.2 0 0 1 15-4.8 8.2 8.2 0 0 1 15 4.8C39 30.3 24 39 24 39Z"/><path d="M17 24c2.2 2.2 4.8 2.2 7 0s4.8-2.2 7 0"/>',
+        '02' => '<circle cx="24" cy="24" r="16"/><circle cx="24" cy="24" r="7"/><path d="M24 3v7M24 38v7M3 24h7M38 24h7M24 20v4l3 2"/>',
+        '03' => '<path d="m24 5 14 5v12c0 10-5.8 16-14 21-8.2-5-14-11-14-21V10l14-5Z"/><path d="m17 23 5 5 10-11"/>',
+        '04' => '<rect x="7" y="8" width="34" height="32" rx="2"/><path d="M7 20h16v20M23 8v12M23 20h18M32 20v20M12 14h5M28 14h8"/>',
+        '05' => '<path d="M17 29c-3-2.2-5-5.6-5-9.5a12 12 0 1 1 24 0c0 3.9-2 7.3-5 9.5-1.5 1.1-2 2.7-2 4.5H19c0-1.8-.5-3.4-2-4.5Z"/><path d="M19 38h10M21 42h6M24 2v3M5 20h4M39 20h4M10 7l3 3M38 7l-3 3"/>',
+    ];
+
+    $updated = preg_replace_callback('~<section class="why sec alt">.*?</section>~s', function ($section) use ($icons) {
+        if (stripos($section[0], 'stand for') === false) return $section[0];
+        $html = preg_replace_callback('~<li class="rv">\s*<span class="mono">(\d{2})</span>(.*?)</li>~s', function ($card) use ($icons) {
+            if (!isset($icons[$card[1]])) return $card[0];
+            $icon = '<span class="vector-icon-wrap"><svg class="vector-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">' . $icons[$card[1]] . '</svg></span>';
+            return '<li class="rv"><div class="vals-mark">' . $icon . '<span class="mono">' . $card[1] . '</span></div>' . $card[2] . '</li>';
+        }, $section[0]);
+        if ($html === null) throw new RuntimeException('Could not add icons to the About page values section.');
+        return $html;
+    }, $body);
+    if ($updated === null) throw new RuntimeException('Could not find the About page values section.');
+    return $updated;
 }

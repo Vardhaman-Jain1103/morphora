@@ -97,7 +97,7 @@ function home_project_cards(): string
     $h = '';
     foreach (projects_list(true) as $p) {
         $by = $p['delivery'] !== '' ? '<span class="by">' . e($p['delivery']) . '</span>' : '';
-        $h .= '      <a class="hz-card" href="/portfolio/' . e($p['slug']) . '/" data-cur="VIEW"><div class="ph"><img src="' . e($p['cover']) . '" alt="' . e($p['name'] . ' office interior, ' . $p['city']) . '" loading="lazy"></div><div class="meta"><div><h3>' . e($p['name']) . '</h3>' . $by . '</div><span class="mono">' . e($p['city']) . '<br>' . e($p['size']) . "</span></div></a>\n";
+        $h .= '      <a class="hz-card rv" href="/portfolio/' . e($p['slug']) . '/" data-cur="VIEW"><div class="ph"><img src="' . e($p['cover']) . '" alt="' . e($p['name'] . ' office interior, ' . $p['city']) . '" loading="lazy"></div><div class="meta"><div><h3>' . e($p['name']) . '</h3>' . $by . '</div><span class="mono">' . e($p['city']) . '<br>' . e($p['size']) . "</span></div></a>\n";
     }
     return $h;
 }

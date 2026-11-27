@@ -135,7 +135,7 @@
 <!-- HORIZONTAL WORK -->
 <section class="hz" id="work">
   <div class="stick">
-    <!-- <div class="wrap hz-head"><h2 class="disp">Our <em>Projects</em></h2><span class="mono">( 150+ offices delivered )</span></div> -->
+    <div class="wrap hz-head"><h2 class="disp">Our <em>Projects</em></h2><span class="mono">( 150+ offices delivered )</span></div>
     <div class="hz-track" id="hzTrack">
 <?= home_project_cards() ?>
       <div class="hz-end"><span class="mono" style="color:var(--mut);margin-bottom:20px">( Full portfolio )</span><a href="/portfolio/">See all <span>projects</span> ↗</a></div>

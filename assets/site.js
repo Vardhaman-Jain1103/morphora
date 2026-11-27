@@ -347,7 +347,7 @@
       .catch(() => cbSay([`Thanks, ${first}! Tap below to send your details to our team on WhatsApp.`], () => { cbIn.innerHTML = ''; cbIn.append(a, r); }));
   }
   function cbOpen(o) {
-    cb.classList.toggle('on', o); cbP.hidden = !o; cbB.setAttribute('aria-expanded', o); cbB.setAttribute('aria-label', o ? 'Close chat' : 'Open chat');
+    cb.classList.toggle('on', o); cbP.hidden = !o; cbB.setAttribute('aria-expanded', o); cbB.setAttribute('aria-label', 'Open chat');
     if (o) { cbN.hidden = true; ss.set('cbSeen', 1); if (!cbStarted) { cbStarted = true; STEPS[0](); } else { const i = cbIn.querySelector('input'); if (i) i.focus({ preventScroll: true }); } }
   }
   cbB.onclick = () => cbOpen(!cb.classList.contains('on'));
