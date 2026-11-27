@@ -30,7 +30,7 @@ const DEFAULT_ROLE = 'subscriber';
  */
 const ROLE_CAPS = [
     'administrator' => ['*'],
-    'editor' => ['manage:posts', 'manage:projects', 'manage:team', 'manage:testimonials', 'manage:cities', 'manage:pages', 'manage:redirects', 'posts:others', 'posts:publish', 'upload'],
+    'editor' => ['manage:posts', 'manage:projects', 'manage:project_categories', 'manage:team', 'manage:testimonials', 'manage:cities', 'manage:pages', 'manage:redirects', 'posts:others', 'posts:publish', 'upload'],
     'author' => ['manage:posts', 'posts:publish', 'upload'],
     'contributor' => ['manage:posts', 'upload'],
     'hr' => ['manage:jobs', 'applications', 'upload'],
@@ -41,7 +41,7 @@ const ROLE_CAPS = [
 /** Plain-language summary of each role, shown on the Users page. */
 const ROLE_HELP = [
     'administrator' => 'Everything, including settings and users.',
-    'editor' => 'All website content: articles (anyone’s), projects, team, testimonials, cities, pages and redirects.',
+    'editor' => 'All website content: articles (anyone’s), projects and project categories, team, testimonials, cities, pages and redirects.',
     'author' => 'Writes, publishes and deletes their own articles.',
     'contributor' => 'Writes their own articles as drafts. Cannot publish, or edit an article once it is published.',
     'hr' => 'Job openings and job applications (including CVs).',

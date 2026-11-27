@@ -76,6 +76,7 @@ textarea{resize:vertical}
 
 .edit{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
 .edit-side{position:sticky;top:20px}
+.edit.has-seo .edit-side{position:static}
 .field{margin-bottom:16px}
 .field>label{margin-bottom:6px}
 .field label i{color:var(--err);font-style:normal}
@@ -127,6 +128,15 @@ textarea{resize:vertical}
 .seo-list-score{display:inline-block;padding:2px 8px;border-radius:999px;background:#e6f5ec;color:var(--ok);font-size:12px;font-weight:600}
 .seo-list-score.low{background:#fdf5e4;color:var(--warn)}
 .seo-list-score.na{background:#eee;color:#666}
+.seo-card{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.6fr);gap:24px;align-items:start}
+.seo-overview,.seo-editor{min-width:0}
+.seo-overview [data-seo-note]{margin:8px 0 14px}
+.seo-checklist{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px;margin:0}
+.seo-preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.seo-preview-grid>div{min-width:0}
+.seo-preview-grid h3{margin-bottom:8px}
+.seo-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px;margin-top:14px}
+.seo-fields>.field,.seo-fields>.check{min-width:0}
 
 /* detail lists, checklist, settings */
 .kv{display:grid;grid-template-columns:130px 1fr;gap:10px 16px;margin:0 0 18px}
@@ -147,7 +157,7 @@ body.auth{display:grid;place-items:center;grid-template-columns:1fr;padding:20px
 .auth-box .btn{width:100%;padding:11px}
 .auth-box pre{white-space:pre-wrap;font-size:12px}
 
-@media (max-width:1100px){.edit{grid-template-columns:1fr}.edit-side{position:static}.cols{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
+@media (max-width:1100px){.edit{grid-template-columns:1fr}.edit-side{position:static}.seo-card{grid-template-columns:1fr}.cols{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
 @media (max-width:800px){
   body{grid-template-columns:1fr}
   .side{position:fixed;inset:0 auto 0 0;width:240px;z-index:20;transform:translateX(-100%);transition:transform .25s}
@@ -157,6 +167,7 @@ body.auth{display:grid;place-items:center;grid-template-columns:1fr;padding:20px
   .grid2{grid-template-columns:1fr}
   .tbl{display:block;overflow-x:auto;white-space:nowrap}
 }
+@media (max-width:640px){.seo-checklist,.seo-preview-grid,.seo-fields{grid-template-columns:1fr}}
 
 /* roles */
 .role-tag{display:block;font-size:11.5px;opacity:.6;margin-top:1px}

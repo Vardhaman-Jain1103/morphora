@@ -8,8 +8,9 @@
  *   4 - Add editable SEO metadata to public content.
  *   5 - User roles (users.role) and article ownership (posts.created_by). Existing users become administrators.
  *   6 - Add vector icons and align numbers in the About page values section.
+ *   7 - Add project categories and category assignments.
  */
-const DB_VERSION = 6;
+const DB_VERSION = 7;
 
 function migrate(): void
 {
@@ -17,6 +18,7 @@ function migrate(): void
     try {
         if (!val("SHOW TABLES LIKE 'settings'")) return;           // not installed yet: /install/ does everything
         schema_apply();
+        project_category_columns();
         seo_columns();
         role_columns();
         $seed = seed_data();
@@ -78,6 +80,24 @@ function role_columns(): void
     }
     if (!$has('posts', 'created_by')) {
         db()->exec('ALTER TABLE posts ADD COLUMN created_by INT UNSIGNED NULL AFTER nofollow, ADD KEY created_by (created_by)');
+    }
+}
+
+/** Add the project-category relation to databases installed before the category catalog. */
+function project_category_columns(): void
+{
+    $hasCategory = (int)val(
+        'SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?',
+        ['projects', 'category_id']
+    );
+    if (!$hasCategory) db()->exec('ALTER TABLE projects ADD COLUMN category_id INT UNSIGNED NULL AFTER city, ADD KEY category_id (category_id)');
+
+    $hasRelation = (int)val(
+        'SELECT COUNT(*) FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ? AND REFERENCED_TABLE_NAME = ?',
+        ['projects', 'category_id', 'project_categories']
+    );
+    if (!$hasRelation) {
+        db()->exec('ALTER TABLE projects ADD CONSTRAINT fk_projects_category FOREIGN KEY (category_id) REFERENCES project_categories(id) ON DELETE SET NULL');
     }
 }
 

@@ -6,6 +6,15 @@
  *   options: 'required', 'help' => '…', 'options' => [...], 'from' => 'title' (slug source),
  *            'group' => 'seo' (shown in the SEO panel), 'max' => n (counter), 'readonly'
  */
+function project_category_options(): array
+{
+    $options = ['' => 'Uncategorized'];
+    foreach (rows('SELECT id, name FROM project_categories ORDER BY sort_order, name') as $category) {
+        $options[(string)$category['id']] = (string)$category['name'];
+    }
+    return $options;
+}
+
 function resources(): array
 {
     $seo = [
@@ -43,13 +52,23 @@ function resources(): array
                 'category' => ['Category', 'text', 'required', 'datalist' => 'SELECT DISTINCT category FROM posts ORDER BY category'],
                 'status' => $status,
                 'published_at' => ['Publish date', 'date', 'required', 'help' => 'A future date schedules the article: it goes live on that day.'],
-                'author' => ['Author', 'text'],
+                'author' => ['Author', 'text', 'help' => 'Defaults to your signed-in name. You can change it for this article.'],
                 'excerpt' => ['Summary', 'textarea', 'max' => 200, 'help' => 'Shown on article cards and used for Google when the SEO description is empty.'],
                 'cover' => ['Header image', 'image', 'help' => 'Wide image at the top of the article and for social sharing (1600 × 900 works well).'],
                 'thumb' => ['Card image', 'image', 'help' => 'Optional smaller image for article cards. The header image is used if empty.'],
                 'body' => ['Article', 'html', 'required'],
             ] + $seoFields($schemaOptions['posts']),
-            'defaults' => ['status' => 'draft', 'published_at' => date('Y-m-d'), 'author' => 'Morphora Spaces', 'category' => 'Office Design'],
+            'defaults' => ['status' => 'draft', 'published_at' => date('Y-m-d'), 'author' => '', 'category' => 'Office Design'],
+        ],
+        'project_categories' => [
+            'title' => 'Project Categories', 'one' => 'project category', 'table' => 'project_categories', 'order' => 'sort_order, name', 'search' => ['name'],
+            'list' => ['name' => 'Category', 'sort_order' => 'Order'],
+            'intro' => 'Manage the categories available in each project. Assign a category from the project editor.',
+            'fields' => [
+                'name' => ['Category name', 'text', 'required', 'max' => 100],
+                'sort_order' => ['Order', 'number', 'help' => 'Lower numbers appear first in project category options.'],
+            ],
+            'defaults' => ['sort_order' => 10],
         ],
         'projects' => [
             'title' => 'Projects', 'one' => 'project', 'table' => 'projects', 'order' => 'sort_order, id', 'search' => ['name', 'city'],
@@ -60,6 +79,7 @@ function resources(): array
                 'name' => ['Client / project name', 'text', 'required'],
                 'slug' => ['URL', 'slug', 'from' => 'name', 'prefix' => '/portfolio/'],
                 'city' => ['City', 'text', 'required'],
+                'category_id' => ['Category', 'select', 'options' => project_category_options(), 'help' => 'Manage these options on the Project Categories page.'],
                 'size' => ['Area', 'text', 'help' => 'For example “5,000 sq ft”.'],
                 'delivery' => ['Delivery', 'text', 'help' => 'For example “Design & Build” or “Managed & executed with …”.'],
                 'status' => $status,

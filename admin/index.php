@@ -476,6 +476,11 @@ function admin_edit(): void
             if (in_array('required', $f, true) && ($v === '' || $v === null)) $errors[] = $f[0] . ' is required.';
             $data[$k] = $v;
         }
+        if ($t === 'posts' && !$rec && ($data['author'] ?? '') === '') $data['author'] = (string)admin_user()['name'];
+        if ($t === 'projects' && ($data['category_id'] ?? '') === '') $data['category_id'] = null;
+        if ($t === 'project_categories' && !$errors && (int)val('SELECT COUNT(*) FROM project_categories WHERE name = ? AND id <> ?', [$data['name'], $id])) {
+            $errors[] = 'A project category with that name already exists.';
+        }
         // table-specific rules
         if (isset($data['slug']) && !$errors) {
             if ((int)val("SELECT COUNT(*) FROM {$R['table']} WHERE slug = ? AND id <> ?", [$data['slug'], $id])) $errors[] = 'Another ' . $R['one'] . ' already uses that URL.';
@@ -506,7 +511,10 @@ function admin_edit(): void
                     flash('The URL changed, so a redirect from the old address was added automatically.', 'info');
                 }
             } else {
-                if ($t === 'posts') $data['created_by'] = (int)admin_user()['id'];
+                if ($t === 'posts') {
+                    if (($data['author'] ?? '') === '') $data['author'] = (string)admin_user()['name'];
+                    $data['created_by'] = (int)admin_user()['id'];
+                }
                 q("INSERT INTO {$R['table']} (" . implode(',', array_keys($data)) . ') VALUES (' . implode(',', array_fill(0, count($data), '?')) . ')', array_values($data));
                 $id = (int)db()->lastInsertId();
             }
@@ -517,6 +525,7 @@ function admin_edit(): void
         $rec = array_merge($rec ?? [], $data);
     }
 
+    if ($t === 'posts' && !$rec) $R['defaults']['author'] = (string)admin_user()['name'];
     $vals = $rec ?? ($R['defaults'] ?? []);
     $main = $side = $seo = '';
     foreach ($R['fields'] as $k => $f) {
@@ -530,26 +539,30 @@ function admin_edit(): void
     ob_start(); ?>
 <p><a href="/admin/?r=list&amp;t=<?= e($t) ?>">← All <?= e(strtolower($R['title'])) ?></a><?php if ($url): ?> · <a href="<?= e($url) ?><?= ($rec['status'] ?? 'published') !== 'published' ? '?preview=1' : '' ?>" target="_blank">View on site ↗</a><?php endif ?></p>
 <?php foreach ($errors as $er): ?><p class="msg err"><?= e($er) ?></p><?php endforeach ?>
-<form method="post" class="edit" id="editForm">
+<form method="post" class="edit<?= $seo !== '' ? ' has-seo' : '' ?>" id="editForm">
   <?= csrf_field() ?>
   <div class="edit-main"><?= $main ?></div>
   <aside class="edit-side">
     <div class="card"><?= $side ?>
-      <div class="row-btns"><button class="btn" type="submit">Save</button><?php if ($rec && empty($R['nodelete'])): ?><button class="btn danger" type="submit" name="delete" value="1" formnovalidate data-confirm="Delete this <?= e($R['one']) ?> permanently? Its page will stop working.">Delete</button><?php endif ?></div>
+      <div class="row-btns"><button class="btn" type="submit">Save</button><?php if ($rec && empty($R['nodelete'])): ?><button class="btn danger" type="submit" name="delete" value="1" formnovalidate data-confirm="<?= e($t === 'project_categories' ? 'Delete this category? Assigned projects will become uncategorized.' : 'Delete this ' . $R['one'] . ' permanently? Its page will stop working.') ?>">Delete</button><?php endif ?></div>
     </div>
+  </aside>
 <?php if ($seo !== ''): ?>
-    <div class="card seo-card" data-seo-panel data-source="<?= e($R['seo_source'] ?? '') ?>">
+  <section class="card seo-card" data-seo-panel data-source="<?= e($R['seo_source'] ?? '') ?>">
+    <div class="seo-overview">
       <div class="seo-score-box"><strong data-seo-score>-</strong><span>SEO score</span></div>
       <p class="small muted" data-seo-note>Add a focus keyword to start the on-page checks.</p>
       <ul class="checks seo-checklist" data-seo-checks></ul>
-      <h3>Google search preview</h3>
-      <div class="serp" data-url="<?= e(abs_url($url ?: '/')) ?>"><span class="serp-url"></span><span class="serp-t"></span><span class="serp-d"></span></div>
-      <h3>Social sharing preview</h3>
-      <div class="social-preview"><img data-social-image alt="" hidden><div><b data-social-title></b><p data-social-desc></p></div></div>
-      <?= $seo ?>
     </div>
+    <div class="seo-editor">
+      <div class="seo-preview-grid">
+        <div><h3>Google search preview</h3><div class="serp" data-url="<?= e(abs_url($url ?: '/')) ?>"><span class="serp-url"></span><span class="serp-t"></span><span class="serp-d"></span></div></div>
+        <div><h3>Social sharing preview</h3><div class="social-preview"><img data-social-image alt="" hidden><div><b data-social-title></b><p data-social-desc></p></div></div></div>
+      </div>
+      <div class="seo-fields"><?= $seo ?></div>
+    </div>
+  </section>
 <?php endif ?>
-  </aside>
 </form>
 <?php
     admin_page(($rec ? 'Edit ' : 'New ') . $R['one'] . ($rec ? ': ' . ($rec['title'] ?? $rec['name'] ?? path_for((string)($rec['slug'] ?? $rec['from_path'] ?? ''))) : ''), ob_get_clean(), $t);

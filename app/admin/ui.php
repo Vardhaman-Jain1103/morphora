@@ -50,6 +50,7 @@ function admin_nav(): array
         ['enquiries', '/admin/?r=enquiries', 'Enquiries', 'enquiries'],
         ['posts', '/admin/?r=list&t=posts', 'Articles', 'manage:posts'],
         ['projects', '/admin/?r=list&t=projects', 'Projects', 'manage:projects'],
+        ['project_categories', '/admin/?r=list&t=project_categories', 'Project categories', 'manage:project_categories'],
         ['team', '/admin/?r=list&t=team', 'Team', 'manage:team'],
         ['testimonials', '/admin/?r=list&t=testimonials', 'Testimonials', 'manage:testimonials'],
         ['cities', '/admin/?r=list&t=cities', 'Cities', 'manage:cities'],
