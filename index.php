@@ -141,7 +141,7 @@ function route_portfolio(): void
 
 function route_project(string $slug): void
 {
-    $p = row('SELECT * FROM projects WHERE slug = ?', [$slug]);
+    $p = row('SELECT p.*, pc.name AS category_name FROM projects p LEFT JOIN project_categories pc ON pc.id = p.category_id WHERE p.slug = ?', [$slug]);
     if (!$p || ($p['status'] !== 'published' && !can_preview('projects', $p))) not_found();
     if ($p['status'] === 'published') cache_public();
     $gallery = json_decode((string)$p['gallery'], true) ?: [];

@@ -3,7 +3,7 @@
 
 <section class="sec" style="padding-top:60px">
   <div class="wrap">
-    <div class="facts"><div><span class="mono">Client</span><b><?= e($p['name']) ?></b></div><div><span class="mono">Location</span><b><?= e($p['city']) ?></b></div><div><span class="mono">Area</span><b><?= e($p['size']) ?></b></div><div><span class="mono">Scope</span><b><?= e($p['delivery']) ?></b></div></div>
+    <div class="facts<?= !empty($p['category_name']) ? ' has-category' : '' ?>"><div><span class="mono">Client</span><b><?= e($p['name']) ?></b></div><?php if (!empty($p['category_name'])): ?><div><span class="mono">Category</span><b><?= e($p['category_name']) ?></b></div><?php endif ?><div><span class="mono">Location</span><b><?= e($p['city']) ?></b></div><div><span class="mono">Area</span><b><?= e($p['size']) ?></b></div><div><span class="mono">Scope</span><b><?= e($p['delivery']) ?></b></div></div>
 <?php if (trim((string)$p['summary']) !== ''): ?>
     <div class="prose" style="margin-top:40px;max-width:760px"><?= $p['summary'] ?></div>
 <?php endif ?>

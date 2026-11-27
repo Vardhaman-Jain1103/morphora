@@ -26,7 +26,7 @@ function latest_posts(int $n = 3, ?int $exceptId = null, ?string $preferCat = nu
 }
 function projects_list(bool $featuredOnly = false): array
 {
-    return rows('SELECT * FROM projects WHERE status="published"' . ($featuredOnly ? ' AND featured=1' : '') . ' ORDER BY sort_order, id');
+    return rows('SELECT p.*, pc.name AS category_name FROM projects p LEFT JOIN project_categories pc ON pc.id = p.category_id WHERE p.status="published"' . ($featuredOnly ? ' AND p.featured=1' : '') . ' ORDER BY p.sort_order, p.id');
 }
 function cities_count(): int { static $n; return $n ??= (int)val('SELECT COUNT(*) FROM cities WHERE status="published"'); }
 
@@ -89,15 +89,19 @@ function home_faq(): array { return default_faq(); }
 /* ------------------------------------------------------------ cards */
 function wcard(array $p): string
 {
-    return '<a class="wcard rv" href="/portfolio/' . e($p['slug']) . '/" data-cur="VIEW"><div class="ph" data-tilt><img src="' . e($p['cover']) . '" alt="' . e($p['name'] . ' office, ' . $p['city']) . '" loading="lazy"></div><div class="meta"><div><h3>' . e($p['name']) . '</h3><span class="by">' . e($p['delivery']) . '</span></div><span class="mono">' . e($p['city']) . '<br>' . e($p['size']) . '</span></div></a>';
+    $category = trim((string)($p['category_name'] ?? ''));
+    $tag = $category !== '' ? '<span class="mono project-category">' . e($category) . '</span>' : '';
+    return '<a class="wcard rv" href="/portfolio/' . e($p['slug']) . '/" data-cur="VIEW"><div class="ph" data-tilt><img src="' . e($p['cover']) . '" alt="' . e($p['name'] . ' office, ' . $p['city']) . '" loading="lazy"></div><div class="meta"><div>' . $tag . '<h3>' . e($p['name']) . '</h3><span class="by">' . e($p['delivery']) . '</span></div><span class="mono">' . e($p['city']) . '<br>' . e($p['size']) . '</span></div></a>';
 }
 
 function home_project_cards(): string
 {
     $h = '';
     foreach (projects_list(true) as $p) {
+        $category = trim((string)($p['category_name'] ?? ''));
+        $tag = $category !== '' ? '<span class="mono project-category">' . e($category) . '</span>' : '';
         $by = $p['delivery'] !== '' ? '<span class="by">' . e($p['delivery']) . '</span>' : '';
-        $h .= '      <a class="hz-card rv" href="/portfolio/' . e($p['slug']) . '/" data-cur="VIEW"><div class="ph"><img src="' . e($p['cover']) . '" alt="' . e($p['name'] . ' office interior, ' . $p['city']) . '" loading="lazy"></div><div class="meta"><div><h3>' . e($p['name']) . '</h3>' . $by . '</div><span class="mono"><span>' . e($p['city']) . '</span>' . ($p['size'] !== '' ? '<br><span>' . e($p['size']) . '</span>' : '') . "</span></div></a>\n";
+        $h .= '      <a class="hz-card rv" href="/portfolio/' . e($p['slug']) . '/" data-cur="VIEW"><div class="ph"><img src="' . e($p['cover']) . '" alt="' . e($p['name'] . ' office interior, ' . $p['city']) . '" loading="lazy"></div><div class="meta"><div>' . $tag . '<h3>' . e($p['name']) . '</h3>' . $by . '</div><span class="mono"><span>' . e($p['city']) . '</span>' . ($p['size'] !== '' ? '<br><span>' . e($p['size']) . '</span>' : '') . "</span></div></a>\n";
     }
     return $h;
 }

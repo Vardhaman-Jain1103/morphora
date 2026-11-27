@@ -9,8 +9,9 @@
  *   5 - User roles (users.role) and article ownership (posts.created_by). Existing users become administrators.
  *   6 - Add vector icons and align numbers in the About page values section.
  *   7 - Add project categories and category assignments.
+ *   8 - Seed demo project categories and assign uncategorized projects.
  */
-const DB_VERSION = 7;
+const DB_VERSION = 8;
 
 function migrate(): void
 {
@@ -19,6 +20,7 @@ function migrate(): void
         if (!val("SHOW TABLES LIKE 'settings'")) return;           // not installed yet: /install/ does everything
         schema_apply();
         project_category_columns();
+        seed_project_categories();
         seo_columns();
         role_columns();
         $seed = seed_data();
@@ -98,6 +100,40 @@ function project_category_columns(): void
     );
     if (!$hasRelation) {
         db()->exec('ALTER TABLE projects ADD CONSTRAINT fk_projects_category FOREIGN KEY (category_id) REFERENCES project_categories(id) ON DELETE SET NULL');
+    }
+}
+
+/** Add representative categories and assign existing projects without overriding admin choices. */
+function seed_project_categories(): void
+{
+    $categories = [
+        'Corporate Offices' => 10,
+        'Technology Workspaces' => 20,
+        'Design & Build' => 30,
+        'Office Interiors' => 40,
+    ];
+    $categoryIds = [];
+    foreach ($categories as $name => $order) {
+        $category = row('SELECT id FROM project_categories WHERE name = ?', [$name]);
+        if (!$category) {
+            q('INSERT INTO project_categories (name, sort_order) VALUES (?, ?)', [$name, $order]);
+            $category = ['id' => db()->lastInsertId()];
+        }
+        $categoryIds[$name] = (int)$category['id'];
+    }
+
+    $assignments = [
+        'lafarge-holcim' => 'Corporate Offices',
+        'codal-ahmedabad' => 'Technology Workspaces',
+        'festival-mumbai' => 'Design & Build',
+        'ishan-tech-ahmedabad' => 'Technology Workspaces',
+        'gro-value-mumbai' => 'Corporate Offices',
+        'i-i-fidelis-thane' => 'Corporate Offices',
+    ];
+    foreach (rows('SELECT id, slug, category_id FROM projects') as $project) {
+        if ($project['category_id'] !== null) continue;
+        $name = $assignments[$project['slug']] ?? 'Office Interiors';
+        q('UPDATE projects SET category_id = ? WHERE id = ? AND category_id IS NULL', [$categoryIds[$name], $project['id']]);
     }
 }
 

@@ -50,6 +50,7 @@ if ($step === 'form' && is_post()) {
             }
             foreach ($seed['posts'] as $p) $ins('posts', $p + ['status' => 'published']);
             foreach ($seed['projects'] as $p) { $p['gallery'] = json_encode($p['gallery'], JSON_UNESCAPED_SLASHES); $ins('projects', $p); }
+            seed_project_categories();
             foreach ($seed['cities'] as $c) $ins('cities', $c);
             foreach ($seed['jobs'] as $j) $ins('jobs', $j);
             foreach ($seed['redirects'] as $r) $ins('redirects', $r);
