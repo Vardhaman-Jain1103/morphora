@@ -37,6 +37,7 @@ switch ($r) {
     case 'users': admin_users($me); break;
     case 'account': admin_account($me); break;
     case 'upload': admin_upload(); break;
+    case 'upload-diag': admin_upload_diag(); break;
     default: admin_dashboard($me);
 }
 
@@ -795,4 +796,38 @@ function admin_upload(): void
     if (!is_post() || empty($_FILES['file'])) json_out(['ok' => false, 'error' => 'No file.'], 400);
     [$url, $err] = save_image($_FILES['file']);
     $err ? json_out(['ok' => false, 'error' => $err], 422) : json_out(['ok' => true, 'url' => $url]);
+}
+
+/* ================================================================ upload diagnostics (admin only) */
+function admin_upload_diag(): void
+{
+    require_cap('*');  // administrator only
+    $dir = ROOT . '/uploads';
+    $testDir = $dir . '/' . date('Y/m');
+    $rows = [
+        'PHP version'           => PHP_VERSION,
+        'upload_max_filesize'   => ini_get('upload_max_filesize'),
+        'post_max_size'         => ini_get('post_max_size'),
+        'max_execution_time'    => ini_get('max_execution_time') . 's',
+        'memory_limit'          => ini_get('memory_limit'),
+        'uploads dir exists'    => is_dir($dir) ? 'yes' : 'NO — missing',
+        'uploads dir writable'  => is_writable($dir) ? 'yes' : 'NO — fix chmod 755',
+        'uploads subdir'        => $testDir,
+        'subdir exists'         => is_dir($testDir) ? 'yes' : 'not yet (created on first upload)',
+        'tmp_name writable'     => is_writable(sys_get_temp_dir()) ? 'yes' : 'NO',
+        'ROOT'                  => ROOT,
+    ];
+    // try creating the subdir
+    if (!is_dir($testDir)) {
+        $made = @mkdir($testDir, 0755, true);
+        $rows['mkdir test'] = $made ? 'OK — created ' . $testDir : 'FAILED — ' . (error_get_last()['message'] ?? 'unknown error');
+    }
+    admin_page('Upload Diagnostics', function () use ($rows) {
+        echo '<div class="card" style="max-width:640px"><h2>Upload Diagnostics</h2><dl class="kv" style="margin-top:16px">';
+        foreach ($rows as $k => $v) {
+            $bad = strpos($v, 'NO') !== false || strpos($v, 'FAILED') !== false;
+            echo '<dt>' . e($k) . '</dt><dd' . ($bad ? ' style="color:var(--red,#c00);font-weight:600"' : '') . '>' . e($v) . '</dd>';
+        }
+        echo '</dl></div>';
+    });
 }
