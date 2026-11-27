@@ -23,7 +23,7 @@ const Z=[
  ['Washrooms','~5%','Clean, well-ventilated washrooms with durable finishes that are easy to maintain.',['Sanitaryware','Ventilation','Easy-clean finishes']]];
 const ADMIN_ZONE_PHOTOS=window.HOME_ZONE_PHOTOS||[];
 const ZP=Z.map((_,i)=>ADMIN_ZONE_PHOTOS[i]||[]);
-const G=ZP.map(items=>items.map(item=>item[1]));
+const G=ZP.map(items=>items.slice(1).map(item=>item[1]));
 $('#zPh').innerHTML=Z.map((z,i)=>ZP[i].length?`<img src="${ZP[i][0][0]}" alt="${z[0]}" loading="lazy">`:'').join('');
 const zImgs=[...$('#zPh').children],zones=$$('.zone'),zNum=i=>String(i+1).padStart(2,'0');
 function zone(i){zones.forEach(g=>g.classList.toggle('on',+g.dataset.z===i));zImgs.forEach((im,k)=>im.classList.toggle('on',k===i));const z=Z[i],n=G[i].length;
